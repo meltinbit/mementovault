@@ -29,17 +29,40 @@ test('can view each system document type', function (string $type) {
         ->get("/workspace/{$type}")
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component("workspace/{$type}")
+            ->component('workspace/show')
             ->has('document')
             ->has('revisions')
+            ->has('meta')
         );
 })->with(['identity', 'instructions', 'context', 'memory']);
 
-test('invalid type returns 404', function () {
+test('visiting unknown type auto-creates document', function () {
     [$user, $workspace] = createUserWithWorkspaceAndDocs();
 
     $this->actingAs($user)
-        ->get('/workspace/invalid')
+        ->get('/workspace/custom-type')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('workspace/show')
+            ->has('document')
+            ->where('document.type', 'custom-type')
+            ->where('document.content', '')
+            ->has('meta')
+        );
+
+    expect(
+        SystemDocument::withoutGlobalScopes()
+            ->where('workspace_id', $workspace->id)
+            ->where('type', 'custom-type')
+            ->exists()
+    )->toBeTrue();
+});
+
+test('invalid type format returns 404', function () {
+    [$user, $workspace] = createUserWithWorkspaceAndDocs();
+
+    $this->actingAs($user)
+        ->get('/workspace/INVALID')
         ->assertNotFound();
 });
 

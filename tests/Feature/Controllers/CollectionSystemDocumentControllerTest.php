@@ -74,13 +74,26 @@ test('revision is created on update', function () {
     expect($revisions->first()->version)->toBe(1);
 });
 
-test('invalid type returns 404', function () {
+test('invalid type format returns 404', function () {
     [$user, $workspace] = createSysDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
     $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/identity", ['content' => 'test'])
+        ->put("/collections/{$collection->id}/documents/INVALID", ['content' => 'test'])
         ->assertNotFound();
+});
+
+test('any valid type can be used for collection documents', function () {
+    [$user, $workspace] = createSysDocTestUser();
+    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
+
+    $this->actingAs($user)
+        ->put("/collections/{$collection->id}/documents/identity", ['content' => 'Identity override'])
+        ->assertRedirect();
+
+    $doc = CollectionSystemDocument::where('collection_id', $collection->id)->where('type', 'identity')->first();
+    expect($doc)->not->toBeNull();
+    expect($doc->content)->toBe('Identity override');
 });
 
 test('validation rejects empty content', function () {

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\SystemDocumentType;
 use App\Models\Collection;
 use App\Models\SystemDocument;
 
@@ -15,37 +16,37 @@ class ContextMergingService
         $workspace = $collection->workspace;
         $workspaceDocs = SystemDocument::withoutGlobalScopes()
             ->where('workspace_id', $workspace->id)
+            ->where('content', '!=', '')
             ->get()
             ->keyBy('type');
 
         $collectionDocs = $collection->collectionSystemDocuments()
+            ->where('content', '!=', '')
             ->get()
             ->keyBy('type');
 
         $sections = [];
 
-        // 1. Identity (workspace only)
-        $identity = $workspaceDocs->get('identity');
-        if ($identity && $identity->content) {
-            $sections[] = "# IDENTITY\n\n".$identity->content;
+        // Iterate all workspace system documents
+        foreach ($workspaceDocs as $type => $doc) {
+            $label = strtoupper(SystemDocumentType::label($type));
+            $parts = [$doc->content];
+
+            // Append collection override if exists
+            $collectionDoc = $collectionDocs->get($type);
+            if ($collectionDoc) {
+                $parts[] = $collectionDoc->content;
+            }
+
+            $sections[] = "# {$label}\n\n".implode("\n\n", $parts);
         }
 
-        // 2. Instructions (workspace + collection override)
-        $instructions = $this->mergeSection('INSTRUCTIONS', $workspaceDocs->get('instructions'), $collectionDocs->get('instructions'));
-        if ($instructions) {
-            $sections[] = $instructions;
-        }
-
-        // 3. Context (workspace + collection override)
-        $context = $this->mergeSection('CONTEXT', $workspaceDocs->get('context'), $collectionDocs->get('context'));
-        if ($context) {
-            $sections[] = $context;
-        }
-
-        // 4. Memory (workspace + collection override)
-        $memory = $this->mergeSection('MEMORY', $workspaceDocs->get('memory'), $collectionDocs->get('memory'));
-        if ($memory) {
-            $sections[] = $memory;
+        // Add collection-only docs (not in workspace)
+        foreach ($collectionDocs as $type => $doc) {
+            if (! $workspaceDocs->has($type)) {
+                $label = strtoupper(SystemDocumentType::label($type));
+                $sections[] = "# {$label}\n\n".$doc->content;
+            }
         }
 
         // 5. Available Skills
@@ -77,24 +78,5 @@ class ContextMergingService
         }
 
         return implode("\n\n---\n\n", $sections);
-    }
-
-    private function mergeSection(string $title, ?object $workspaceDoc, ?object $collectionDoc): ?string
-    {
-        $parts = [];
-
-        if ($workspaceDoc && $workspaceDoc->content) {
-            $parts[] = $workspaceDoc->content;
-        }
-
-        if ($collectionDoc && $collectionDoc->content) {
-            $parts[] = $collectionDoc->content;
-        }
-
-        if (empty($parts)) {
-            return null;
-        }
-
-        return "# {$title}\n\n".implode("\n\n", $parts);
     }
 }

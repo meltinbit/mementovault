@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SystemDocumentType;
 use App\Http\Requests\UpdateSystemDocumentRequest;
 use App\Models\SystemDocument;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +14,16 @@ class SystemDocumentController extends Controller
 {
     public function show(Request $request, string $type): Response
     {
-        $document = SystemDocument::where('type', $type)->firstOrFail();
+        $document = SystemDocument::where('type', $type)->first();
+
+        // Create on first visit if doesn't exist
+        if (! $document) {
+            $document = SystemDocument::create([
+                'type' => $type,
+                'content' => '',
+                'version' => 1,
+            ]);
+        }
 
         $revisions = $document->revisions()
             ->latest('version')
@@ -27,7 +37,7 @@ class SystemDocumentController extends Controller
                 'created_at' => $revision->created_at->diffForHumans(),
             ]);
 
-        return Inertia::render('workspace/'.$type, [
+        return Inertia::render('workspace/show', [
             'document' => [
                 'id' => $document->id,
                 'type' => $document->type,
@@ -36,6 +46,13 @@ class SystemDocumentController extends Controller
                 'updated_at' => $document->updated_at->diffForHumans(),
             ],
             'revisions' => $revisions,
+            'meta' => [
+                'label' => SystemDocumentType::label($type),
+                'description' => SystemDocumentType::description($type),
+                'guidance' => SystemDocumentType::guidance($type),
+                'icon' => SystemDocumentType::icon($type),
+                'isCore' => SystemDocumentType::isCore($type),
+            ],
         ]);
     }
 
@@ -48,5 +65,27 @@ class SystemDocumentController extends Controller
         ]);
 
         return back();
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'type' => ['required', 'string', 'max:50', 'regex:/^[a-z][a-z0-9_-]*$/'],
+            'label' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $type = $validated['type'];
+
+        if (SystemDocument::where('type', $type)->exists()) {
+            return to_route('workspace.show', $type);
+        }
+
+        SystemDocument::create([
+            'type' => $type,
+            'content' => '',
+            'version' => 1,
+        ]);
+
+        return to_route('workspace.show', $type);
     }
 }

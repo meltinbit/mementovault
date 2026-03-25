@@ -1,108 +1,101 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import {
-    BookOpen,
-    BookText,
-    Brain,
-    Code,
-    Database,
-    FileText,
-    FolderOpen,
-    Image,
-    LayoutGrid,
-    Settings,
-    Tag,
-    User,
-    Zap,
-} from 'lucide-react';
-import AppLogo from './app-logo';
 import { GlobalSearch } from '@/components/global-search';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { type NavItem, type SharedData } from '@/types';
+import { Link, usePage, router } from '@inertiajs/react';
+import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Settings, Tag, Target, User, Zap } from 'lucide-react';
+import { useState } from 'react';
+import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        url: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const workspaceNavItems: NavItem[] = [
-    {
-        title: 'Identity',
-        url: '/workspace/identity',
-        icon: User,
-    },
-    {
-        title: 'Instructions',
-        url: '/workspace/instructions',
-        icon: BookText,
-    },
-    {
-        title: 'Context',
-        url: '/workspace/context',
-        icon: Brain,
-    },
-    {
-        title: 'Memory',
-        url: '/workspace/memory',
-        icon: Database,
-    },
+    { title: 'Dashboard', url: '/dashboard', icon: LayoutGrid },
 ];
 
 const contentNavItems: NavItem[] = [
-    {
-        title: 'Documents',
-        url: '/documents',
-        icon: FileText,
-    },
-    {
-        title: 'Skills',
-        url: '/skills',
-        icon: Zap,
-    },
-    {
-        title: 'Snippets',
-        url: '/snippets',
-        icon: Code,
-    },
-    {
-        title: 'Assets',
-        url: '/assets',
-        icon: Image,
-    },
+    { title: 'Documents', url: '/documents', icon: FileText },
+    { title: 'Skills', url: '/skills', icon: Zap },
+    { title: 'Snippets', url: '/snippets', icon: Code },
+    { title: 'Assets', url: '/assets', icon: Image },
 ];
 
 const organizationNavItems: NavItem[] = [
-    {
-        title: 'Collections',
-        url: '/collections',
-        icon: FolderOpen,
-    },
-    {
-        title: 'Tags',
-        url: '/tags',
-        icon: Tag,
-    },
+    { title: 'Collections', url: '/collections', icon: FolderOpen },
+    { title: 'Tags', url: '/tags', icon: Tag },
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Docs',
-        url: '/docs',
-        icon: BookOpen,
-    },
-    {
-        title: 'Settings',
-        url: '/settings',
-        icon: Settings,
-    },
+    { title: 'Docs', url: '/docs', icon: BookOpen },
+    { title: 'Settings', url: '/settings', icon: Settings },
 ];
 
+// Type icon/label registry for known types
+const typeIcons: Record<string, LucideIcon> = {
+    identity: User, instructions: BookText, context: Brain, memory: Database,
+    soul: Heart, services: Briefcase, portfolio: FolderOpen, products: Package, icp: Target,
+};
+
+const typeLabels: Record<string, string> = {
+    identity: 'Identity', instructions: 'Instructions', context: 'Context', memory: 'Memory',
+    soul: 'Soul', services: 'Services', portfolio: 'Portfolio', products: 'Products', icp: 'ICP',
+};
+
+const typeDescriptions: Record<string, string> = {
+    soul: 'Mission, vision, core values, brand personality',
+    services: 'What you offer and how you deliver it',
+    portfolio: 'Past work, case studies, results',
+    products: 'Products, features, pricing, positioning',
+    icp: 'Ideal Customer Profile, pain points, buying behavior',
+};
+
+const coreTypes = ['identity', 'instructions', 'context', 'memory'];
+const builtinOptionalTypes = ['soul', 'services', 'portfolio', 'products', 'icp'];
+
 export function AppSidebar() {
+    const { workspaceSystemDocs } = usePage<SharedData>().props;
+    const [showAddDoc, setShowAddDoc] = useState(false);
+    const [customType, setCustomType] = useState('');
+
+    // Build workspace nav: core types always, then extras
+    const existingTypes = workspaceSystemDocs || [];
+    const extraTypes = existingTypes.filter((t: string) => !coreTypes.includes(t));
+
+    const workspaceNavItems: NavItem[] = [
+        ...coreTypes.map((type) => ({
+            title: typeLabels[type] || type,
+            url: `/workspace/${type}`,
+            icon: typeIcons[type] || FileText,
+        })),
+        ...extraTypes.map((type: string) => ({
+            title: typeLabels[type] || type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
+            url: `/workspace/${type}`,
+            icon: typeIcons[type] || FileText,
+        })),
+    ];
+
+    // Available built-in types not yet created
+    const availableBuiltins = builtinOptionalTypes.filter((t) => !existingTypes.includes(t));
+
+    const addDocument = (type: string) => {
+        router.post('/workspace', { type }, {
+            onSuccess: () => {
+                setShowAddDoc(false);
+                setCustomType('');
+            },
+        });
+    };
+
+    const handleCustomSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const slug = customType.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        if (slug) addDocument(slug);
+    };
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -123,6 +116,59 @@ export function AppSidebar() {
                 </div>
                 <NavMain items={mainNavItems} />
                 <NavMain items={workspaceNavItems} label="Workspace" />
+
+                {/* Add workspace document button */}
+                <SidebarGroup className="px-2 py-0">
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <Dialog open={showAddDoc} onOpenChange={setShowAddDoc}>
+                                <DialogTrigger asChild>
+                                    <SidebarMenuButton className="text-muted-foreground">
+                                        <Plus className="h-4 w-4" />
+                                        <span>Add document</span>
+                                    </SidebarMenuButton>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-sm">
+                                    <DialogHeader>
+                                        <DialogTitle>Add Workspace Document</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="space-y-1">
+                                        {availableBuiltins.map((type) => {
+                                            const Icon = typeIcons[type] || FileText;
+                                            return (
+                                                <button
+                                                    key={type}
+                                                    type="button"
+                                                    onClick={() => addDocument(type)}
+                                                    className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm transition-colors hover:bg-accent"
+                                                >
+                                                    <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                                    <div>
+                                                        <p className="font-medium">{typeLabels[type]}</p>
+                                                        <p className="text-xs text-muted-foreground">{typeDescriptions[type]}</p>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                        {availableBuiltins.length > 0 && <Separator className="my-2" />}
+                                        <form onSubmit={handleCustomSubmit} className="flex gap-2 px-1">
+                                            <Input
+                                                value={customType}
+                                                onChange={(e) => setCustomType(e.target.value)}
+                                                placeholder="custom-type"
+                                                className="h-8 text-sm"
+                                            />
+                                            <Button size="sm" type="submit" className="h-8 shrink-0">
+                                                Add
+                                            </Button>
+                                        </form>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
+
                 <NavMain items={contentNavItems} label="Content" />
                 <NavMain items={organizationNavItems} label="Organization" />
             </SidebarContent>

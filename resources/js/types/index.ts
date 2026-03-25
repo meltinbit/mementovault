@@ -30,11 +30,19 @@ export interface Workspace {
 
 export interface SystemDocumentData {
     id: number;
-    type: 'identity' | 'instructions' | 'context' | 'memory';
+    type: string;
     content: string;
     version: number;
     created_at: string;
     updated_at: string;
+}
+
+export interface SystemDocumentMeta {
+    label: string;
+    description: string;
+    guidance: string;
+    icon: string;
+    isCore: boolean;
 }
 
 export interface SystemDocumentRevisionData {
@@ -132,7 +140,7 @@ export interface CollectionData {
 
 export interface CollectionSystemDocumentData {
     id: number;
-    type: 'instructions' | 'context' | 'memory';
+    type: string;
     content: string;
     version: number;
     updated_at: string;
@@ -169,6 +177,7 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     workspace: Workspace | null;
+    workspaceSystemDocs: string[];
     [key: string]: unknown;
 }
 

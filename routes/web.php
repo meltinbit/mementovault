@@ -34,12 +34,15 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('workspace/{type}', [SystemDocumentController::class, 'show'])
-        ->where('type', 'identity|instructions|context|memory')
+        ->where('type', '[a-z][a-z0-9_-]*')
         ->name('workspace.show');
 
     Route::put('workspace/{type}', [SystemDocumentController::class, 'update'])
-        ->where('type', 'identity|instructions|context|memory')
+        ->where('type', '[a-z][a-z0-9_-]*')
         ->name('workspace.update');
+
+    Route::post('workspace', [SystemDocumentController::class, 'store'])
+        ->name('workspace.store');
 
     Route::resource('tags', TagController::class)->only(['index', 'store', 'destroy']);
     Route::resource('documents', DocumentController::class);
@@ -56,7 +59,7 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::post('collections/{collection}/items', [CollectionItemController::class, 'store'])->name('collections.items.store');
     Route::delete('collections/{collection}/items', [CollectionItemController::class, 'destroy'])->name('collections.items.destroy');
     Route::put('collections/{collection}/documents/{type}', [CollectionSystemDocumentController::class, 'update'])
-        ->where('type', 'instructions|context|memory')
+        ->where('type', '[a-z][a-z0-9_-]*')
         ->name('collections.system-documents.update');
     Route::post('collections/{collection}/tokens', [CollectionTokenController::class, 'store'])->name('collections.tokens.store');
     Route::delete('collections/{collection}/tokens/{token}', [CollectionTokenController::class, 'destroy'])->name('collections.tokens.destroy');

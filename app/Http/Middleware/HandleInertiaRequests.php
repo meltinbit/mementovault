@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SystemDocument;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -50,6 +51,10 @@ class HandleInertiaRequests extends Middleware
                 'name' => $request->user()->workspace->name,
                 'slug' => $request->user()->workspace->slug,
             ] : null,
+            'workspaceSystemDocs' => $request->user()?->workspace ? SystemDocument::withoutGlobalScopes()
+                ->where('workspace_id', $request->user()->workspace->id)
+                ->pluck('type')
+                ->toArray() : [],
         ]);
     }
 }
