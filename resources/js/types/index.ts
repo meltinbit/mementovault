@@ -114,6 +114,37 @@ export interface PaginatedResponse<T> {
     links: Array<{ url: string | null; label: string; active: boolean }>;
 }
 
+export interface CollectionData {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    type: string;
+    color: string;
+    is_active: boolean;
+    updated_at: string;
+    documents_count?: number;
+    skills_count?: number;
+    snippets_count?: number;
+    assets_count?: number;
+}
+
+export interface CollectionSystemDocumentData {
+    id: number;
+    type: 'instructions' | 'context' | 'memory';
+    content: string;
+    version: number;
+    updated_at: string;
+}
+
+export interface ApiTokenData {
+    id: number;
+    name: string;
+    last_used_at: string | null;
+    expires_at: string | null;
+    created_at: string;
+}
+
 export interface DashboardStats {
     documents: number;
     skills: number;

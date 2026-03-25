@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CollectionItemController;
+use App\Http\Controllers\CollectionSystemDocumentController;
+use App\Http\Controllers\CollectionTokenController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\SkillController;
@@ -31,6 +35,15 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::resource('snippets', SnippetController::class);
     Route::resource('assets', AssetController::class);
     Route::get('assets/{asset}/download', [AssetController::class, 'download'])->name('assets.download');
+
+    Route::resource('collections', CollectionController::class);
+    Route::post('collections/{collection}/items', [CollectionItemController::class, 'store'])->name('collections.items.store');
+    Route::delete('collections/{collection}/items', [CollectionItemController::class, 'destroy'])->name('collections.items.destroy');
+    Route::put('collections/{collection}/documents/{type}', [CollectionSystemDocumentController::class, 'update'])
+        ->where('type', 'instructions|context|memory')
+        ->name('collections.system-documents.update');
+    Route::post('collections/{collection}/tokens', [CollectionTokenController::class, 'store'])->name('collections.tokens.store');
+    Route::delete('collections/{collection}/tokens/{token}', [CollectionTokenController::class, 'destroy'])->name('collections.tokens.destroy');
 });
 
 require __DIR__.'/settings.php';
