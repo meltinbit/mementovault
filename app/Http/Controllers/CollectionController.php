@@ -79,11 +79,9 @@ class CollectionController extends Controller
         ]);
     }
 
-    public function edit(Collection $collection): Response
+    public function edit(Collection $collection): RedirectResponse
     {
-        return Inertia::render('collections/edit', [
-            'collection' => $collection,
-        ]);
+        return to_route('collections.show', $collection);
     }
 
     public function update(UpdateCollectionRequest $request, Collection $collection): RedirectResponse

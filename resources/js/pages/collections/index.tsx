@@ -67,7 +67,7 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                         </div>
                                         <div className="flex gap-1">
                                             <Button variant="ghost" size="sm" asChild className="h-7 w-7 p-0">
-                                                <Link href={route('collections.edit', col.id)}>
+                                                <Link href={route('collections.show', col.id)}>
                                                     <Pencil className="h-3 w-3" />
                                                 </Link>
                                             </Button>

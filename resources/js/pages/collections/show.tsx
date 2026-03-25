@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
@@ -7,10 +7,17 @@ import HeadingSmall from '@/components/heading-small';
 import { MarkdownEditor } from '@/components/markdown-editor';
 import { TokenManager } from '@/components/token-manager';
 import { CollectionItemPicker } from '@/components/collection-item-picker';
+import { DeleteConfirmation } from '@/components/delete-confirmation';
+import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import {
     type BreadcrumbItem,
     type CollectionData,
@@ -21,7 +28,7 @@ import {
     type SnippetData,
     type AssetData,
 } from '@/types';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Trash2 } from 'lucide-react';
 
 interface AvailableItem {
     id: number;
@@ -92,6 +99,8 @@ function SystemDocSection({
     );
 }
 
+const colorPalette = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#14b8a6', '#f97316'];
+
 export default function CollectionShow({
     collection,
     systemDocuments,
@@ -108,6 +117,8 @@ export default function CollectionShow({
     newToken,
 }: Props) {
     const [copied, setCopied] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Collections', href: '/collections' },
@@ -122,6 +133,19 @@ export default function CollectionShow({
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const detailsForm = useForm({
+        name: collection.name,
+        description: collection.description || '',
+        type: collection.type,
+        color: collection.color,
+        is_active: collection.is_active,
+    });
+
+    const submitDetails: FormEventHandler = (e) => {
+        e.preventDefault();
+        detailsForm.put(route('collections.update', collection.id));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={collection.name} />
@@ -131,10 +155,71 @@ export default function CollectionShow({
                         <span className="h-4 w-4 rounded-full" style={{ backgroundColor: collection.color }} />
                         <Heading title={collection.name} description={collection.description || undefined} />
                     </div>
-                    <Badge variant="outline" className="capitalize">
-                        {collection.type.replace('_', ' ')}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="capitalize">
+                            {collection.type.replace('_', ' ')}
+                        </Badge>
+                        <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
+                            {showDetails ? 'Hide Details' : 'Edit Details'}
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => setShowDelete(true)} className="gap-1">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                 </div>
+
+                {showDetails && (
+                    <Card>
+                        <CardContent className="p-4">
+                            <form onSubmit={submitDetails} className="space-y-4">
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="name">Name</Label>
+                                        <Input id="name" value={detailsForm.data.name} onChange={(e) => detailsForm.setData('name', e.target.value)} required />
+                                        <InputError message={detailsForm.errors.name} />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label>Type</Label>
+                                        <Select value={detailsForm.data.type} onValueChange={(v) => detailsForm.setData('type', v)}>
+                                            <SelectTrigger><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="software_project">Software Project</SelectItem>
+                                                <SelectItem value="client_project">Client Project</SelectItem>
+                                                <SelectItem value="product_saas">Product / SaaS</SelectItem>
+                                                <SelectItem value="marketing">Marketing</SelectItem>
+                                                <SelectItem value="custom">Custom</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="description">Description</Label>
+                                    <Textarea id="description" value={detailsForm.data.description} onChange={(e) => detailsForm.setData('description', e.target.value)} rows={2} />
+                                </div>
+                                <div className="grid gap-1.5">
+                                    <Label>Color</Label>
+                                    <div className="flex gap-1">
+                                        {colorPalette.map((color) => (
+                                            <button key={color} type="button" onClick={() => detailsForm.setData('color', color)}
+                                                className={`h-6 w-6 rounded-full border-2 transition-transform ${detailsForm.data.color === color ? 'scale-110 border-foreground' : 'border-transparent'}`}
+                                                style={{ backgroundColor: color }} />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Checkbox id="is_active" checked={detailsForm.data.is_active} onCheckedChange={(checked) => detailsForm.setData('is_active', !!checked)} />
+                                    <Label htmlFor="is_active" className="text-sm">Active</Label>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <Button size="sm" disabled={detailsForm.processing}>Save Details</Button>
+                                    <Transition show={detailsForm.recentlySuccessful} enter="transition ease-in-out" enterFrom="opacity-0" leave="transition ease-in-out" leaveTo="opacity-0">
+                                        <p className="text-sm text-neutral-600">Saved</p>
+                                    </Transition>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                )}
 
                 <Card>
                     <CardHeader>
@@ -186,6 +271,14 @@ export default function CollectionShow({
                     />
                 </div>
             </div>
+
+            <DeleteConfirmation
+                open={showDelete}
+                onClose={() => setShowDelete(false)}
+                onConfirm={() => router.delete(route('collections.destroy', collection.id))}
+                title={`Delete "${collection.name}"?`}
+                description="This deletes the collection, system documents, and all API tokens. Content items (documents, skills, etc.) are NOT deleted."
+            />
         </AppLayout>
     );
 }

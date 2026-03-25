@@ -52,12 +52,12 @@ test('can view collection detail page', function () {
         ->assertInertia(fn ($page) => $page->component('collections/show')->has('collection')->has('tokens'));
 });
 
-test('can view edit form', function () {
+test('edit redirects to show', function () {
     [$user, $workspace] = createCollectionTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
-    $this->actingAs($user)->get("/collections/{$collection->id}/edit")->assertOk()
-        ->assertInertia(fn ($page) => $page->component('collections/edit')->has('collection'));
+    $this->actingAs($user)->get("/collections/{$collection->id}/edit")
+        ->assertRedirect("/collections/{$collection->id}");
 });
 
 test('can update a collection', function () {
