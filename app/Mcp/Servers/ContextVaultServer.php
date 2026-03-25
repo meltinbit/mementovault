@@ -2,6 +2,10 @@
 
 namespace App\Mcp\Servers;
 
+use App\Mcp\Tools\AppendMemoryTool;
+use App\Mcp\Tools\CreateDocumentTool;
+use App\Mcp\Tools\CreateSkillTool;
+use App\Mcp\Tools\CreateSnippetTool;
 use App\Mcp\Tools\GetAssetUrlTool;
 use App\Mcp\Tools\GetContextTool;
 use App\Mcp\Tools\GetDocumentTool;
@@ -12,6 +16,10 @@ use App\Mcp\Tools\ListDocumentsTool;
 use App\Mcp\Tools\ListSkillsTool;
 use App\Mcp\Tools\ListSnippetsTool;
 use App\Mcp\Tools\SearchTool;
+use App\Mcp\Tools\UpdateDocumentTool;
+use App\Mcp\Tools\UpdateSkillTool;
+use App\Mcp\Tools\UpdateSnippetTool;
+use App\Mcp\Tools\UpdateSystemDocumentTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Attributes\Name;
@@ -35,5 +43,13 @@ class ContextVaultServer extends Server
         ListAssetsTool::class,
         GetAssetUrlTool::class,
         SearchTool::class,
+        UpdateSystemDocumentTool::class,
+        AppendMemoryTool::class,
+        CreateDocumentTool::class,
+        UpdateDocumentTool::class,
+        CreateSkillTool::class,
+        UpdateSkillTool::class,
+        CreateSnippetTool::class,
+        UpdateSnippetTool::class,
     ];
 }
