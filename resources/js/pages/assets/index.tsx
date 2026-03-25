@@ -62,10 +62,22 @@ export default function AssetsIndex({ assets, filters, tags }: Props) {
                         {assets.data.map((asset) => (
                             <Card key={asset.id}>
                                 <CardContent className="p-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="rounded-md bg-muted p-2 text-muted-foreground">
-                                            <MimeIcon mime={asset.mime_type} />
+                                    {asset.thumbnail_url && (
+                                        <div className="mb-3 overflow-hidden rounded-md bg-muted">
+                                            <img
+                                                src={asset.thumbnail_url}
+                                                alt={asset.name}
+                                                className="h-32 w-full object-cover"
+                                                loading="lazy"
+                                            />
                                         </div>
+                                    )}
+                                    <div className="flex items-start gap-3">
+                                        {!asset.thumbnail_url && (
+                                            <div className="rounded-md bg-muted p-2 text-muted-foreground">
+                                                <MimeIcon mime={asset.mime_type} />
+                                            </div>
+                                        )}
                                         <div className="min-w-0 flex-1">
                                             <Link href={route('assets.edit', asset.id)} className="truncate text-sm font-medium hover:underline">
                                                 {asset.name}

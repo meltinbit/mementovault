@@ -39,8 +39,18 @@ class AssetController extends Controller
             $query->whereHas('tags', fn ($q) => $q->where('tags.id', $tagId));
         }
 
+        $paginated = $query->latest()->paginate(15)->withQueryString();
+
+        $paginated->through(function (Asset $asset) {
+            if (str_starts_with($asset->mime_type, 'image/')) {
+                $asset->thumbnail_url = route('assets.download', $asset->id);
+            }
+
+            return $asset;
+        });
+
         return Inertia::render('assets/index', [
-            'assets' => $query->latest()->paginate(15)->withQueryString(),
+            'assets' => $paginated,
             'filters' => $request->only(['search', 'mime', 'tag']),
             'tags' => Tag::orderBy('name')->get(),
         ]);

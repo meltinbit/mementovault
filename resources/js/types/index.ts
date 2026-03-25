@@ -99,6 +99,7 @@ export interface AssetData {
     updated_at: string;
     tags: TagData[];
     download_url?: string;
+    thumbnail_url?: string;
 }
 
 export interface PaginatedResponse<T> {
