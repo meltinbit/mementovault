@@ -416,19 +416,19 @@ export default function Welcome() {
                             }}
                         />
                         {steps.map((step, index) => (
-                            <div key={step.step} className={`animate-fade-in-up stagger-${index + 1} glass-card group relative rounded-2xl p-8`}>
+                            <div key={step.step} className={`animate-fade-in-up stagger-${index + 1} glass-card group relative rounded-2xl p-10 lg:p-12`}>
                                 {/* Oversized step number */}
                                 <span
-                                    className="pointer-events-none absolute top-4 right-6 text-7xl font-bold leading-none select-none"
+                                    className="pointer-events-none absolute top-6 right-8 text-8xl font-bold leading-none select-none"
                                     style={{ color: 'rgba(99, 102, 241, 0.06)' }}
                                 >
                                     {step.step}
                                 </span>
-                                <div className="icon-glow mb-5 flex size-12 items-center justify-center rounded-xl">
-                                    <step.icon className="size-6" style={{ color: '#6366f1' }} />
+                                <div className="icon-glow mb-6 flex size-14 items-center justify-center rounded-xl">
+                                    <step.icon className="size-7" style={{ color: '#6366f1' }} />
                                 </div>
-                                <h3 className="mb-3 text-lg font-semibold">{step.title}</h3>
-                                <p className="text-base font-light leading-relaxed" style={{ color: '#9999b0' }}>
+                                <h3 className="mb-4 text-xl font-semibold lg:text-2xl">{step.title}</h3>
+                                <p className="text-lg font-light leading-loose" style={{ color: '#9999b0' }}>
                                     {step.description}
                                 </p>
                             </div>
@@ -450,17 +450,17 @@ export default function Welcome() {
                             Built from the ground up for AI context management.
                         </p>
                     </div>
-                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {features.map((feature, index) => (
                             <div
                                 key={feature.title}
-                                className={`animate-fade-in-up stagger-${index + 1} glass-card group rounded-2xl p-7`}
+                                className={`animate-fade-in-up stagger-${index + 1} glass-card group rounded-2xl p-8 lg:p-10`}
                             >
-                                <div className="icon-glow mb-5 flex size-11 items-center justify-center rounded-xl">
-                                    <feature.icon className="size-5" style={{ color: '#6366f1' }} />
+                                <div className="icon-glow mb-6 flex size-12 items-center justify-center rounded-xl">
+                                    <feature.icon className="size-6" style={{ color: '#6366f1' }} />
                                 </div>
-                                <h3 className="mb-2 text-base font-semibold">{feature.title}</h3>
-                                <p className="text-[15px] font-light leading-relaxed" style={{ color: '#9999b0' }}>
+                                <h3 className="mb-3 text-lg font-semibold">{feature.title}</h3>
+                                <p className="text-base font-light leading-loose" style={{ color: '#9999b0' }}>
                                     {feature.description}
                                 </p>
                             </div>
@@ -502,8 +502,8 @@ export default function Welcome() {
                                     >
                                         <useCase.icon className="size-6" style={{ color: '#6366f1' }} />
                                     </div>
-                                    <h3 className="mb-3 text-xl font-semibold">{useCase.role}</h3>
-                                    <p className="text-base font-light leading-relaxed" style={{ color: '#9999b0' }}>
+                                    <h3 className="mb-4 text-2xl font-semibold">{useCase.role}</h3>
+                                    <p className="text-lg font-light leading-loose" style={{ color: '#9999b0' }}>
                                         {useCase.description}
                                     </p>
                                 </div>
