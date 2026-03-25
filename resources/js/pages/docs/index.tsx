@@ -517,13 +517,21 @@ You can create multiple tokens per collection (e.g., one for Claude Desktop, one
                             <section id="creating-documents" className="mb-12">
                                 <Markdown>{`## Creating Documents
 
-1. Navigate to **Documents** in the sidebar
-2. Click **New Document**
-3. Set a **title** and choose a **type**
-4. Write your content in **markdown** (with live preview)
-5. Add **tags** for organization
+**Documents are reference materials that AI retrieves on demand.** They're the knowledge base your AI draws from when it needs deeper context — think of them as the files in a shared drive that a colleague would read before starting work.
 
-Documents support full markdown including headings, lists, code blocks, tables, and links. Use the preview tab to see how your content will render.`}</Markdown>
+**What to put in documents:**
+- **Technical:** API documentation, architecture decisions, database schemas, deployment guides
+- **Copy:** Brand guidelines, tone of voice docs, content templates
+- **Process:** SOPs, workflows, review checklists, onboarding guides
+- **General:** Meeting notes, project briefs, research findings
+
+**How AI uses them:** Documents are NOT sent to AI automatically. They're listed in the collection context so AI *knows they exist*, and AI can retrieve specific documents when relevant using \`get_document\`. This keeps context lean while making deep knowledge available.
+
+**To create a document:**
+1. Go to **Documents** → **New Document**
+2. Set a title, choose a type, and write content in markdown
+3. Add tags for organization
+4. Assign to one or more collections`}</Markdown>
                             </section>
 
                             <section id="writing-effective-skills" className="mb-12">
@@ -545,15 +553,20 @@ A well-written description ensures your skills activate at the right time, not t
                             <section id="using-snippets" className="mb-12">
                                 <Markdown>{`## Using Snippets
 
-Snippets are quick, reusable text blocks. Unlike documents, snippets have **no markdown rendering** — they're raw text that gets inserted as-is.
+**Snippets are short, reusable text blocks that AI can insert as-is.** Think of them as copy-paste templates — they're not markdown documents, they're raw text that gets used exactly as written.
 
-Good uses for snippets:
-- **Email signatures** and sign-offs
-- **Legal disclaimers** or standard notices
-- **Prompt templates** for common tasks
-- **Boilerplate text** you use frequently
+**The difference from documents:**
+- **Documents** = reference material AI reads to understand context (markdown, can be long)
+- **Snippets** = ready-to-use text AI copies verbatim (raw text, typically short)
 
-Snippets are available to AI via the \`list_snippets\` and \`get_snippet\` MCP tools.`}</Markdown>
+**What to put in snippets:**
+- **Email signatures** — your standard sign-off with contact info
+- **Legal disclaimers** — standard notices, terms, copyright text
+- **Prompt templates** — reusable prompts for common tasks
+- **Boilerplate** — standard paragraphs, code snippets, response templates
+- **Quick references** — API keys format, standard headers, common replies
+
+**How AI uses them:** AI can list all available snippets and retrieve any by name via \`get_snippet\`. When it needs to include standard text in a response, it pulls the snippet directly.`}</Markdown>
                             </section>
 
                             <section id="uploading-assets" className="mb-12">
