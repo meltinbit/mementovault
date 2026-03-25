@@ -25,6 +25,42 @@ export interface Workspace {
     id: number;
     name: string;
     slug: string;
+    description?: string | null;
+}
+
+export interface SystemDocumentData {
+    id: number;
+    type: 'identity' | 'instructions' | 'context' | 'memory';
+    content: string;
+    version: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface SystemDocumentRevisionData {
+    id: number;
+    content: string;
+    version: number;
+    created_by: string | null;
+    created_at: string;
+}
+
+export interface DashboardStats {
+    documents: number;
+    skills: number;
+    snippets: number;
+    assets: number;
+    collections: number;
+}
+
+export interface ActivityLogEntry {
+    id: number;
+    action: string;
+    subject_type: string;
+    subject_id: number;
+    description: string | null;
+    created_at: string;
+    user: { name: string } | null;
 }
 
 export interface SharedData {
