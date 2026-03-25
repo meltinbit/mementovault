@@ -7,6 +7,8 @@ use App\Http\Controllers\CollectionSystemDocumentController;
 use App\Http\Controllers\CollectionTokenController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\SnippetController;
 use App\Http\Controllers\SystemDocumentController;
@@ -21,6 +23,11 @@ Route::get('/', function () {
 Route::get('docs', function () {
     return Inertia::render('docs/index');
 })->name('docs');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('onboarding', [OnboardingController::class, 'show'])->name('onboarding.show');
+    Route::post('onboarding', [OnboardingController::class, 'store'])->name('onboarding.store');
+});
 
 Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -39,6 +46,8 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::resource('snippets', SnippetController::class);
     Route::resource('assets', AssetController::class);
     Route::get('assets/{asset}/download', [AssetController::class, 'download'])->name('assets.download');
+
+    Route::get('search', SearchController::class)->name('search');
 
     Route::resource('collections', CollectionController::class);
     Route::post('collections/{collection}/items', [CollectionItemController::class, 'store'])->name('collections.items.store');

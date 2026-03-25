@@ -18,12 +18,14 @@ class Workspace extends Model
         'slug',
         'description',
         'settings',
+        'onboarded_at',
     ];
 
     protected function casts(): array
     {
         return [
             'settings' => 'array',
+            'onboarded_at' => 'datetime',
         ];
     }
 

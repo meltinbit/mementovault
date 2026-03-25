@@ -24,6 +24,11 @@ class WorkspaceMiddleware
 
         app()->instance('current_workspace', $workspace);
 
+        // Redirect to onboarding if not completed (skip if already on onboarding route)
+        if (! $workspace->onboarded_at && ! $request->routeIs('onboarding.*')) {
+            return redirect()->route('onboarding.show');
+        }
+
         return $next($request);
     }
 }

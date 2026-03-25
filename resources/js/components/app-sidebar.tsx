@@ -19,6 +19,7 @@ import {
     Zap,
 } from 'lucide-react';
 import AppLogo from './app-logo';
+import { GlobalSearch } from '@/components/global-search';
 
 const mainNavItems: NavItem[] = [
     {
@@ -111,6 +112,9 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
+                <div className="px-4 py-2">
+                    <GlobalSearch />
+                </div>
                 <NavMain items={mainNavItems} />
                 <NavMain items={workspaceNavItems} label="Workspace" />
                 <NavMain items={contentNavItems} label="Content" />

@@ -18,6 +18,7 @@ class WorkspaceFactory extends Factory
             'slug' => Str::slug($name),
             'description' => fake()->sentence(),
             'settings' => null,
+            'onboarded_at' => now(),
         ];
     }
 }
