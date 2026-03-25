@@ -18,6 +18,10 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::get('docs', function () {
+    return Inertia::render('docs/index');
+})->name('docs');
+
 Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
