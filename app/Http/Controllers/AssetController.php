@@ -6,9 +6,9 @@ use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
 use App\Models\Asset;
 use App\Models\Tag;
+use App\Services\WorkspaceStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AssetController extends Controller
 {
+    public function __construct(
+        private WorkspaceStorageService $storage,
+    ) {}
+
     public function index(Request $request): Response
     {
         $query = Asset::with('tags');
@@ -57,7 +61,7 @@ class AssetController extends Controller
         $uuid = Str::uuid();
         $path = "{$workspace->slug}/assets/{$uuid}/{$file->getClientOriginalName()}";
 
-        Storage::disk('assets')->putFileAs(
+        $this->storage->disk()->putFileAs(
             dirname($path),
             $file,
             basename($path),
@@ -102,7 +106,7 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset): RedirectResponse
     {
-        Storage::disk('assets')->deleteDirectory(dirname($asset->storage_path));
+        $this->storage->disk()->deleteDirectory(dirname($asset->storage_path));
 
         $asset->delete();
 
@@ -111,6 +115,6 @@ class AssetController extends Controller
 
     public function download(Asset $asset): StreamedResponse
     {
-        return Storage::disk('assets')->download($asset->storage_path, $asset->original_filename);
+        return $this->storage->disk()->download($asset->storage_path, $asset->original_filename);
     }
 }

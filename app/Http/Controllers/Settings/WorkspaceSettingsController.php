@@ -14,6 +14,7 @@ class WorkspaceSettingsController extends Controller
     public function edit(Request $request): Response
     {
         $workspace = current_workspace();
+        $storageSettings = $workspace->settings['storage'] ?? null;
 
         return Inertia::render('settings/workspace', [
             'workspace' => [
@@ -22,6 +23,16 @@ class WorkspaceSettingsController extends Controller
                 'slug' => $workspace->slug,
                 'description' => $workspace->description,
             ],
+            'storageSettings' => $storageSettings ? [
+                'driver' => $storageSettings['driver'] ?? 'local',
+                'key' => $storageSettings['key'] ?? '',
+                'secret' => $storageSettings['secret'] ? '••••••••' : '',
+                'region' => $storageSettings['region'] ?? 'auto',
+                'bucket' => $storageSettings['bucket'] ?? '',
+                'endpoint' => $storageSettings['endpoint'] ?? '',
+                'url' => $storageSettings['url'] ?? '',
+                'use_path_style_endpoint' => $storageSettings['use_path_style_endpoint'] ?? true,
+            ] : null,
         ]);
     }
 
@@ -29,7 +40,43 @@ class WorkspaceSettingsController extends Controller
     {
         $workspace = current_workspace();
 
-        $workspace->update($request->validated());
+        $data = $request->safe()->only(['name', 'description']);
+        $workspace->fill($data);
+
+        // Handle storage settings
+        if ($request->has('storage_driver')) {
+            $driver = $request->input('storage_driver');
+
+            if ($driver === 'local') {
+                $settings = $workspace->settings ?? [];
+                unset($settings['storage']);
+                $workspace->settings = $settings ?: null;
+            } else {
+                $settings = $workspace->settings ?? [];
+                $storageConfig = [
+                    'driver' => $driver,
+                    'key' => $request->input('storage_key', ''),
+                    'region' => $request->input('storage_region', 'auto'),
+                    'bucket' => $request->input('storage_bucket', ''),
+                    'endpoint' => $request->input('storage_endpoint', ''),
+                    'url' => $request->input('storage_url', ''),
+                    'use_path_style_endpoint' => (bool) $request->input('storage_use_path_style_endpoint', true),
+                ];
+
+                // Only update secret if a new one is provided (not the masked value)
+                $newSecret = $request->input('storage_secret');
+                if ($newSecret && $newSecret !== '••••••••') {
+                    $storageConfig['secret'] = $newSecret;
+                } else {
+                    $storageConfig['secret'] = $settings['storage']['secret'] ?? '';
+                }
+
+                $settings['storage'] = $storageConfig;
+                $workspace->settings = $settings;
+            }
+        }
+
+        $workspace->save();
 
         return to_route('workspace.settings');
     }
