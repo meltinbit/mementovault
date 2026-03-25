@@ -1,0 +1,90 @@
+import { useCallback, useState, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Upload, X, File as FileIcon, Image as ImageIcon } from 'lucide-react';
+
+interface AssetUploaderProps {
+    onChange: (file: File | null) => void;
+    accept?: string;
+}
+
+export function AssetUploader({ onChange, accept }: AssetUploaderProps) {
+    const [file, setFile] = useState<File | null>(null);
+    const [dragActive, setDragActive] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleFile = useCallback(
+        (f: File) => {
+            setFile(f);
+            onChange(f);
+        },
+        [onChange],
+    );
+
+    const handleDrop = useCallback(
+        (e: React.DragEvent) => {
+            e.preventDefault();
+            setDragActive(false);
+            const f = e.dataTransfer.files[0];
+            if (f) handleFile(f);
+        },
+        [handleFile],
+    );
+
+    const handleRemove = () => {
+        setFile(null);
+        onChange(null);
+        if (inputRef.current) inputRef.current.value = '';
+    };
+
+    const formatSize = (bytes: number) => {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    };
+
+    const isImage = file?.type.startsWith('image/');
+
+    if (file) {
+        return (
+            <div className="flex items-center gap-3 rounded-md border bg-muted/50 p-3">
+                <div className="rounded-md bg-background p-2">
+                    {isImage ? <ImageIcon className="h-5 w-5 text-muted-foreground" /> : <FileIcon className="h-5 w-5 text-muted-foreground" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                    <p className="truncate text-sm font-medium">{file.name}</p>
+                    <p className="text-xs text-muted-foreground">{file.type || 'Unknown'} — {formatSize(file.size)}</p>
+                </div>
+                <Button type="button" variant="ghost" size="sm" onClick={handleRemove} className="h-8 w-8 p-0">
+                    <X className="h-4 w-4" />
+                </Button>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+            onDragLeave={() => setDragActive(false)}
+            onDrop={handleDrop}
+            className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-8 transition-colors ${
+                dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'
+            }`}
+        >
+            <Upload className="h-8 w-8 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">Drag & drop a file here, or</p>
+            <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
+                Browse files
+            </Button>
+            <input
+                ref={inputRef}
+                type="file"
+                accept={accept}
+                className="hidden"
+                onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleFile(f);
+                }}
+            />
+        </div>
+    );
+}

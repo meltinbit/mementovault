@@ -45,6 +45,80 @@ export interface SystemDocumentRevisionData {
     created_at: string;
 }
 
+export type RevisionData = SystemDocumentRevisionData;
+
+export interface TagData {
+    id: number;
+    name: string;
+    slug: string;
+    color: string | null;
+}
+
+export interface DocumentData {
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    type: string;
+    is_active: boolean;
+    version: number;
+    updated_at: string;
+    tags: TagData[];
+}
+
+export interface SkillData {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    content: string;
+    is_active: boolean;
+    version: number;
+    updated_at: string;
+    tags: TagData[];
+}
+
+export interface SnippetData {
+    id: number;
+    name: string;
+    slug: string;
+    content: string;
+    is_active: boolean;
+    updated_at: string;
+    tags: TagData[];
+}
+
+export interface AssetData {
+    id: number;
+    name: string;
+    original_filename: string;
+    mime_type: string;
+    size_bytes: number;
+    description: string | null;
+    is_active: boolean;
+    updated_at: string;
+    tags: TagData[];
+    download_url?: string;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    links: {
+        first: string | null;
+        last: string | null;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+        from: number | null;
+        to: number | null;
+    };
+}
+
 export interface DashboardStats {
     documents: number;
     skills: number;
