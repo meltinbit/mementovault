@@ -454,13 +454,13 @@ export default function Welcome() {
                         {features.map((feature, index) => (
                             <div
                                 key={feature.title}
-                                className={`animate-fade-in-up stagger-${index + 1} glass-card group rounded-2xl p-8 lg:p-10`}
+                                className={`animate-fade-in-up stagger-${index + 1} glass-card group rounded-2xl p-10 lg:p-12`}
                             >
-                                <div className="icon-glow mb-6 flex size-12 items-center justify-center rounded-xl">
-                                    <feature.icon className="size-6" style={{ color: '#6366f1' }} />
+                                <div className="icon-glow mb-7 flex size-14 items-center justify-center rounded-xl">
+                                    <feature.icon className="size-7" style={{ color: '#6366f1' }} />
                                 </div>
-                                <h3 className="mb-3 text-lg font-semibold">{feature.title}</h3>
-                                <p className="text-base font-light leading-loose" style={{ color: '#9999b0' }}>
+                                <h3 className="mb-4 text-xl font-semibold lg:text-2xl">{feature.title}</h3>
+                                <p className="text-lg font-light leading-loose" style={{ color: '#9999b0' }}>
                                     {feature.description}
                                 </p>
                             </div>
