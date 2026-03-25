@@ -870,7 +870,7 @@ GET  /mcp/{collection_slug}          → SSE MCP endpoint (token auth via query 
 
 ```env
 APP_NAME="Context Vault"
-APP_URL=https://vault.yourdomain.com
+APP_URL=https://mementovault.com
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
