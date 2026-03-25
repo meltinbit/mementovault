@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type BreadcrumbItem } from '@/types';
+import { ArrowRight, FolderOpen, FileText, Key } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Collections', href: '/collections' },
@@ -37,6 +38,33 @@ export default function CollectionCreate() {
             <Head title="Create Collection" />
             <div className="space-y-6 p-4">
                 <Heading title="Create Collection" description="Create a new context package with its own MCP endpoint." />
+
+                {/* Steps indicator */}
+                <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <FolderOpen className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm font-medium">Step 1 — Define your collection</p>
+                        <p className="text-xs text-muted-foreground">Name, type, and description</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full border bg-background text-muted-foreground">
+                        <FileText className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm text-muted-foreground">Step 2 — Add content</p>
+                        <p className="text-xs text-muted-foreground">Documents, skills, snippets</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full border bg-background text-muted-foreground">
+                        <Key className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm text-muted-foreground">Step 3 — Connect via MCP</p>
+                        <p className="text-xs text-muted-foreground">Generate token and connect</p>
+                    </div>
+                </div>
 
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
@@ -92,7 +120,9 @@ export default function CollectionCreate() {
                         </Label>
                     </div>
 
-                    <Button disabled={processing}>Create Collection</Button>
+                    <Button disabled={processing} className="gap-2">
+                        Create & Continue <ArrowRight className="h-4 w-4" />
+                    </Button>
                 </form>
             </div>
         </AppLayout>
