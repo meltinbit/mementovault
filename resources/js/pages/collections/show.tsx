@@ -221,32 +221,6 @@ export default function CollectionShow({
                     </Card>
                 )}
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">MCP Endpoint</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex items-center gap-2">
-                            <code className="flex-1 rounded bg-muted px-3 py-2 font-mono text-sm">{mcpEndpoint}</code>
-                            <Button variant="outline" size="sm" onClick={copyEndpoint}>
-                                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                            </Button>
-                        </div>
-                        <p className="mt-2 text-xs text-muted-foreground">Connect via: {mcpEndpoint}?token=YOUR_TOKEN</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">API Tokens</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <TokenManager tokens={tokens} collectionId={collection.id} mcpEndpoint={mcpEndpoint} newToken={newToken} />
-                    </CardContent>
-                </Card>
-
-                <Separator />
-
                 <div className="grid gap-6 lg:grid-cols-[7fr_3fr]">
                     {/* Left column: System Document Overrides */}
                     <div className="space-y-6">
@@ -256,20 +230,46 @@ export default function CollectionShow({
                         <SystemDocSection collectionId={collection.id} type="memory" label="Memory" existing={getSystemDoc('memory')} />
                     </div>
 
-                    {/* Right column: Content picker */}
-                    <div className="space-y-3">
-                        <HeadingSmall title="Content" description="Manage what's included in this collection." />
-                        <CollectionItemPicker
-                            collectionId={collection.id}
-                            documents={documents}
-                            skills={skills}
-                            snippets={snippets}
-                            assets={assets}
-                            availableDocuments={availableDocuments}
-                            availableSkills={availableSkills}
-                            availableSnippets={availableSnippets}
-                            availableAssets={availableAssets}
-                        />
+                    {/* Right column: Content + MCP + Tokens */}
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <HeadingSmall title="Content" description="Manage what's included in this collection." />
+                            <CollectionItemPicker
+                                collectionId={collection.id}
+                                documents={documents}
+                                skills={skills}
+                                snippets={snippets}
+                                assets={assets}
+                                availableDocuments={availableDocuments}
+                                availableSkills={availableSkills}
+                                availableSnippets={availableSnippets}
+                                availableAssets={availableAssets}
+                            />
+                        </div>
+
+                        <Card>
+                            <CardHeader className="p-4 pb-2">
+                                <CardTitle className="text-sm">MCP Endpoint</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-4 pt-0">
+                                <div className="flex items-center gap-2">
+                                    <code className="flex-1 truncate rounded bg-muted px-2.5 py-1.5 font-mono text-xs">{mcpEndpoint}</code>
+                                    <Button variant="outline" size="sm" onClick={copyEndpoint} className="h-7 w-7 shrink-0 p-0">
+                                        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                                    </Button>
+                                </div>
+                                <p className="mt-1.5 text-xs text-muted-foreground">Add ?token=YOUR_TOKEN to connect</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="p-4 pb-2">
+                                <CardTitle className="text-sm">API Tokens</CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-4 pt-0">
+                                <TokenManager tokens={tokens} collectionId={collection.id} mcpEndpoint={mcpEndpoint} newToken={newToken} />
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
