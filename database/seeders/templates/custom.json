@@ -1,0 +1,14 @@
+{
+    "identity": {
+        "content": "# Identity\n\n[Define who you are and how AI should understand you]"
+    },
+    "instructions": {
+        "content": "# Instructions\n\n[Set rules and preferences for how AI should work with you]"
+    },
+    "context": {
+        "content": "# Context\n\n[Provide current context about your projects and priorities]"
+    },
+    "memory": {
+        "content": ""
+    }
+}

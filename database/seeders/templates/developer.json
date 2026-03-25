@@ -1,0 +1,14 @@
+{
+    "identity": {
+        "content": "# Identity\n\n## Who I Am\n[Describe yourself, your role, and your expertise]\n\n## Tech Stack\n[List your primary languages, frameworks, and tools]\n\n## Voice & Tone\n[How should AI communicate with you? Technical, casual, direct?]\n\n## Values\n[What principles guide your work? Clean code, testing, documentation?]"
+    },
+    "instructions": {
+        "content": "# Instructions\n\n## Language\n[Preferred language for responses]\n\n## Code Style\n[Conventions you follow: naming, formatting, patterns]\n\n## Stack Preferences\n[Framework-specific preferences and conventions]\n\n## Things to Avoid\n[Anti-patterns, deprecated approaches, things you dislike]"
+    },
+    "context": {
+        "content": "# Context\n\n## Active Projects\n[List your current projects with brief descriptions]\n\n## Current Priorities\n[What are you focused on right now?]\n\n## Deadlines\n[Any upcoming deadlines or milestones]"
+    },
+    "memory": {
+        "content": ""
+    }
+}

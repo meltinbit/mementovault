@@ -1,0 +1,14 @@
+{
+    "identity": {
+        "content": "# Identity\n\n## Brand\n[Describe your brand or the brand you represent]\n\n## Target Audience\n[Who are you creating content for?]\n\n## Voice & Tone\n[Brand voice guidelines: formal, playful, authoritative?]\n\n## Channels\n[Primary marketing channels: social, email, blog, ads?]"
+    },
+    "instructions": {
+        "content": "# Instructions\n\n## Language\n[Preferred language and regional variations]\n\n## Content Style\n[Writing style preferences: long-form, punchy, storytelling?]\n\n## Formatting Rules\n[How content should be structured: headers, bullet points, CTAs]\n\n## Platform Guidelines\n[Platform-specific rules: character limits, hashtag usage, etc.]"
+    },
+    "context": {
+        "content": "# Context\n\n## Active Campaigns\n[Current marketing campaigns and their goals]\n\n## Editorial Calendar\n[Upcoming content schedule]\n\n## KPIs\n[Key metrics you're tracking]"
+    },
+    "memory": {
+        "content": ""
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "identity": {
+        "content": "# Identity\n\n## Expertise\n[Your areas of specialization]\n\n## Positioning\n[How you differentiate yourself in the market]\n\n## Client Types\n[Types of clients you work with]\n\n## Communication Style\n[How you communicate with clients: formal, advisory, collaborative?]"
+    },
+    "instructions": {
+        "content": "# Instructions\n\n## Language\n[Preferred language for deliverables]\n\n## Deliverable Format\n[How you structure reports, proposals, and other deliverables]\n\n## Client Communication Rules\n[Guidelines for tone and approach in client-facing work]"
+    },
+    "context": {
+        "content": "# Context\n\n## Active Projects\n[Current client engagements]\n\n## Pipeline\n[Upcoming opportunities or proposals]\n\n## Priorities\n[What needs attention right now]"
+    },
+    "memory": {
+        "content": ""
+    }
+}

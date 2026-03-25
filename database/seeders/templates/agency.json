@@ -1,0 +1,14 @@
+{
+    "identity": {
+        "content": "# Identity\n\n## Agency Brand\n[Your agency's brand identity and mission]\n\n## Services\n[Services you offer]\n\n## Team Structure\n[How your team is organized]\n\n## Values\n[Core values that guide your agency]"
+    },
+    "instructions": {
+        "content": "# Instructions\n\n## Language\n[Default language for internal and client work]\n\n## Brand Guidelines\n[Agency-wide brand and style guidelines]\n\n## Quality Standards\n[Standards for deliverables and client work]"
+    },
+    "context": {
+        "content": "# Context\n\n## Active Clients\n[Current client roster and projects]\n\n## Team Capacity\n[Current team availability and workload]"
+    },
+    "memory": {
+        "content": ""
+    }
+}
