@@ -428,7 +428,7 @@ export default function Welcome() {
                                     <step.icon className="size-6" style={{ color: '#6366f1' }} />
                                 </div>
                                 <h3 className="mb-3 text-lg font-semibold">{step.title}</h3>
-                                <p className="text-sm leading-relaxed" style={{ color: '#8888a0' }}>
+                                <p className="text-base font-light leading-relaxed" style={{ color: '#9999b0' }}>
                                     {step.description}
                                 </p>
                             </div>
@@ -459,8 +459,8 @@ export default function Welcome() {
                                 <div className="icon-glow mb-5 flex size-11 items-center justify-center rounded-xl">
                                     <feature.icon className="size-5" style={{ color: '#6366f1' }} />
                                 </div>
-                                <h3 className="mb-2 text-[15px] font-semibold">{feature.title}</h3>
-                                <p className="text-sm leading-relaxed" style={{ color: '#8888a0' }}>
+                                <h3 className="mb-2 text-base font-semibold">{feature.title}</h3>
+                                <p className="text-[15px] font-light leading-relaxed" style={{ color: '#9999b0' }}>
                                     {feature.description}
                                 </p>
                             </div>
@@ -503,7 +503,7 @@ export default function Welcome() {
                                         <useCase.icon className="size-6" style={{ color: '#6366f1' }} />
                                     </div>
                                     <h3 className="mb-3 text-xl font-semibold">{useCase.role}</h3>
-                                    <p className="text-sm leading-relaxed" style={{ color: '#8888a0' }}>
+                                    <p className="text-base font-light leading-relaxed" style={{ color: '#9999b0' }}>
                                         {useCase.description}
                                     </p>
                                 </div>
