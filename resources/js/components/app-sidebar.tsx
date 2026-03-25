@@ -5,6 +5,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
+    BookOpen,
     BookText,
     Brain,
     Code,
@@ -89,6 +90,11 @@ const organizationNavItems: NavItem[] = [
 ];
 
 const footerNavItems: NavItem[] = [
+    {
+        title: 'Docs',
+        url: '/docs',
+        icon: BookOpen,
+    },
     {
         title: 'Settings',
         url: '/settings',
