@@ -247,28 +247,30 @@ export default function CollectionShow({
 
                 <Separator />
 
-                <div className="space-y-6">
-                    <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
-                    <SystemDocSection collectionId={collection.id} type="instructions" label="Instructions" existing={getSystemDoc('instructions')} />
-                    <SystemDocSection collectionId={collection.id} type="context" label="Context" existing={getSystemDoc('context')} />
-                    <SystemDocSection collectionId={collection.id} type="memory" label="Memory" existing={getSystemDoc('memory')} />
-                </div>
+                <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+                    {/* Left column: System Document Overrides */}
+                    <div className="space-y-6">
+                        <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
+                        <SystemDocSection collectionId={collection.id} type="instructions" label="Instructions" existing={getSystemDoc('instructions')} />
+                        <SystemDocSection collectionId={collection.id} type="context" label="Context" existing={getSystemDoc('context')} />
+                        <SystemDocSection collectionId={collection.id} type="memory" label="Memory" existing={getSystemDoc('memory')} />
+                    </div>
 
-                <Separator />
-
-                <div className="space-y-4">
-                    <HeadingSmall title="Content" description="Documents, skills, snippets, and assets in this collection." />
-                    <CollectionItemPicker
-                        collectionId={collection.id}
-                        documents={documents}
-                        skills={skills}
-                        snippets={snippets}
-                        assets={assets}
-                        availableDocuments={availableDocuments}
-                        availableSkills={availableSkills}
-                        availableSnippets={availableSnippets}
-                        availableAssets={availableAssets}
-                    />
+                    {/* Right column: Content picker */}
+                    <div className="space-y-3">
+                        <HeadingSmall title="Content" description="Manage what's included in this collection." />
+                        <CollectionItemPicker
+                            collectionId={collection.id}
+                            documents={documents}
+                            skills={skills}
+                            snippets={snippets}
+                            assets={assets}
+                            availableDocuments={availableDocuments}
+                            availableSkills={availableSkills}
+                            availableSnippets={availableSnippets}
+                            availableAssets={availableAssets}
+                        />
+                    </div>
                 </div>
             </div>
 

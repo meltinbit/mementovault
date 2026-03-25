@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { type DocumentData, type SkillData, type SnippetData, type AssetData } from '@/types';
-import { FileText, Zap, Code, Image, X, Plus } from 'lucide-react';
+import { FileText, Zap, Code, Image, X, Plus, Search, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AvailableItem {
     id: number;
@@ -26,21 +27,36 @@ interface CollectionItemPickerProps {
     availableAssets: AvailableItem[];
 }
 
-function AttachedSection({
-    title,
-    icon: Icon,
-    items,
+const contentTypes = [
+    { key: 'document', label: 'Documents', icon: FileText, color: '#3b82f6', labelKey: 'title' },
+    { key: 'skill', label: 'Skills', icon: Zap, color: '#f59e0b', labelKey: 'name' },
+    { key: 'snippet', label: 'Snippets', icon: Code, color: '#10b981', labelKey: 'name' },
+    { key: 'asset', label: 'Assets', icon: Image, color: '#8b5cf6', labelKey: 'name' },
+] as const;
+
+function ContentSection({
     type,
+    label,
+    icon: Icon,
+    color,
+    labelKey,
+    attached,
+    available,
     collectionId,
-    labelKey = 'name',
 }: {
-    title: string;
-    icon: any;
-    items: any[];
     type: string;
+    label: string;
+    icon: any;
+    color: string;
+    labelKey: string;
+    attached: any[];
+    available: AvailableItem[];
     collectionId: number;
-    labelKey?: string;
 }) {
+    const [expanded, setExpanded] = useState(false);
+    const [selected, setSelected] = useState<number[]>([]);
+    const [search, setSearch] = useState('');
+
     const detach = (id: number) => {
         router.delete(route('collections.items.destroy', collectionId), {
             data: { items: [{ type, id }] },
@@ -48,106 +64,149 @@ function AttachedSection({
         });
     };
 
-    return (
-        <div>
-            <div className="mb-2 flex items-center gap-2 text-sm font-medium">
-                <Icon className="h-4 w-4 text-muted-foreground" /> {title} ({items.length})
-            </div>
-            {items.length === 0 ? (
-                <p className="text-xs text-muted-foreground">None attached</p>
-            ) : (
-                <div className="flex flex-wrap gap-1">
-                    {items.map((item) => (
-                        <Badge key={item.id} variant="secondary" className="gap-1 pr-1">
-                            {item[labelKey] || item.title || item.name}
-                            <button type="button" onClick={() => detach(item.id)} className="ml-0.5 rounded-full p-0.5 hover:bg-black/10">
-                                <X className="h-3 w-3" />
-                            </button>
-                        </Badge>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-}
-
-function AddSection({
-    title,
-    items,
-    type,
-    collectionId,
-    labelKey = 'name',
-}: {
-    title: string;
-    items: AvailableItem[];
-    type: string;
-    collectionId: number;
-    labelKey?: string;
-}) {
-    const [selected, setSelected] = useState<number[]>([]);
-
     const attach = () => {
         if (selected.length === 0) return;
         router.post(
             route('collections.items.store', collectionId),
-            {
-                items: selected.map((id) => ({ type, id })),
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => setSelected([]),
-            },
+            { items: selected.map((id) => ({ type, id })) },
+            { preserveScroll: true, onSuccess: () => { setSelected([]); setSearch(''); } },
         );
     };
 
-    if (items.length === 0) return null;
+    const filteredAvailable = available.filter((item) => {
+        const name = ((item as any)[labelKey] || item.title || item.name || '').toLowerCase();
+        return name.includes(search.toLowerCase());
+    });
 
     return (
-        <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">Add {title}</p>
-            <div className="max-h-32 space-y-1 overflow-y-auto">
-                {items.map((item) => (
-                    <label key={item.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-muted">
-                        <Checkbox
-                            checked={selected.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                                setSelected(checked ? [...selected, item.id] : selected.filter((id) => id !== item.id));
-                            }}
-                        />
-                        {(item as any)[labelKey] || item.title || item.name}
-                    </label>
-                ))}
-            </div>
-            {selected.length > 0 && (
-                <Button size="sm" onClick={attach} className="gap-1">
-                    <Plus className="h-3 w-3" /> Add {selected.length} {title.toLowerCase()}
-                </Button>
+        <Card className="overflow-hidden">
+            <CardHeader className="p-0">
+                <button
+                    type="button"
+                    onClick={() => setExpanded(!expanded)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-accent/50"
+                >
+                    <div className="flex items-center gap-2.5">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-md" style={{ backgroundColor: color + '18' }}>
+                            <Icon className="h-3.5 w-3.5" style={{ color }} />
+                        </div>
+                        <CardTitle className="text-sm font-medium">{label}</CardTitle>
+                        <span
+                            className="flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold"
+                            style={{ backgroundColor: attached.length > 0 ? color + '20' : undefined, color: attached.length > 0 ? color : undefined }}
+                        >
+                            {attached.length}
+                        </span>
+                    </div>
+                    {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                </button>
+            </CardHeader>
+
+            {expanded && (
+                <CardContent className="border-t p-0">
+                    {/* Attached items */}
+                    {attached.length > 0 && (
+                        <div className="border-b px-4 py-3">
+                            <div className="space-y-1">
+                                {attached.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="group flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors hover:bg-muted"
+                                    >
+                                        <span className="truncate">{(item as any)[labelKey] || item.title || item.name}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => detach(item.id)}
+                                            className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                        >
+                                            <X className="h-3.5 w-3.5" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Add items */}
+                    {available.length > 0 ? (
+                        <div className="px-4 py-3">
+                            <div className="relative mb-2">
+                                <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder={`Add ${label.toLowerCase()}...`}
+                                    className="h-8 pl-7 text-xs"
+                                />
+                            </div>
+                            <div className="max-h-36 space-y-0.5 overflow-y-auto">
+                                {filteredAvailable.map((item) => (
+                                    <label
+                                        key={item.id}
+                                        className="flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors hover:bg-muted"
+                                    >
+                                        <Checkbox
+                                            checked={selected.includes(item.id)}
+                                            onCheckedChange={(checked) => {
+                                                setSelected(checked ? [...selected, item.id] : selected.filter((id) => id !== item.id));
+                                            }}
+                                        />
+                                        <span className="truncate">{(item as any)[labelKey] || item.title || item.name}</span>
+                                    </label>
+                                ))}
+                                {filteredAvailable.length === 0 && (
+                                    <p className="py-2 text-center text-xs text-muted-foreground">No matches</p>
+                                )}
+                            </div>
+                            {selected.length > 0 && (
+                                <Button size="sm" onClick={attach} className="mt-2 h-7 w-full gap-1 text-xs">
+                                    <Plus className="h-3 w-3" /> Add {selected.length} {label.toLowerCase()}
+                                </Button>
+                            )}
+                        </div>
+                    ) : attached.length === 0 ? (
+                        <div className="px-4 py-6 text-center">
+                            <p className="text-xs text-muted-foreground">
+                                No {label.toLowerCase()} in your workspace yet.
+                            </p>
+                        </div>
+                    ) : null}
+                </CardContent>
             )}
-        </div>
+        </Card>
     );
 }
 
 export function CollectionItemPicker(props: CollectionItemPickerProps) {
+    const dataMap = {
+        document: { attached: props.documents, available: props.availableDocuments },
+        skill: { attached: props.skills, available: props.availableSkills },
+        snippet: { attached: props.snippets, available: props.availableSnippets },
+        asset: { attached: props.assets, available: props.availableAssets },
+    };
+
+    const totalAttached = props.documents.length + props.skills.length + props.snippets.length + props.assets.length;
+
     return (
-        <div className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-4">
-                    <AttachedSection title="Documents" icon={FileText} items={props.documents} type="document" collectionId={props.collectionId} labelKey="title" />
-                    <AddSection title="Documents" items={props.availableDocuments} type="document" collectionId={props.collectionId} labelKey="title" />
-                </div>
-                <div className="space-y-4">
-                    <AttachedSection title="Skills" icon={Zap} items={props.skills} type="skill" collectionId={props.collectionId} />
-                    <AddSection title="Skills" items={props.availableSkills} type="skill" collectionId={props.collectionId} />
-                </div>
-                <div className="space-y-4">
-                    <AttachedSection title="Snippets" icon={Code} items={props.snippets} type="snippet" collectionId={props.collectionId} />
-                    <AddSection title="Snippets" items={props.availableSnippets} type="snippet" collectionId={props.collectionId} />
-                </div>
-                <div className="space-y-4">
-                    <AttachedSection title="Assets" icon={Image} items={props.assets} type="asset" collectionId={props.collectionId} />
-                    <AddSection title="Assets" items={props.availableAssets} type="asset" collectionId={props.collectionId} />
-                </div>
+        <div className="space-y-2">
+            <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground">
+                    {totalAttached} item{totalAttached !== 1 ? 's' : ''} in this collection
+                </p>
             </div>
+            {contentTypes.map((ct) => (
+                <ContentSection
+                    key={ct.key}
+                    type={ct.key}
+                    label={ct.label}
+                    icon={ct.icon}
+                    color={ct.color}
+                    labelKey={ct.labelKey}
+                    attached={dataMap[ct.key].attached}
+                    available={dataMap[ct.key].available}
+                    collectionId={props.collectionId}
+                />
+            ))}
         </div>
     );
 }
