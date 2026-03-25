@@ -84,19 +84,19 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
                     </div>
                 )}
 
-                {snippets.meta.last_page > 1 && (
+                {snippets.last_page > 1 && (
                     <div className="flex items-center justify-center gap-2">
-                        {snippets.links.prev && (
+                        {snippets.prev_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={snippets.links.prev}>Previous</Link>
+                                <Link href={snippets.prev_page_url}>Previous</Link>
                             </Button>
                         )}
                         <span className="text-sm text-muted-foreground">
-                            Page {snippets.meta.current_page} of {snippets.meta.last_page}
+                            Page {snippets.current_page} of {snippets.last_page}
                         </span>
-                        {snippets.links.next && (
+                        {snippets.next_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={snippets.links.next}>Next</Link>
+                                <Link href={snippets.next_page_url}>Next</Link>
                             </Button>
                         )}
                     </div>

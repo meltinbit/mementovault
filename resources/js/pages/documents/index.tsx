@@ -102,19 +102,19 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
                     </div>
                 )}
 
-                {documents.meta.last_page > 1 && (
+                {documents.last_page > 1 && (
                     <div className="flex items-center justify-center gap-2">
-                        {documents.links.prev && (
+                        {documents.prev_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={documents.links.prev}>Previous</Link>
+                                <Link href={documents.prev_page_url}>Previous</Link>
                             </Button>
                         )}
                         <span className="text-sm text-muted-foreground">
-                            Page {documents.meta.current_page} of {documents.meta.last_page}
+                            Page {documents.current_page} of {documents.last_page}
                         </span>
-                        {documents.links.next && (
+                        {documents.next_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={documents.links.next}>Next</Link>
+                                <Link href={documents.next_page_url}>Next</Link>
                             </Button>
                         )}
                     </div>

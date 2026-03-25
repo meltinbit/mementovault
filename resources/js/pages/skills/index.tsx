@@ -92,19 +92,19 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
                     </div>
                 )}
 
-                {skills.meta.last_page > 1 && (
+                {skills.last_page > 1 && (
                     <div className="flex items-center justify-center gap-2">
-                        {skills.links.prev && (
+                        {skills.prev_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={skills.links.prev}>Previous</Link>
+                                <Link href={skills.prev_page_url}>Previous</Link>
                             </Button>
                         )}
                         <span className="text-sm text-muted-foreground">
-                            Page {skills.meta.current_page} of {skills.meta.last_page}
+                            Page {skills.current_page} of {skills.last_page}
                         </span>
-                        {skills.links.next && (
+                        {skills.next_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={skills.links.next}>Next</Link>
+                                <Link href={skills.next_page_url}>Next</Link>
                             </Button>
                         )}
                     </div>

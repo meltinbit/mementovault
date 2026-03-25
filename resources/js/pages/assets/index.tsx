@@ -111,19 +111,19 @@ export default function AssetsIndex({ assets, filters, tags }: Props) {
                     </div>
                 )}
 
-                {assets.meta.last_page > 1 && (
+                {assets.last_page > 1 && (
                     <div className="flex items-center justify-center gap-2">
-                        {assets.links.prev && (
+                        {assets.prev_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={assets.links.prev}>Previous</Link>
+                                <Link href={assets.prev_page_url}>Previous</Link>
                             </Button>
                         )}
                         <span className="text-sm text-muted-foreground">
-                            Page {assets.meta.current_page} of {assets.meta.last_page}
+                            Page {assets.current_page} of {assets.last_page}
                         </span>
-                        {assets.links.next && (
+                        {assets.next_page_url && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={assets.links.next}>Next</Link>
+                                <Link href={assets.next_page_url}>Next</Link>
                             </Button>
                         )}
                     </div>
