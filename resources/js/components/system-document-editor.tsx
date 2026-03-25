@@ -1,12 +1,14 @@
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import { MarkdownEditor } from '@/components/markdown-editor';
 import { RevisionHistory } from '@/components/revision-history';
 import Heading from '@/components/heading';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Lightbulb, X } from 'lucide-react';
 import { type BreadcrumbItem, type SystemDocumentData, type SystemDocumentRevisionData } from '@/types';
 
 interface SystemDocumentEditorProps {
@@ -14,10 +16,12 @@ interface SystemDocumentEditorProps {
     revisions: SystemDocumentRevisionData[];
     title: string;
     description: string;
+    guidance?: string;
     breadcrumbs: BreadcrumbItem[];
 }
 
-export function SystemDocumentEditor({ document, revisions, title, description, breadcrumbs }: SystemDocumentEditorProps) {
+export function SystemDocumentEditor({ document, revisions, title, description, guidance, breadcrumbs }: SystemDocumentEditorProps) {
+    const [showGuidance, setShowGuidance] = useState(true);
     const { data, setData, put, processing, recentlySuccessful } = useForm({
         content: document.content,
     });
@@ -48,6 +52,20 @@ export function SystemDocumentEditor({ document, revisions, title, description, 
                         />
                     </div>
                 </div>
+
+                {guidance && showGuidance && (
+                    <Alert className="relative">
+                        <Lightbulb className="h-4 w-4" />
+                        <AlertDescription>{guidance}</AlertDescription>
+                        <button
+                            type="button"
+                            onClick={() => setShowGuidance(false)}
+                            className="absolute right-2 top-2 rounded-sm p-1 opacity-70 hover:opacity-100"
+                        >
+                            <X className="h-3 w-3" />
+                        </button>
+                    </Alert>
+                )}
 
                 <form onSubmit={submit} className="space-y-4">
                     <MarkdownEditor

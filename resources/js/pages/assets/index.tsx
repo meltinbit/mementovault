@@ -44,7 +44,7 @@ export default function AssetsIndex({ assets, filters, tags }: Props) {
             <Head title="Assets" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Assets" description="Binary files and media stored in your workspace." />
+                    <Heading title="Assets" description="Files and media stored in your workspace. Add AI-readable descriptions so Claude understands what each file contains." />
                     <Button asChild size="sm" className="gap-1">
                         <Link href={route('assets.create')}>
                             <Plus className="h-4 w-4" />

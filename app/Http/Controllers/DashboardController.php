@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
+use App\Models\ApiToken;
 use App\Models\Asset;
 use App\Models\Collection;
 use App\Models\Document;
 use App\Models\Skill;
 use App\Models\Snippet;
+use App\Models\SystemDocument;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,6 +19,24 @@ class DashboardController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('dashboard', [
+            'onboardingChecklist' => [
+                'identity' => SystemDocument::where('type', 'identity')
+                    ->where('content', '!=', '')
+                    ->whereRaw("content NOT LIKE '%[%]%'")
+                    ->exists(),
+                'instructions' => SystemDocument::where('type', 'instructions')
+                    ->where('content', '!=', '')
+                    ->whereRaw("content NOT LIKE '%[%]%'")
+                    ->exists(),
+                'context' => SystemDocument::where('type', 'context')
+                    ->where('content', '!=', '')
+                    ->whereRaw("content NOT LIKE '%[%]%'")
+                    ->exists(),
+                'hasDocument' => Document::exists(),
+                'hasCollection' => Collection::exists(),
+                'hasToken' => ApiToken::whereHas('collection')->exists(),
+            ],
+            'hideOnboarding' => current_workspace()?->settings['hide_onboarding'] ?? false,
             'stats' => Inertia::defer(fn () => [
                 'documents' => Document::count(),
                 'skills' => Skill::count(),

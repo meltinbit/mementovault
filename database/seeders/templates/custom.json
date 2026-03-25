@@ -1,12 +1,12 @@
 {
     "identity": {
-        "content": "# Identity\n\n[Define who you are and how AI should understand you]"
+        "content": "# Identity\n\n<!-- This is what AI will know about you in every conversation. -->\n<!-- Replace the sections below with your own content. -->\n\n## Who I Am\n[Describe yourself — your role, expertise, and what you do]\n\n## How I Communicate\n[How should AI talk to you? Technical? Casual? Direct? Verbose?]\n\n## What Matters to Me\n[Your values, priorities, and what you care about in your work]"
     },
     "instructions": {
-        "content": "# Instructions\n\n[Set rules and preferences for how AI should work with you]"
+        "content": "# Instructions\n\n<!-- Rules and preferences for how AI should work with you. -->\n\n## Language\n[What language should AI respond in?]\n\n## Style\n[Any formatting, tone, or approach preferences?]\n\n## Avoid\n[What should AI NOT do?]"
     },
     "context": {
-        "content": "# Context\n\n[Provide current context about your projects and priorities]"
+        "content": "# Context\n\n<!-- What are you working on right now? Keep this updated. -->\n\n## Current Projects\n[List your active projects with brief descriptions]\n\n## Priorities\n[What matters most right now?]"
     },
     "memory": {
         "content": ""

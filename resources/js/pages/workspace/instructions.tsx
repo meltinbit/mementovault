@@ -16,7 +16,8 @@ export default function Instructions({ document, revisions }: Props) {
             document={document}
             revisions={revisions}
             title="Instructions"
-            description="Set rules and preferences for how AI should work with you."
+            description="Set the rules for how AI should work with you. Include language preferences, code style, formatting rules, and things to avoid."
+            guidance="Define: preferred language for responses, code conventions, formatting rules, framework-specific preferences, and explicit things to avoid. These rules apply to every AI interaction."
             breadcrumbs={breadcrumbs}
         />
     );

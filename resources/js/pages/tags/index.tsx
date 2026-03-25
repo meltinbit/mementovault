@@ -42,7 +42,7 @@ export default function TagsIndex({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tags" />
             <div className="space-y-6 p-4">
-                <Heading title="Tags" description="Create and manage tags to organize your content." />
+                <Heading title="Tags" description="Organize your content with color-coded tags. Apply tags to documents, skills, snippets, and assets for easy filtering." />
 
                 <form onSubmit={submit} className="flex items-end gap-3">
                     <div className="grid gap-1.5">

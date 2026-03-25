@@ -163,7 +163,7 @@ export default function CollectionShow({
                 <Separator />
 
                 <div className="space-y-6">
-                    <HeadingSmall title="System Document Overrides" description="Collection-level overrides that merge with workspace system documents." />
+                    <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
                     <SystemDocSection collectionId={collection.id} type="instructions" label="Instructions" existing={getSystemDoc('instructions')} />
                     <SystemDocSection collectionId={collection.id} type="context" label="Context" existing={getSystemDoc('context')} />
                     <SystemDocSection collectionId={collection.id} type="memory" label="Memory" existing={getSystemDoc('memory')} />

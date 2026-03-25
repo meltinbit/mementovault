@@ -1,12 +1,12 @@
 {
     "identity": {
-        "content": "# Identity\n\n## Expertise\n[Your areas of specialization]\n\n## Positioning\n[How you differentiate yourself in the market]\n\n## Client Types\n[Types of clients you work with]\n\n## Communication Style\n[How you communicate with clients: formal, advisory, collaborative?]"
+        "content": "# Identity\n\n## Expertise\nI specialize in [areas of expertise].\nMy approach is [methodology, philosophy, or framework].\n\n## Positioning\n- I help [type of clients] achieve [outcome]\n- My differentiator: [what makes you unique]\n- Typical engagement: [retainer, project-based, advisory]\n\n## Client Types\n- [Industry/size]: [typical challenges you solve]\n- [Industry/size]: [typical challenges you solve]\n\n## Communication Style\n- With clients: [professional, advisory, collaborative]\n- In deliverables: [structured, data-driven, actionable]\n- Preferred format: [reports, presentations, workshops]"
     },
     "instructions": {
-        "content": "# Instructions\n\n## Language\n[Preferred language for deliverables]\n\n## Deliverable Format\n[How you structure reports, proposals, and other deliverables]\n\n## Client Communication Rules\n[Guidelines for tone and approach in client-facing work]"
+        "content": "# Instructions\n\n## Language\nWrite in [English/Italian/etc.]. Match client's formality level.\n\n## Deliverable Format\n- Start with executive summary\n- Use bullet points for recommendations\n- Include data and evidence for claims\n- End with clear next steps and timeline\n\n## Client Communication Rules\n- Always be solution-oriented, not just problem-identifying\n- Quantify impact when possible (revenue, time saved, efficiency)\n- Use client's terminology, not consultant jargon\n- Flag risks early, always with mitigation options"
     },
     "context": {
-        "content": "# Context\n\n## Active Projects\n[Current client engagements]\n\n## Pipeline\n[Upcoming opportunities or proposals]\n\n## Priorities\n[What needs attention right now]"
+        "content": "# Context\n\n## Active Engagements\n- **[Client Name]:** [Project scope, timeline, current phase]\n- **[Client Name]:** [Project scope, timeline, current phase]\n\n## Pipeline\n- [Prospect]: [Opportunity, next step, probability]\n\n## Priorities\n1. [Highest priority deliverable or decision]\n2. [Second priority]\n\n## Key Deadlines\n- [Date]: [Deliverable for Client X]"
     },
     "memory": {
         "content": ""

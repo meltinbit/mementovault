@@ -66,6 +66,7 @@ export default function CollectionCreate() {
                             </SelectContent>
                         </Select>
                         <InputError message={errors.type} />
+                        <p className="text-xs text-muted-foreground">Software Project: dev work with architecture and code context. Client Project: client deliverables and communication. Product/SaaS: roadmap, pricing, brand. Marketing: campaigns, content, channels.</p>
                     </div>
 
                     <div className="grid gap-1.5">

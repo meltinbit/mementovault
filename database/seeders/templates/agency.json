@@ -1,12 +1,12 @@
 {
     "identity": {
-        "content": "# Identity\n\n## Agency Brand\n[Your agency's brand identity and mission]\n\n## Services\n[Services you offer]\n\n## Team Structure\n[How your team is organized]\n\n## Values\n[Core values that guide your agency]"
+        "content": "# Identity\n\n## Agency Brand\n[Agency Name] is a [type: digital, creative, full-service] agency.\nWe help [types of clients] with [services: branding, web dev, marketing, design].\n\n## Services\n- **[Service 1]:** [Brief description]\n- **[Service 2]:** [Brief description]\n- **[Service 3]:** [Brief description]\n\n## Team Structure\n- [X] people across [departments: design, dev, strategy, account management]\n- Key roles: [Creative Director, Lead Developer, Account Manager, etc.]\n\n## Values\n- [e.g., Quality over quantity]\n- [e.g., Client partnership, not just service]\n- [e.g., Stay curious, keep learning]"
     },
     "instructions": {
-        "content": "# Instructions\n\n## Language\n[Default language for internal and client work]\n\n## Brand Guidelines\n[Agency-wide brand and style guidelines]\n\n## Quality Standards\n[Standards for deliverables and client work]"
+        "content": "# Instructions\n\n## Language\nDefault to [English/Italian/etc.] for internal work.\nMatch client's language for client-facing deliverables.\n\n## Brand Guidelines\n- Use our brand voice: [professional yet approachable / bold and creative / etc.]\n- Agency colors: [hex codes]\n- Always include agency branding on deliverables\n\n## Quality Standards\n- All copy must be proofread before delivery\n- Design work follows our grid system and component library\n- Code must pass linting and basic tests before deployment\n- Client presentations follow our deck template"
     },
     "context": {
-        "content": "# Context\n\n## Active Clients\n[Current client roster and projects]\n\n## Team Capacity\n[Current team availability and workload]"
+        "content": "# Context\n\n## Active Clients\n- **[Client Name]:** [Project type, team members assigned, deadline]\n- **[Client Name]:** [Project type, team members assigned, deadline]\n\n## Team Capacity\n- Design team: [availability]\n- Dev team: [availability]\n- Strategy: [availability]\n\n## Upcoming\n- [Pitch/proposal due date]\n- [Client review meeting]"
     },
     "memory": {
         "content": ""

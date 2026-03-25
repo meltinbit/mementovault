@@ -1,18 +1,92 @@
-import { Head } from '@inertiajs/react';
+import { useState } from 'react';
+import { Head, Link } from '@inertiajs/react';
 import { Deferred } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem, type DashboardStats, type ActivityLogEntry } from '@/types';
-import { FileText, Zap, Code, Image, FolderOpen } from 'lucide-react';
+import { FileText, Zap, Code, Image, FolderOpen, Check, Circle, User, BookText, Brain, Key, X } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
 ];
 
+interface OnboardingChecklist {
+    identity: boolean;
+    instructions: boolean;
+    context: boolean;
+    hasDocument: boolean;
+    hasCollection: boolean;
+    hasToken: boolean;
+}
+
 interface DashboardProps {
     stats?: DashboardStats;
     recentActivity?: ActivityLogEntry[];
+    onboardingChecklist?: OnboardingChecklist;
+    hideOnboarding?: boolean;
+}
+
+const checklistItems = [
+    { key: 'identity', label: 'Set up your Identity', description: 'Tell AI who you are', href: '/workspace/identity', icon: User },
+    { key: 'instructions', label: 'Write Instructions', description: 'Define how AI should work with you', href: '/workspace/instructions', icon: BookText },
+    { key: 'context', label: 'Add Context', description: 'Share current projects and priorities', href: '/workspace/context', icon: Brain },
+    { key: 'hasDocument', label: 'Create a Document', description: 'Add your first reference material', href: '/documents/create', icon: FileText },
+    { key: 'hasCollection', label: 'Create a Collection', description: 'Organize content by project', href: '/collections/create', icon: FolderOpen },
+    { key: 'hasToken', label: 'Connect via MCP', description: 'Generate a token and connect your AI client', href: '/docs#connecting-to-clients', icon: Key },
+];
+
+function GettingStarted({ checklist, onHide }: { checklist: OnboardingChecklist; onHide: () => void }) {
+    const completed = Object.values(checklist).filter(Boolean).length;
+    const total = Object.keys(checklist).length;
+
+    if (completed === total) {
+        return null;
+    }
+
+    return (
+        <Card className="relative">
+            <button
+                type="button"
+                onClick={onHide}
+                className="absolute right-3 top-3 rounded-sm p-1 text-muted-foreground opacity-70 hover:opacity-100"
+            >
+                <X className="h-4 w-4" />
+            </button>
+            <CardHeader>
+                <CardTitle className="text-base">Getting Started</CardTitle>
+                <p className="text-sm text-muted-foreground">{completed} of {total} steps completed</p>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(completed / total) * 100}%` }} />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-2">
+                    {checklistItems.map((item) => {
+                        const done = checklist[item.key as keyof OnboardingChecklist];
+                        return (
+                            <Link
+                                key={item.key}
+                                href={item.href}
+                                className={`flex items-center gap-3 rounded-md border p-3 text-sm transition-colors hover:bg-accent ${done ? 'opacity-60' : ''}`}
+                            >
+                                {done ? (
+                                    <Check className="h-5 w-5 shrink-0 text-primary" />
+                                ) : (
+                                    <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
+                                )}
+                                <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                <div>
+                                    <p className={`font-medium ${done ? 'line-through' : ''}`}>{item.label}</p>
+                                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                                </div>
+                            </Link>
+                        );
+                    })}
+                </div>
+            </CardContent>
+        </Card>
+    );
 }
 
 function StatsGrid({ stats }: { stats: DashboardStats }) {
@@ -102,11 +176,17 @@ function ActivityFeedSkeleton() {
     );
 }
 
-export default function Dashboard({ stats, recentActivity }: DashboardProps) {
+export default function Dashboard({ stats, recentActivity, onboardingChecklist, hideOnboarding }: DashboardProps) {
+    const [showChecklist, setShowChecklist] = useState(!hideOnboarding);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="space-y-6 p-4">
+                {showChecklist && onboardingChecklist && (
+                    <GettingStarted checklist={onboardingChecklist} onHide={() => setShowChecklist(false)} />
+                )}
+
                 <Deferred data="stats" fallback={<StatsGridSkeleton />}>
                     <StatsGrid stats={stats!} />
                 </Deferred>

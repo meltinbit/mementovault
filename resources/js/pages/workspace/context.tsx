@@ -16,7 +16,8 @@ export default function Context({ document, revisions }: Props) {
             document={document}
             revisions={revisions}
             title="Context"
-            description="Provide current context about your projects and priorities."
+            description="Share what you're working on right now. Active projects, current priorities, deadlines, and anything AI needs to know about your current situation."
+            guidance="Keep this updated regularly. Include: active projects with brief descriptions, current priorities and focus areas, upcoming deadlines, and team members or collaborators involved."
             breadcrumbs={breadcrumbs}
         />
     );

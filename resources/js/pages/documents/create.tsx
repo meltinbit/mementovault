@@ -65,6 +65,7 @@ export default function DocumentCreate({ tags }: Props) {
                                 </SelectContent>
                             </Select>
                             <InputError message={errors.type} />
+                            <p className="text-xs text-muted-foreground">Technical: API docs, architecture specs. Copy: marketing text, blog posts. Brand: voice guidelines. Process: workflows, SOPs. General: everything else.</p>
                         </div>
                     </div>
 

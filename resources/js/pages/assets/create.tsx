@@ -66,7 +66,7 @@ export default function AssetCreate({ tags }: Props) {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="description">Description</Label>
-                        <p className="text-xs text-muted-foreground">AI-readable description of this asset. Important for MCP context.</p>
+                        <p className="text-xs text-muted-foreground">AI can't read files directly — this description is what Claude sees via MCP. Be specific about what the file contains, its purpose, and when AI should reference it.</p>
                         <Textarea
                             id="description"
                             value={data.description}

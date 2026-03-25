@@ -32,7 +32,7 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
             <Head title="Skills" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Skills" description="Operational instructions with triggering metadata for AI." />
+                    <Heading title="Skills" description="Operational instructions that AI activates automatically based on triggers. Each skill has a description that tells AI when to use it, and content with the full instructions." />
                     <Button asChild size="sm" className="gap-1">
                         <Link href={route('skills.create')}>
                             <Plus className="h-4 w-4" />

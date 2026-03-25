@@ -1,12 +1,12 @@
 {
     "identity": {
-        "content": "# Identity\n\n## Brand\n[Describe your brand or the brand you represent]\n\n## Target Audience\n[Who are you creating content for?]\n\n## Voice & Tone\n[Brand voice guidelines: formal, playful, authoritative?]\n\n## Channels\n[Primary marketing channels: social, email, blog, ads?]"
+        "content": "# Identity\n\n## Brand\n[Brand name] is a [type of company/product] that [what you do].\nOur brand personality is [adjectives: bold, friendly, authoritative, playful].\n\n## Target Audience\n- **Primary:** [Demographics, interests, pain points]\n- **Secondary:** [Demographics, interests, pain points]\n- **Buyer persona:** [Name, age, role, goals, challenges]\n\n## Voice & Tone\n- **Voice:** [Consistent traits: professional, casual, witty, empathetic]\n- **Tone varies by channel:**\n  - Social media: [casual, engaging, emoji-friendly]\n  - Blog: [informative, conversational]\n  - Email: [personal, action-oriented]\n  - Ads: [punchy, benefit-focused]\n\n## Channels\n- **Primary:** [e.g., Instagram, LinkedIn, Newsletter]\n- **Secondary:** [e.g., Twitter/X, YouTube, Blog]\n- **Paid:** [e.g., Google Ads, Meta Ads]"
     },
     "instructions": {
-        "content": "# Instructions\n\n## Language\n[Preferred language and regional variations]\n\n## Content Style\n[Writing style preferences: long-form, punchy, storytelling?]\n\n## Formatting Rules\n[How content should be structured: headers, bullet points, CTAs]\n\n## Platform Guidelines\n[Platform-specific rules: character limits, hashtag usage, etc.]"
+        "content": "# Instructions\n\n## Language\nWrite in [English/Italian/etc.]. Use [formal/informal] register.\n\n## Content Style\n- Lead with the benefit, not the feature\n- Use active voice\n- Keep sentences short (max 20 words for social)\n- Always include a clear CTA\n- Avoid jargon unless writing for industry audience\n\n## Formatting Rules\n- Blog posts: H2 for main sections, bullet points for lists, bold key phrases\n- Social: one idea per post, line breaks for readability\n- Email: subject line under 50 chars, preview text under 90 chars\n\n## Platform Guidelines\n- **Instagram:** max 2200 chars, 5-10 relevant hashtags, carousel preferred\n- **LinkedIn:** professional tone, tag relevant people, no hashtag spam\n- **Newsletter:** personalized greeting, 3-5 minute read max"
     },
     "context": {
-        "content": "# Context\n\n## Active Campaigns\n[Current marketing campaigns and their goals]\n\n## Editorial Calendar\n[Upcoming content schedule]\n\n## KPIs\n[Key metrics you're tracking]"
+        "content": "# Context\n\n## Active Campaigns\n- **[Campaign Name]:** [Goal, target audience, channels, end date]\n- **[Campaign Name]:** [Goal, target audience, channels, end date]\n\n## Editorial Calendar\n- This week: [planned content]\n- Next week: [planned content]\n- This month's theme: [theme]\n\n## KPIs\n- Engagement rate target: [X%]\n- Email open rate target: [X%]\n- Conversion goal: [X per month]\n\n## Competitors\n- [Competitor 1]: [What they do well, what we do differently]"
     },
     "memory": {
         "content": ""

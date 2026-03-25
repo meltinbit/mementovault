@@ -48,6 +48,7 @@ export default function SnippetCreate({ tags }: Props) {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="content">Content</Label>
+                        <p className="text-xs text-muted-foreground">Snippets are raw text — not markdown. Great for: email signatures, prompt templates, disclaimers, code snippets, boilerplate text.</p>
                         <Textarea id="content" value={data.content} onChange={(e) => setData('content', e.target.value)} rows={8} required />
                         <InputError message={errors.content} />
                     </div>
