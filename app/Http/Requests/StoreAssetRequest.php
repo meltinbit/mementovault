@@ -17,7 +17,7 @@ class StoreAssetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'file', 'max:20480'],
+            'file' => ['required', 'file', 'max:20480'], // Note: PHP upload_max_filesize must also be >= 20M
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
