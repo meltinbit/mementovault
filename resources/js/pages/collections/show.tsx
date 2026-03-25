@@ -247,7 +247,7 @@ export default function CollectionShow({
 
                 <Separator />
 
-                <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+                <div className="grid gap-6 lg:grid-cols-[7fr_3fr]">
                     {/* Left column: System Document Overrides */}
                     <div className="space-y-6">
                         <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
