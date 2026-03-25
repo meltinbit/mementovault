@@ -451,7 +451,7 @@ Collection overrides don't replace workspace content — they **extend** it. Thi
 To connect Claude Desktop to Context Vault:
 
 1. Open Claude Desktop
-2. Go to **Customize** (bottom-left)
+2. Go to **Customize**
 3. Click **Connectors**
 4. Click the **+** button, then **Add custom connector**
 5. Enter your MCP endpoint URL:
