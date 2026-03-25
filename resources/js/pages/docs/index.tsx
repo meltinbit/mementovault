@@ -37,7 +37,7 @@ const sections: Section[] = [
         id: 'connecting-to-clients',
         title: 'Connecting to Clients',
         children: [
-            { id: 'claude-ai', title: 'Claude.ai' },
+            { id: 'claude-desktop', title: 'Claude Desktop' },
             { id: 'claude-code', title: 'Claude Code' },
             { id: 'cowork', title: 'Cowork' },
             { id: 'token-management', title: 'Token Management' },
@@ -318,7 +318,7 @@ export default function DocsIndex() {
 
 Context Vault is an **AI Context Manager** — a centralized platform for managing all the context your AI assistants need. Think of it as **1Password for AI context**.
 
-Instead of repeating yourself in every conversation, you define your identity, instructions, project details, and reusable content once. Then any AI client (Claude.ai, Claude Code, Cowork) connects via MCP and receives everything it needs automatically.
+Instead of repeating yourself in every conversation, you define your identity, instructions, project details, and reusable content once. Then any AI client (Claude Desktop, Claude Code, Cowork) connects via MCP and receives everything it needs automatically.
 
 - **One source of truth** for all your AI context
 - **Project-specific packages** via collections with their own MCP endpoints
@@ -445,20 +445,24 @@ Collection overrides don't replace workspace content — they **extend** it. Thi
                         <section id="connecting-to-clients" className="mb-16">
                             <h1 className="mb-8 text-3xl font-bold text-white">Connecting to Clients</h1>
 
-                            <section id="claude-ai" className="mb-12">
-                                <Markdown>{`## Claude.ai
+                            <section id="claude-desktop" className="mb-12">
+                                <Markdown>{`## Claude Desktop
 
-To connect Claude.ai to Context Vault:
+To connect Claude Desktop to Context Vault:
 
-1. Open Claude.ai and go to **Settings**
-2. Navigate to the **MCP** section
-3. Add a new MCP server with your collection URL:
+1. Open Claude Desktop
+2. Go to **Customize** (bottom-left)
+3. Click **Connectors**
+4. Click the **+** button, then **Add custom connector**
+5. Enter your MCP endpoint URL:
 
 \`\`\`
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Replace \`yourdomain.com\` with your Context Vault domain and \`YOUR_TOKEN\` with a token generated from your collection.`}</Markdown>
+Replace \`yourdomain.com\` with your Context Vault domain and \`YOUR_TOKEN\` with a token generated from your collection.
+
+Once connected, Claude Desktop will automatically have access to all the context, documents, skills, and assets in that collection.`}</Markdown>
                             </section>
 
                             <section id="claude-code" className="mb-12">
@@ -502,7 +506,7 @@ API tokens authenticate MCP connections. Key details:
 - **Security**: tokens are shown only once at creation — store them securely
 - **Server-side**: tokens are SHA-256 hashed before storage
 
-You can create multiple tokens per collection (e.g., one for Claude.ai, one for Claude Code) and revoke them independently.`}</Markdown>
+You can create multiple tokens per collection (e.g., one for Claude Desktop, one for Claude Code) and revoke them independently.`}</Markdown>
                             </section>
                         </section>
 

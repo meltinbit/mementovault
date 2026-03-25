@@ -52,7 +52,7 @@ const features = [
     },
     {
         icon: MonitorSmartphone,
-        title: 'Works with Claude.ai, Claude Code, Cowork',
+        title: 'Works with Claude Desktop, Claude Code, Cowork',
         description: 'Compatible with any MCP-enabled AI client. Connect once, use everywhere.',
     },
 ];
@@ -370,7 +370,7 @@ export default function Welcome() {
                                 Works with
                             </p>
                             <div className="flex items-center justify-center gap-8 text-sm" style={{ color: '#55556a', fontFamily: "'DM Mono', 'SF Mono', monospace" }}>
-                                <span className="transition-colors duration-200 hover:text-white/50">Claude.ai</span>
+                                <span className="transition-colors duration-200 hover:text-white/50">Claude Desktop</span>
                                 <span style={{ color: '#2a2a35' }}>|</span>
                                 <span className="transition-colors duration-200 hover:text-white/50">Claude Code</span>
                                 <span style={{ color: '#2a2a35' }}>|</span>
