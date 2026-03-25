@@ -10,6 +10,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\SkillMarketplaceController;
 use App\Http\Controllers\SnippetController;
 use App\Http\Controllers\SystemDocumentController;
 use App\Http\Controllers\TagController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
 
     Route::resource('tags', TagController::class)->only(['index', 'store', 'destroy']);
     Route::resource('documents', DocumentController::class);
+    Route::get('skills/marketplace', [SkillMarketplaceController::class, 'index'])->name('skills.marketplace');
+    Route::post('skills/marketplace/install', [SkillMarketplaceController::class, 'install'])->name('skills.marketplace.install');
     Route::resource('skills', SkillController::class);
     Route::resource('snippets', SnippetController::class);
     Route::resource('assets', AssetController::class);
