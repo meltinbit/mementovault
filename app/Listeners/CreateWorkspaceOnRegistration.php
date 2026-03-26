@@ -24,7 +24,9 @@ class CreateWorkspaceOnRegistration
             'name' => $user->name."'s Workspace",
             'slug' => Str::slug($user->name.' '.Str::random(4)),
             'description' => null,
-            'settings' => null,
+            'settings' => [
+                'mcp_instructions' => Workspace::defaultMcpInstructions(),
+            ],
         ]);
 
         $template = $this->templateService->getTemplate('custom');

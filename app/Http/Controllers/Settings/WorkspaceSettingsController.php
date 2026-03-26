@@ -23,6 +23,8 @@ class WorkspaceSettingsController extends Controller
                 'slug' => $workspace->slug,
                 'description' => $workspace->description,
             ],
+            'mcpInstructions' => $workspace->settings['mcp_instructions'] ?? '',
+            'mcpCustomPrompt' => $workspace->settings['mcp_custom_prompt'] ?? '',
             'storageSettings' => $storageSettings ? [
                 'driver' => $storageSettings['driver'] ?? 'local',
                 'key' => $storageSettings['key'] ?? '',
@@ -75,6 +77,31 @@ class WorkspaceSettingsController extends Controller
                 $workspace->settings = $settings;
             }
         }
+
+        // Handle MCP settings
+        $settings = $workspace->settings ?? [];
+
+        if ($request->has('mcp_instructions')) {
+            $mcpInstructions = $request->validated('mcp_instructions');
+
+            if ($mcpInstructions) {
+                $settings['mcp_instructions'] = $mcpInstructions;
+            } else {
+                unset($settings['mcp_instructions']);
+            }
+        }
+
+        if ($request->has('mcp_custom_prompt')) {
+            $customPrompt = $request->validated('mcp_custom_prompt');
+
+            if ($customPrompt) {
+                $settings['mcp_custom_prompt'] = $customPrompt;
+            } else {
+                unset($settings['mcp_custom_prompt']);
+            }
+        }
+
+        $workspace->settings = $settings ?: null;
 
         $workspace->save();
 

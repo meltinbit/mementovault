@@ -20,6 +20,7 @@ use App\Mcp\Tools\UpdateDocumentTool;
 use App\Mcp\Tools\UpdateSkillTool;
 use App\Mcp\Tools\UpdateSnippetTool;
 use App\Mcp\Tools\UpdateSystemDocumentTool;
+use App\Models\Workspace;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Attributes\Name;
@@ -52,4 +53,26 @@ class ContextVaultServer extends Server
         CreateSnippetTool::class,
         UpdateSnippetTool::class,
     ];
+
+    protected function boot(): void
+    {
+        $workspace = current_workspace();
+
+        $this->instructions = $this->buildInstructions($workspace);
+    }
+
+    private function buildInstructions(?Workspace $workspace): string
+    {
+        // MCP instructions are stored in the workspace settings.
+        // Only sent for MCP protocol versions 2025-06-18+.
+        $base = $workspace?->settings['mcp_instructions'] ?? '';
+
+        $customPrompt = $workspace?->settings['mcp_custom_prompt'] ?? null;
+
+        if ($customPrompt) {
+            $base .= "\n\n--- Additional Instructions ---\n\n".$customPrompt;
+        }
+
+        return $base;
+    }
 }

@@ -1,7 +1,7 @@
 import { type BreadcrumbItem, type Workspace } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
@@ -36,12 +36,16 @@ interface StorageSettings {
 interface Props {
     workspace: Workspace;
     storageSettings: StorageSettings | null;
+    mcpInstructions: string;
+    mcpCustomPrompt: string;
 }
 
-export default function WorkspaceSettings({ workspace, storageSettings }: Props) {
+export default function WorkspaceSettings({ workspace, storageSettings, mcpInstructions, mcpCustomPrompt }: Props) {
     const { data, setData, put, errors, processing, recentlySuccessful } = useForm({
         name: workspace.name,
         description: workspace.description || '',
+        mcp_instructions: mcpInstructions || '',
+        mcp_custom_prompt: mcpCustomPrompt || '',
         storage_driver: storageSettings?.driver || 'local',
         storage_key: storageSettings?.key || '',
         storage_secret: storageSettings?.secret || '',
@@ -58,6 +62,7 @@ export default function WorkspaceSettings({ workspace, storageSettings }: Props)
     };
 
     const isS3 = data.storage_driver === 's3';
+    const [mcpInstructionsUnlocked, setMcpInstructionsUnlocked] = useState(false);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -193,6 +198,63 @@ export default function WorkspaceSettings({ workspace, storageSettings }: Props)
                                 </div>
                             </div>
                         )}
+
+                        <Separator />
+
+                        <HeadingSmall title="MCP Behavior" description="Configure how AI agents interact with your workspace via MCP." />
+
+                        <div className="grid gap-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="mcp_instructions">MCP Instructions</Label>
+                                {!mcpInstructionsUnlocked && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setMcpInstructionsUnlocked(true)}
+                                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        Unlock editing
+                                    </button>
+                                )}
+                            </div>
+
+                            {!mcpInstructionsUnlocked && (
+                                <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+                                    These instructions control how AI agents load your context via MCP. Editing them incorrectly may break auto-context loading. Only modify if you know what you are doing.
+                                </div>
+                            )}
+
+                            <Textarea
+                                id="mcp_instructions"
+                                value={data.mcp_instructions}
+                                onChange={(e) => setData('mcp_instructions', e.target.value)}
+                                rows={8}
+                                maxLength={5000}
+                                disabled={!mcpInstructionsUnlocked}
+                                className="font-mono text-sm"
+                            />
+                            <div className="flex justify-between">
+                                <p className="text-xs text-muted-foreground">Core instructions sent to the AI on every MCP connection. Controls auto-context loading behavior.</p>
+                                <p className="text-xs text-muted-foreground">{data.mcp_instructions.length}/5000</p>
+                            </div>
+                            <InputError message={errors.mcp_instructions} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="mcp_custom_prompt">Custom MCP Prompt</Label>
+                            <Textarea
+                                id="mcp_custom_prompt"
+                                value={data.mcp_custom_prompt}
+                                onChange={(e) => setData('mcp_custom_prompt', e.target.value)}
+                                rows={4}
+                                maxLength={2000}
+                                placeholder="e.g. Always respond in Italian. Be concise."
+                            />
+                            <div className="flex justify-between">
+                                <p className="text-xs text-muted-foreground">Optional additional instructions appended after the main MCP instructions.</p>
+                                <p className="text-xs text-muted-foreground">{data.mcp_custom_prompt.length}/2000</p>
+                            </div>
+                            <InputError message={errors.mcp_custom_prompt} />
+                        </div>
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>Save</Button>

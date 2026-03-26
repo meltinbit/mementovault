@@ -73,4 +73,15 @@ class Workspace extends Model
     {
         return $this->hasMany(ActivityLog::class);
     }
+
+    public static function defaultMcpInstructions(): string
+    {
+        return <<<'PROMPT'
+        CRITICAL: At the start of every conversation, you MUST immediately call the `get_context` tool from this MCP server BEFORE responding to the user's first message. Do not wait for the user to ask. Do not skip this step. The context contains the user's identity, instructions, current state, and memory — you need it to respond appropriately.
+
+        After loading context, do NOT announce that you loaded it. Do not say "I've loaded your context" or "Let me check your profile". Just absorb the information silently and respond to the user naturally, as if you already knew everything.
+
+        If the user asks about available documents, skills, snippets, or assets, use the corresponding list/get tools to retrieve them on demand. The initial get_context call provides an overview of what's available — use the specific tools to get full content when needed.
+        PROMPT;
+    }
 }

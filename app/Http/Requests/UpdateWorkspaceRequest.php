@@ -27,6 +27,8 @@ class UpdateWorkspaceRequest extends FormRequest
             'storage_endpoint' => ['nullable', 'string', 'max:500'],
             'storage_url' => ['nullable', 'string', 'max:500'],
             'storage_use_path_style_endpoint' => ['nullable', 'boolean'],
+            'mcp_instructions' => ['nullable', 'string', 'max:5000'],
+            'mcp_custom_prompt' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }
