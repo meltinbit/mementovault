@@ -96,8 +96,22 @@ export interface SnippetData {
     tags: TagData[];
 }
 
+export interface AssetFolderData {
+    id: number;
+    parent_id: number | null;
+    name: string;
+    slug: string;
+    sort_order: number;
+    assets_count: number;
+    children: AssetFolderData[];
+    created_at: string;
+    updated_at: string;
+}
+
 export interface AssetData {
     id: number;
+    folder_id: number | null;
+    folder?: AssetFolderData | null;
     name: string;
     original_filename: string;
     mime_type: string;
@@ -108,6 +122,16 @@ export interface AssetData {
     tags: TagData[];
     download_url?: string;
     thumbnail_url?: string;
+}
+
+export interface MemoryEntryData {
+    id: number;
+    content: string;
+    category: string | null;
+    is_pinned: boolean;
+    is_archived: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface PaginatedResponse<T> {

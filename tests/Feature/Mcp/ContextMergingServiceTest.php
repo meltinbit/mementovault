@@ -4,6 +4,7 @@ use App\Models\Asset;
 use App\Models\Collection;
 use App\Models\CollectionSystemDocument;
 use App\Models\Document;
+use App\Models\MemoryEntry;
 use App\Models\Skill;
 use App\Models\Snippet;
 use App\Models\SystemDocument;
@@ -19,7 +20,7 @@ function createMergingTestSetup(): array
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['user_id' => $user->id]);
 
-    foreach (['identity', 'instructions', 'context', 'memory'] as $type) {
+    foreach (['identity', 'instructions', 'context'] as $type) {
         SystemDocument::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
             'type' => $type,
@@ -34,7 +35,7 @@ function createMergingTestSetup(): array
 
 test('merged context includes workspace identity', function () {
     [, $collection] = createMergingTestSetup();
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
 
     $result = $service->merge($collection);
 
@@ -42,9 +43,10 @@ test('merged context includes workspace identity', function () {
     expect($result)->toContain('Workspace identity content');
 });
 
-test('merged context includes all four sections', function () {
-    [, $collection] = createMergingTestSetup();
-    $service = new ContextMergingService;
+test('merged context includes all sections including memory entries', function () {
+    [$workspace, $collection] = createMergingTestSetup();
+    MemoryEntry::factory()->create(['workspace_id' => $workspace->id, 'content' => 'Test memory']);
+    $service = app(ContextMergingService::class);
 
     $result = $service->merge($collection);
 
@@ -52,6 +54,7 @@ test('merged context includes all four sections', function () {
     expect($result)->toContain('# INSTRUCTIONS');
     expect($result)->toContain('# CONTEXT');
     expect($result)->toContain('# MEMORY');
+    expect($result)->toContain('Test memory');
 });
 
 test('collection overrides are appended to workspace content', function () {
@@ -64,7 +67,7 @@ test('collection overrides are appended to workspace content', function () {
         'version' => 1,
     ]);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->toContain('Workspace instructions content');
@@ -81,7 +84,7 @@ test('merged context lists available skills', function () {
     ]);
     $collection->skills()->attach($skill->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->toContain('# AVAILABLE SKILLS');
@@ -98,7 +101,7 @@ test('merged context lists available documents', function () {
     ]);
     $collection->documents()->attach($doc->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->toContain('# AVAILABLE DOCUMENTS');
@@ -114,7 +117,7 @@ test('merged context lists available snippets', function () {
     ]);
     $collection->snippets()->attach($snippet->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->toContain('# AVAILABLE SNIPPETS');
@@ -131,7 +134,7 @@ test('merged context lists available assets', function () {
     ]);
     $collection->assets()->attach($asset->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->toContain('# AVAILABLE ASSETS');
@@ -148,7 +151,7 @@ test('inactive skills are excluded from merged context', function () {
     ]);
     $collection->skills()->attach($skill->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->not->toContain('Inactive Skill');
@@ -164,7 +167,7 @@ test('inactive documents are excluded from merged context', function () {
     ]);
     $collection->documents()->attach($doc->id);
 
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
     expect($result)->not->toContain('Inactive Document');
@@ -172,7 +175,7 @@ test('inactive documents are excluded from merged context', function () {
 
 test('sections are separated by horizontal rules', function () {
     [, $collection] = createMergingTestSetup();
-    $service = new ContextMergingService;
+    $service = app(ContextMergingService::class);
 
     $result = $service->merge($collection);
 

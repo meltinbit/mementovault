@@ -74,6 +74,11 @@ class Workspace extends Model
         return $this->hasMany(ActivityLog::class);
     }
 
+    public function memoryEntries(): HasMany
+    {
+        return $this->hasMany(MemoryEntry::class);
+    }
+
     public static function defaultMcpInstructions(): string
     {
         return <<<'PROMPT'

@@ -74,6 +74,12 @@ class CollectionController extends Controller
             'availableSkills' => Skill::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
             'availableSnippets' => Snippet::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
             'availableAssets' => Asset::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name', 'mime_type']),
+            'memoryEntries' => $collection->collectionMemoryEntries()
+                ->active()
+                ->orderByDesc('is_pinned')
+                ->orderByDesc('created_at')
+                ->limit(10)
+                ->get(),
             'mcpEndpoint' => url('/mcp'),
             'newToken' => session('newToken'),
         ]);

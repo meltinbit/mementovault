@@ -2,7 +2,8 @@
 
 namespace App\Mcp\Tools;
 
-use App\Models\SystemDocument;
+use App\Models\CollectionMemoryEntry;
+use App\Models\MemoryEntry;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -11,36 +12,43 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('append_memory')]
-#[Description('Appends content to the workspace memory document. Useful for saving decisions, preferences, and important context that should persist across conversations.')]
+#[Description('Save a new memory entry. Use this when you learn something important about the user\'s preferences, decisions, or patterns that should be remembered for future conversations. Keep entries concise — 1-2 sentences.')]
 class AppendMemoryTool extends Tool
 {
     public function handle(Request $request): Response
     {
         $workspace = app('current_workspace');
         $content = $request->get('content');
+        $category = $request->get('category');
+        $scope = $request->get('scope', 'workspace');
 
-        $memory = SystemDocument::withoutGlobalScopes()
-            ->where('workspace_id', $workspace->id)
-            ->where('type', 'memory')
-            ->first();
+        if ($scope === 'collection') {
+            $collection = app('mcp_collection');
 
-        if (! $memory) {
-            return Response::error('Memory document not found.');
+            $entry = CollectionMemoryEntry::create([
+                'collection_id' => $collection->id,
+                'content' => $content,
+                'category' => $category,
+            ]);
+
+            return Response::text("Memory entry saved to collection (id: {$entry->id}).");
         }
 
-        $newContent = $memory->content
-            ? $memory->content."\n\n".$content
-            : $content;
+        $entry = MemoryEntry::create([
+            'workspace_id' => $workspace->id,
+            'content' => $content,
+            'category' => $category,
+        ]);
 
-        $memory->update(['content' => $newContent]);
-
-        return Response::text("Appended to memory (now v{$memory->version}).");
+        return Response::text("Memory entry saved (id: {$entry->id}).");
     }
 
     public function schema(JsonSchema $schema): array
     {
         return [
-            'content' => $schema->string()->description('The content to append to memory. Will be added after existing memory content with a blank line separator.')->required(),
+            'content' => $schema->string()->description('The memory to save. Keep it concise — 1-2 sentences.')->required(),
+            'category' => $schema->string()->description('Optional category label (e.g. preference, decision, workflow, technical).'),
+            'scope' => $schema->string()->description('Scope: "workspace" (default) for general memory, "collection" for project-specific memory.'),
         ];
     }
 }

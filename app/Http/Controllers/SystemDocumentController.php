@@ -12,8 +12,12 @@ use Inertia\Response;
 
 class SystemDocumentController extends Controller
 {
-    public function show(Request $request, string $type): Response
+    public function show(Request $request, string $type): Response|RedirectResponse
     {
+        if ($type === 'memory') {
+            return to_route('memory.index');
+        }
+
         $document = SystemDocument::where('type', $type)->first();
 
         // Create on first visit if doesn't exist

@@ -53,7 +53,7 @@ const typeDescriptions: Record<string, string> = {
     icp: 'Ideal Customer Profile, pain points, buying behavior',
 };
 
-const coreTypes = ['identity', 'instructions', 'context', 'memory'];
+const coreTypes = ['identity', 'instructions', 'context'];
 const builtinOptionalTypes = ['soul', 'services', 'portfolio', 'products', 'icp'];
 
 export function AppSidebar() {
@@ -63,7 +63,7 @@ export function AppSidebar() {
 
     // Build workspace nav: core types always, then extras
     const existingTypes = workspaceSystemDocs || [];
-    const extraTypes = existingTypes.filter((t: string) => !coreTypes.includes(t));
+    const extraTypes = existingTypes.filter((t: string) => !coreTypes.includes(t) && t !== 'memory');
 
     const workspaceNavItems: NavItem[] = [
         ...coreTypes.map((type) => ({
@@ -71,6 +71,7 @@ export function AppSidebar() {
             url: `/workspace/${type}`,
             icon: typeIcons[type] || FileText,
         })),
+        { title: 'Memory', url: '/memory', icon: Database },
         ...extraTypes.map((type: string) => ({
             title: typeLabels[type] || type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
             url: `/workspace/${type}`,

@@ -59,4 +59,9 @@ class Collection extends Model
     {
         return $this->morphedByMany(Asset::class, 'collectable');
     }
+
+    public function collectionMemoryEntries(): HasMany
+    {
+        return $this->hasMany(CollectionMemoryEntry::class);
+    }
 }

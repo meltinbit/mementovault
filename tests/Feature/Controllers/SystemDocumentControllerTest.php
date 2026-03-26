@@ -34,7 +34,7 @@ test('can view each system document type', function (string $type) {
             ->has('revisions')
             ->has('meta')
         );
-})->with(['identity', 'instructions', 'context', 'memory']);
+})->with(['identity', 'instructions', 'context']);
 
 test('visiting unknown type auto-creates document', function () {
     [$user, $workspace] = createUserWithWorkspaceAndDocs();

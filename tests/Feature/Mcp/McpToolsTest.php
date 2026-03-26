@@ -27,7 +27,7 @@ function setupMcpToolTest(): array
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['user_id' => $user->id]);
 
-    foreach (['identity', 'instructions', 'context', 'memory'] as $type) {
+    foreach (['identity', 'instructions', 'context'] as $type) {
         SystemDocument::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
             'type' => $type,

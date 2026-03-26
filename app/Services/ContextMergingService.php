@@ -8,6 +8,10 @@ use App\Models\SystemDocument;
 
 class ContextMergingService
 {
+    public function __construct(
+        private MemoryContextBuilder $memoryBuilder,
+    ) {}
+
     /**
      * Build the merged context markdown for a collection's MCP endpoint.
      */
@@ -27,8 +31,12 @@ class ContextMergingService
 
         $sections = [];
 
-        // Iterate all workspace system documents
+        // Iterate all workspace system documents (skip memory — now handled by MemoryContextBuilder)
         foreach ($workspaceDocs as $type => $doc) {
+            if ($type === 'memory') {
+                continue;
+            }
+
             $label = strtoupper(SystemDocumentType::label($type));
             $parts = [$doc->content];
 
@@ -41,12 +49,22 @@ class ContextMergingService
             $sections[] = "# {$label}\n\n".implode("\n\n", $parts);
         }
 
-        // Add collection-only docs (not in workspace)
+        // Add collection-only docs (not in workspace, skip memory)
         foreach ($collectionDocs as $type => $doc) {
+            if ($type === 'memory') {
+                continue;
+            }
+
             if (! $workspaceDocs->has($type)) {
                 $label = strtoupper(SystemDocumentType::label($type));
                 $sections[] = "# {$label}\n\n".$doc->content;
             }
+        }
+
+        // Memory section from structured entries
+        $memoryMarkdown = $this->memoryBuilder->build($workspace, $collection);
+        if ($memoryMarkdown) {
+            $sections[] = "# MEMORY\n\n".$memoryMarkdown;
         }
 
         // 5. Available Skills

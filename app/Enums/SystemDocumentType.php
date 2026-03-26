@@ -5,7 +5,7 @@ namespace App\Enums;
 class SystemDocumentType
 {
     /** @var string[] Core types — always created for every workspace */
-    public const CORE = ['identity', 'instructions', 'context', 'memory'];
+    public const CORE = ['identity', 'instructions', 'context'];
 
     /** @var string[] Built-in optional types — available but not auto-created */
     public const BUILTIN = ['soul', 'services', 'portfolio', 'products', 'icp'];
@@ -33,12 +33,6 @@ class SystemDocumentType
                 'description' => 'Share what you\'re working on right now. Active projects, current priorities, deadlines.',
                 'icon' => 'Brain',
                 'guidance' => 'Keep this updated regularly. Include: active projects, current priorities, upcoming deadlines, and collaborators.',
-            ],
-            'memory' => [
-                'label' => 'Memory',
-                'description' => 'Persistent notes that carry across AI conversations. Decisions made, preferences discovered.',
-                'icon' => 'Database',
-                'guidance' => 'Add things AI should remember long-term: decisions, preferences, project history.',
             ],
             'soul' => [
                 'label' => 'Soul',

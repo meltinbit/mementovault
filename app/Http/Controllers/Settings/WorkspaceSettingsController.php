@@ -25,6 +25,8 @@ class WorkspaceSettingsController extends Controller
             ],
             'mcpInstructions' => $workspace->settings['mcp_instructions'] ?? '',
             'mcpCustomPrompt' => $workspace->settings['mcp_custom_prompt'] ?? '',
+            'memoryMaxEntries' => $workspace->settings['memory_max_entries'] ?? 50,
+            'collectionMemoryMaxEntries' => $workspace->settings['collection_memory_max_entries'] ?? 20,
             'storageSettings' => $storageSettings ? [
                 'driver' => $storageSettings['driver'] ?? 'local',
                 'key' => $storageSettings['key'] ?? '',
@@ -99,6 +101,15 @@ class WorkspaceSettingsController extends Controller
             } else {
                 unset($settings['mcp_custom_prompt']);
             }
+        }
+
+        // Handle memory limits
+        if ($request->has('memory_max_entries')) {
+            $settings['memory_max_entries'] = (int) $request->validated('memory_max_entries') ?: 50;
+        }
+
+        if ($request->has('collection_memory_max_entries')) {
+            $settings['collection_memory_max_entries'] = (int) $request->validated('collection_memory_max_entries') ?: 20;
         }
 
         $workspace->settings = $settings ?: null;

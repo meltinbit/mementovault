@@ -38,14 +38,18 @@ interface Props {
     storageSettings: StorageSettings | null;
     mcpInstructions: string;
     mcpCustomPrompt: string;
+    memoryMaxEntries: number;
+    collectionMemoryMaxEntries: number;
 }
 
-export default function WorkspaceSettings({ workspace, storageSettings, mcpInstructions, mcpCustomPrompt }: Props) {
+export default function WorkspaceSettings({ workspace, storageSettings, mcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
     const { data, setData, put, errors, processing, recentlySuccessful } = useForm({
         name: workspace.name,
         description: workspace.description || '',
         mcp_instructions: mcpInstructions || '',
         mcp_custom_prompt: mcpCustomPrompt || '',
+        memory_max_entries: memoryMaxEntries || 50,
+        collection_memory_max_entries: collectionMemoryMaxEntries || 20,
         storage_driver: storageSettings?.driver || 'local',
         storage_key: storageSettings?.key || '',
         storage_secret: storageSettings?.secret || '',
@@ -255,6 +259,40 @@ export default function WorkspaceSettings({ workspace, storageSettings, mcpInstr
                             </div>
                             <InputError message={errors.mcp_custom_prompt} />
                         </div>
+
+                        <Separator />
+
+                        <HeadingSmall title="Memory Limits" description="Control how many memory entries are included in the AI context." />
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="grid gap-2">
+                                <Label htmlFor="memory_max_entries">Workspace memory entries</Label>
+                                <Input
+                                    id="memory_max_entries"
+                                    type="number"
+                                    min={1}
+                                    max={500}
+                                    value={data.memory_max_entries}
+                                    onChange={(e) => setData('memory_max_entries', parseInt(e.target.value) || 50)}
+                                    className="w-24"
+                                />
+                                <InputError message={errors.memory_max_entries} />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="collection_memory_max_entries">Collection memory entries</Label>
+                                <Input
+                                    id="collection_memory_max_entries"
+                                    type="number"
+                                    min={1}
+                                    max={200}
+                                    value={data.collection_memory_max_entries}
+                                    onChange={(e) => setData('collection_memory_max_entries', parseInt(e.target.value) || 20)}
+                                    className="w-24"
+                                />
+                                <InputError message={errors.collection_memory_max_entries} />
+                            </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Pinned entries are always included regardless of these limits. Only the most recent entries up to this limit are sent to AI.</p>
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>Save</Button>

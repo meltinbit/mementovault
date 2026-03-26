@@ -22,13 +22,15 @@ import {
     type BreadcrumbItem,
     type CollectionData,
     type CollectionSystemDocumentData,
+    type MemoryEntryData,
     type ApiTokenData,
     type DocumentData,
     type SkillData,
     type SnippetData,
     type AssetData,
 } from '@/types';
-import { Copy, Check, Trash2 } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Archive, Copy, Check, Database, Pin, PinOff, Trash2 } from 'lucide-react';
 
 interface AvailableItem {
     id: number;
@@ -50,6 +52,7 @@ interface Props {
     availableSkills: AvailableItem[];
     availableSnippets: AvailableItem[];
     availableAssets: AvailableItem[];
+    memoryEntries: MemoryEntryData[];
     mcpEndpoint: string;
     newToken?: string | null;
 }
@@ -113,6 +116,7 @@ export default function CollectionShow({
     availableSkills,
     availableSnippets,
     availableAssets,
+    memoryEntries,
     mcpEndpoint,
     newToken,
 }: Props) {
@@ -221,13 +225,45 @@ export default function CollectionShow({
                     </Card>
                 )}
 
-                <div className="grid gap-6 lg:grid-cols-[7fr_3fr]">
+                <div className="grid gap-6 lg:grid-cols-[6fr_4fr]">
                     {/* Left column: System Document Overrides */}
                     <div className="space-y-6">
                         <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
                         <SystemDocSection collectionId={collection.id} type="instructions" label="Instructions" existing={getSystemDoc('instructions')} />
                         <SystemDocSection collectionId={collection.id} type="context" label="Context" existing={getSystemDoc('context')} />
-                        <SystemDocSection collectionId={collection.id} type="memory" label="Memory" existing={getSystemDoc('memory')} />
+
+                        <Separator />
+
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Database className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-sm font-medium">Memory</span>
+                                    <Badge variant="secondary" className="text-xs">{memoryEntries.length}</Badge>
+                                </div>
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={route('collections.memory.index', collection.id)}>
+                                        Manage Memory
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {memoryEntries.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">No memory entries yet.</p>
+                            ) : (
+                                <div className="space-y-1.5">
+                                    {memoryEntries.map((entry) => (
+                                        <div key={entry.id} className="flex items-start gap-2 rounded border px-3 py-2 text-sm">
+                                            {entry.is_pinned && <span className="shrink-0">📌</span>}
+                                            <span className="flex-1">{entry.content}</span>
+                                            {entry.category && (
+                                                <Badge variant="secondary" className="shrink-0 text-xs">{entry.category}</Badge>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Right column: Content + MCP + Tokens */}
