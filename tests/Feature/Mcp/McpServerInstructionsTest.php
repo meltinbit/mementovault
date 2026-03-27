@@ -29,7 +29,7 @@ test('server instructions always include operating guidelines', function () {
     expect($instructions)->toContain('get_context');
     expect($instructions)->toContain('collection_documents');
     expect($instructions)->toContain('update_system_document');
-    expect($instructions)->toContain('Writing Long Content');
+    expect($instructions)->toContain('Writing Content');
 });
 
 test('server instructions include workspace mcp_instructions', function () {
