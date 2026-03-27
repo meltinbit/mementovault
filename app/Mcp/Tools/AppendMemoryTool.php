@@ -23,7 +23,10 @@ class AppendMemoryTool extends Tool
         $scope = $request->get('scope', 'workspace');
 
         if ($scope === 'collection') {
-            $collection = app('mcp_collection');
+            $collection = mcp_collection();
+            if (! $collection) {
+                return Response::text('No collection active. Call get_context(collection: "slug") to select one, or use scope "workspace".');
+            }
 
             $entry = CollectionMemoryEntry::create([
                 'collection_id' => $collection->id,

@@ -46,7 +46,7 @@ class ContextVaultServer extends Server
     private function buildInstructions(?Workspace $workspace): string
     {
         $base = <<<'GUIDE'
-Call get_context first. Tools use action param. Write max 1500 chars per call, use append for more. One document per turn.
+Call get_context first. If no collection is active, it lists available ones — pass a slug to select. Tools use action param. Write max 1500 chars per call, use append for more. One document per turn.
 GUIDE;
 
         $customPrompt = $workspace?->settings['mcp_custom_prompt'] ?? null;

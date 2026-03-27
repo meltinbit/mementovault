@@ -1,10 +1,11 @@
-import { type BreadcrumbItem, type Workspace } from '@/types';
+import { type ApiTokenData, type BreadcrumbItem, type Workspace } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
 
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
+import { WorkspaceTokenManager } from '@/components/workspace-token-manager';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,9 @@ interface StorageSettings {
 
 interface Props {
     workspace: Workspace;
+    workspaceTokens: ApiTokenData[];
+    mcpEndpoint: string;
+    newWorkspaceToken?: string | null;
     storageSettings: StorageSettings | null;
     mcpInstructions: string;
     mcpCustomPrompt: string;
@@ -42,7 +46,7 @@ interface Props {
     collectionMemoryMaxEntries: number;
 }
 
-export default function WorkspaceSettings({ workspace, storageSettings, mcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
+export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpoint, newWorkspaceToken, storageSettings, mcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
     const { data, setData, put, errors, processing, recentlySuccessful } = useForm({
         name: workspace.name,
         description: workspace.description || '',
@@ -259,6 +263,16 @@ export default function WorkspaceSettings({ workspace, storageSettings, mcpInstr
                             </div>
                             <InputError message={errors.mcp_custom_prompt} />
                         </div>
+
+                        <Separator />
+
+                        <HeadingSmall title="Workspace API Token" description="A single token that gives MCP access to all collections in this workspace. You can switch between collections dynamically." />
+
+                        <WorkspaceTokenManager
+                            tokens={workspaceTokens}
+                            mcpEndpoint={mcpEndpoint}
+                            newToken={newWorkspaceToken}
+                        />
 
                         <Separator />
 

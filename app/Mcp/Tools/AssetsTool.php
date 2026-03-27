@@ -18,6 +18,10 @@ class AssetsTool extends Tool
 {
     public function handle(Request $request, WorkspaceStorageService $storage): Response
     {
+        if (! mcp_collection()) {
+            return Response::text('No collection active. Call get_context(collection: "slug") to select one.');
+        }
+
         return match ($request->get('action')) {
             'list' => $this->list(),
             'get_url' => $this->getUrl($request, $storage),

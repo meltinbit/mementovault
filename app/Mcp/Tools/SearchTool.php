@@ -17,7 +17,10 @@ class SearchTool extends Tool
 {
     public function handle(Request $request): Response
     {
-        $collection = app('mcp_collection');
+        $collection = mcp_collection();
+        if (! $collection) {
+            return Response::text('No collection active. Call get_context(collection: "slug") to select one.');
+        }
         $query = $request->get('query');
         $results = [];
 

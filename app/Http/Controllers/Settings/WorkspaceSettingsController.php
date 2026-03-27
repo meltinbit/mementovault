@@ -27,6 +27,15 @@ class WorkspaceSettingsController extends Controller
             'mcpCustomPrompt' => $workspace->settings['mcp_custom_prompt'] ?? '',
             'memoryMaxEntries' => $workspace->settings['memory_max_entries'] ?? 50,
             'collectionMemoryMaxEntries' => $workspace->settings['collection_memory_max_entries'] ?? 20,
+            'workspaceTokens' => $workspace->apiTokens()->latest()->get()->map(fn ($token) => [
+                'id' => $token->id,
+                'name' => $token->name,
+                'last_used_at' => $token->last_used_at?->diffForHumans(),
+                'expires_at' => $token->expires_at?->toDateString(),
+                'created_at' => $token->created_at->diffForHumans(),
+            ]),
+            'mcpEndpoint' => url('/mcp'),
+            'newWorkspaceToken' => session('newWorkspaceToken'),
             'storageSettings' => $storageSettings ? [
                 'driver' => $storageSettings['driver'] ?? 'local',
                 'key' => $storageSettings['key'] ?? '',

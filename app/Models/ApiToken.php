@@ -12,6 +12,8 @@ class ApiToken extends Model
 
     protected $fillable = [
         'collection_id',
+        'workspace_id',
+        'active_collection_id',
         'name',
         'token_hash',
         'last_used_at',
@@ -29,5 +31,20 @@ class ApiToken extends Model
     public function collection(): BelongsTo
     {
         return $this->belongsTo(Collection::class);
+    }
+
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
+    }
+
+    public function activeCollection(): BelongsTo
+    {
+        return $this->belongsTo(Collection::class, 'active_collection_id');
+    }
+
+    public function isWorkspaceToken(): bool
+    {
+        return $this->workspace_id !== null;
     }
 }

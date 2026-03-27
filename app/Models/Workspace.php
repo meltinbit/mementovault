@@ -79,6 +79,11 @@ class Workspace extends Model
         return $this->hasMany(MemoryEntry::class);
     }
 
+    public function apiTokens(): HasMany
+    {
+        return $this->hasMany(ApiToken::class);
+    }
+
     public static function defaultMcpInstructions(): string
     {
         return <<<'PROMPT'
