@@ -22,59 +22,18 @@ function getServerInstructions(): string
     return $prop->getValue($server);
 }
 
-test('server instructions always include operating guidelines', function () {
+test('server instructions include core guidelines', function () {
     $instructions = getServerInstructions();
 
-    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
     expect($instructions)->toContain('get_context');
-    expect($instructions)->toContain('collection_documents');
-    expect($instructions)->toContain('update_system_document');
-    expect($instructions)->toContain('Writing Content');
-});
-
-test('server instructions include workspace mcp_instructions', function () {
-    $user = User::factory()->create();
-    $workspace = Workspace::factory()->create([
-        'user_id' => $user->id,
-        'settings' => ['mcp_instructions' => 'Custom base instructions here.'],
-    ]);
-    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
-
-    app()->instance('current_workspace', $workspace);
-    app()->instance('mcp_collection', $collection);
-
-    $instructions = getServerInstructions();
-
-    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
-    expect($instructions)->toContain('--- Workspace Instructions ---');
-    expect($instructions)->toContain('Custom base instructions here.');
-});
-
-test('server instructions use default when workspace has mcp_instructions set', function () {
-    $user = User::factory()->create();
-    $workspace = Workspace::factory()->create([
-        'user_id' => $user->id,
-        'settings' => ['mcp_instructions' => Workspace::defaultMcpInstructions()],
-    ]);
-    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
-
-    app()->instance('current_workspace', $workspace);
-    app()->instance('mcp_collection', $collection);
-
-    $instructions = getServerInstructions();
-
-    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
-    expect($instructions)->toContain('get_context');
+    expect($instructions)->toContain('append');
 });
 
 test('server instructions append custom prompt when set', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create([
         'user_id' => $user->id,
-        'settings' => [
-            'mcp_instructions' => 'Base instructions.',
-            'mcp_custom_prompt' => 'Always respond in Italian.',
-        ],
+        'settings' => ['mcp_custom_prompt' => 'Always respond in Italian.'],
     ]);
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
@@ -83,16 +42,15 @@ test('server instructions append custom prompt when set', function () {
 
     $instructions = getServerInstructions();
 
-    expect($instructions)->toContain('Base instructions.');
-    expect($instructions)->toContain('--- Additional Instructions ---');
+    expect($instructions)->toContain('get_context');
     expect($instructions)->toContain('Always respond in Italian.');
 });
 
-test('server instructions do not include additional section when custom prompt is empty', function () {
+test('server instructions without custom prompt are minimal', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create([
         'user_id' => $user->id,
-        'settings' => ['mcp_instructions' => 'Base only.'],
+        'settings' => [],
     ]);
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
@@ -101,13 +59,5 @@ test('server instructions do not include additional section when custom prompt i
 
     $instructions = getServerInstructions();
 
-    expect($instructions)->toContain('Base only.');
-    expect($instructions)->not->toContain('Additional Instructions');
-});
-
-test('server guidelines are present even without workspace', function () {
-    $instructions = getServerInstructions();
-
-    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
-    expect($instructions)->not->toContain('Workspace Instructions');
+    expect(mb_strlen($instructions))->toBeLessThan(200);
 });

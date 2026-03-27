@@ -7,19 +7,16 @@ use App\Models\SystemDocument;
 
 class ContextMergingService
 {
-    public function __construct(
-        private MemoryContextBuilder $memoryBuilder,
-    ) {}
-
     /**
-     * Build the merged context markdown for a collection's MCP endpoint.
+     * Build a minimal context for MCP — just enough to orient the AI.
+     * All content is fetched on-demand via tools.
      */
     public function merge(Collection $collection): string
     {
         $workspace = $collection->workspace;
         $sections = [];
 
-        // 1. Workspace Identity
+        // 1. Workspace Identity (compact)
         $identity = SystemDocument::withoutGlobalScopes()
             ->where('workspace_id', $workspace->id)
             ->where('type', 'identity')
@@ -27,10 +24,10 @@ class ContextMergingService
             ->first();
 
         if ($identity) {
-            $sections[] = "# IDENTITY\n\n".$identity->content;
+            $sections[] = $identity->content;
         }
 
-        // 2. Workspace Instructions
+        // 2. Workspace Instructions (compact)
         $instructions = SystemDocument::withoutGlobalScopes()
             ->where('workspace_id', $workspace->id)
             ->where('type', 'instructions')
@@ -38,73 +35,44 @@ class ContextMergingService
             ->first();
 
         if ($instructions) {
-            $sections[] = "# INSTRUCTIONS\n\n".$instructions->content;
+            $sections[] = $instructions->content;
         }
 
-        // 3. Collection header
-        $collectionHeader = "# COLLECTION: {$collection->name}";
+        // 3. Collection + inventory (slugs only, no content)
+        $inventory = "Collection: {$collection->name}";
         if ($collection->description) {
-            $collectionHeader .= "\n\n".$collection->description;
-        }
-        $sections[] = $collectionHeader;
-
-        // 4. Collection documents (in sort_order)
-        // Required docs (e.g. Instructions) are included in full.
-        // Others get a preview — use get_collection_document to read the full content.
-        $summaryDocs = [];
-        foreach ($collection->collectionDocuments as $doc) {
-            if (! $doc->content) {
-                continue;
-            }
-
-            if ($doc->is_required) {
-                $sections[] = "## {$doc->name}\n\n".$doc->content;
-            } else {
-                $preview = mb_substr($doc->content, 0, 200);
-                if (mb_strlen($doc->content) > 200) {
-                    $preview .= '…';
-                }
-                $summaryDocs[] = "- **{$doc->name}** (slug: `{$doc->slug}`) — {$preview}";
-            }
+            $inventory .= " — {$collection->description}";
         }
 
-        if ($summaryDocs) {
-            $sections[] = "## Collection Documents\n\nUse `get_collection_document` with the slug to read full content.\n\n".implode("\n", $summaryDocs);
+        $docs = $collection->collectionDocuments()->pluck('slug')->join(', ');
+        if ($docs) {
+            $inventory .= "\nCollection docs: {$docs}";
         }
 
-        // 5. Memory (workspace + collection)
-        $memoryMarkdown = $this->memoryBuilder->build($workspace, $collection);
-        if ($memoryMarkdown) {
-            $sections[] = "# MEMORY\n\n".$memoryMarkdown;
+        $counts = [];
+        $skillCount = $collection->skills()->where('is_active', true)->count();
+        $docCount = $collection->documents()->where('is_active', true)->count();
+        $snippetCount = $collection->snippets()->where('is_active', true)->count();
+        $assetCount = $collection->assets()->where('is_active', true)->count();
+
+        if ($skillCount) {
+            $counts[] = "{$skillCount} skills";
+        }
+        if ($docCount) {
+            $counts[] = "{$docCount} documents";
+        }
+        if ($snippetCount) {
+            $counts[] = "{$snippetCount} snippets";
+        }
+        if ($assetCount) {
+            $counts[] = "{$assetCount} assets";
         }
 
-        // 6. Available Skills
-        $skills = $collection->skills()->where('is_active', true)->get(['name', 'description']);
-        if ($skills->isNotEmpty()) {
-            $skillList = $skills->map(fn ($s) => "- **{$s->name}**: {$s->description}")->join("\n");
-            $sections[] = "# AVAILABLE SKILLS\n\n{$skillList}";
+        if ($counts) {
+            $inventory .= "\nContent: ".implode(', ', $counts);
         }
 
-        // 7. Available Documents
-        $documents = $collection->documents()->where('is_active', true)->get(['title', 'type']);
-        if ($documents->isNotEmpty()) {
-            $docList = $documents->map(fn ($d) => "- {$d->title} ({$d->type})")->join("\n");
-            $sections[] = "# AVAILABLE DOCUMENTS\n\n{$docList}";
-        }
-
-        // 8. Available Snippets
-        $snippets = $collection->snippets()->where('is_active', true)->get(['name']);
-        if ($snippets->isNotEmpty()) {
-            $snippetList = $snippets->map(fn ($s) => "- {$s->name}")->join("\n");
-            $sections[] = "# AVAILABLE SNIPPETS\n\n{$snippetList}";
-        }
-
-        // 9. Available Assets
-        $assets = $collection->assets()->where('is_active', true)->get(['name', 'description']);
-        if ($assets->isNotEmpty()) {
-            $assetList = $assets->map(fn ($a) => "- **{$a->name}**".($a->description ? ": {$a->description}" : ''))->join("\n");
-            $sections[] = "# AVAILABLE ASSETS\n\n{$assetList}";
-        }
+        $sections[] = $inventory;
 
         return implode("\n\n---\n\n", $sections);
     }

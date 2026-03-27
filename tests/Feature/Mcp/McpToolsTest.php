@@ -46,7 +46,7 @@ test('get_context returns merged context', function () {
 
     $response = ContextVaultServer::tool(GetContextTool::class);
 
-    $response->assertOk()->assertSee('IDENTITY');
+    $response->assertOk()->assertSee('Collection:');
 });
 
 test('documents list returns collection documents', function () {

@@ -19,8 +19,8 @@ use Laravel\Mcp\Server\Attributes\Version;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('Context Vault')]
-#[Version('2.0.0')]
-#[Description('AI Context Manager — serves identity, instructions, context, memory, documents, skills, snippets, and assets via MCP.')]
+#[Version('2.1.0')]
+#[Description('AI Context Manager — serves identity, instructions, documents, skills, snippets, and assets via MCP.')]
 class ContextVaultServer extends Server
 {
     /** @var array<int, class-string<Tool>> */
@@ -45,63 +45,15 @@ class ContextVaultServer extends Server
 
     private function buildInstructions(?Workspace $workspace): string
     {
-        $base = $this->serverGuidelines();
-
-        // Workspace-level MCP instructions from settings.
-        $workspaceInstructions = $workspace?->settings['mcp_instructions'] ?? '';
-        if ($workspaceInstructions) {
-            $base .= "\n\n--- Workspace Instructions ---\n\n".$workspaceInstructions;
-        }
+        $base = <<<'GUIDE'
+Call get_context first. Tools use action param. Write max 1500 chars per call, use append for more. One document per turn.
+GUIDE;
 
         $customPrompt = $workspace?->settings['mcp_custom_prompt'] ?? null;
         if ($customPrompt) {
-            $base .= "\n\n--- Additional Instructions ---\n\n".$customPrompt;
+            $base .= "\n".$customPrompt;
         }
 
         return $base;
-    }
-
-    private function serverGuidelines(): string
-    {
-        return <<<'GUIDELINES'
-# MementoVault MCP — Operating Guidelines
-
-## Startup
-1. Call `get_context` FIRST, before any response. Absorb silently — never announce it.
-
-## Tools Overview
-Each tool uses an `action` parameter to select the operation.
-
-### `collection_documents` — Collection-level documents (Instructions, Memory, Architecture, etc.)
-Always included in MCP context. Actions: list, get, create, update, delete, reorder, list_templates.
-- To update a doc: `{action: "update", slug: "instructions", content: "..."}`
-- To create from template: `{action: "create", template: "brand-voice"}`
-
-### `documents` — Workspace documents assigned to this collection
-Actions: list, get, create, update.
-
-### `skills` — Reusable skill instructions
-Actions: list, get, create, update.
-
-### `snippets` — Reusable text snippets
-Actions: list, get, create, update.
-
-### `assets` — Files, images, and folders
-Actions: list, get_url, list_folders, create_folder, move.
-
-### `update_system_document` — Workspace-level system docs (Identity, Soul, Services, etc.)
-NOT for collection documents. Only for workspace-wide settings.
-
-### `search` — Full-text search across all content types
-
-### `append_memory` — Save short memory entries
-For structured/long memory, use `collection_documents` with `{action: "update", slug: "memory"}`.
-
-## Writing Content — CRITICAL RULES
-1. NEVER send more than 1500 characters of content in a single tool call.
-2. For longer content, use `update` for the first chunk, then `append` for each subsequent chunk.
-3. **Only update ONE document per response turn.** After finishing one document, STOP and let the user ask for the next one. Never try to update multiple documents in a single turn — you will run out of output tokens and the response will be cut off.
-4. The `append` action is available on: collection_documents, documents, skills, snippets.
-GUIDELINES;
     }
 }
