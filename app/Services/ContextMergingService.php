@@ -49,10 +49,27 @@ class ContextMergingService
         $sections[] = $collectionHeader;
 
         // 4. Collection documents (in sort_order)
+        // Required docs (e.g. Instructions) are included in full.
+        // Others get a preview — use get_collection_document to read the full content.
+        $summaryDocs = [];
         foreach ($collection->collectionDocuments as $doc) {
-            if ($doc->content) {
-                $sections[] = "## {$doc->name}\n\n".$doc->content;
+            if (! $doc->content) {
+                continue;
             }
+
+            if ($doc->is_required) {
+                $sections[] = "## {$doc->name}\n\n".$doc->content;
+            } else {
+                $preview = mb_substr($doc->content, 0, 200);
+                if (mb_strlen($doc->content) > 200) {
+                    $preview .= '…';
+                }
+                $summaryDocs[] = "- **{$doc->name}** (slug: `{$doc->slug}`) — {$preview}";
+            }
+        }
+
+        if ($summaryDocs) {
+            $sections[] = "## Collection Documents\n\nUse `get_collection_document` with the slug to read full content.\n\n".implode("\n", $summaryDocs);
         }
 
         // 5. Memory (workspace + collection)

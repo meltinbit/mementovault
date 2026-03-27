@@ -56,21 +56,41 @@ test('merged context includes all sections including memory entries', function (
     expect($result)->toContain('Test memory');
 });
 
-test('collection documents are included in merged context', function () {
+test('required collection documents are included in full in merged context', function () {
+    [, $collection] = createMergingTestSetup();
+
+    CollectionDocument::create([
+        'collection_id' => $collection->id,
+        'name' => 'Instructions',
+        'content' => 'Follow these rules carefully',
+        'sort_order' => 0,
+        'is_required' => true,
+    ]);
+
+    $service = app(ContextMergingService::class);
+    $result = $service->merge($collection);
+
+    expect($result)->toContain('## Instructions');
+    expect($result)->toContain('Follow these rules carefully');
+});
+
+test('non-required collection documents show preview with slug in merged context', function () {
     [, $collection] = createMergingTestSetup();
 
     CollectionDocument::create([
         'collection_id' => $collection->id,
         'name' => 'Architecture',
         'content' => 'System architecture details',
-        'sort_order' => 0,
+        'sort_order' => 1,
+        'is_required' => false,
     ]);
 
     $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
-    expect($result)->toContain('## Architecture');
-    expect($result)->toContain('System architecture details');
+    expect($result)->toContain('**Architecture**');
+    expect($result)->toContain('slug: `architecture`');
+    expect($result)->toContain('get_collection_document');
 });
 
 test('merged context lists available skills', function () {
