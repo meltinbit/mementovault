@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Asset;
+use App\Models\AssetFolder;
+use App\Models\Collection;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Http\UploadedFile;
@@ -40,7 +43,7 @@ test('can upload an asset', function () {
             'name' => 'My Document',
             'description' => 'A test PDF',
         ])
-        ->assertRedirect('/assets');
+        ->assertRedirect();
 
     $asset = Asset::withoutGlobalScopes()->where('workspace_id', $workspace->id)->first();
     expect($asset)->not->toBeNull();
@@ -75,7 +78,7 @@ test('can delete an asset', function () {
 
     Storage::disk('assets')->put('test/assets/file.pdf', 'content');
 
-    $this->actingAs($user)->delete("/assets/{$asset->id}")->assertRedirect('/assets');
+    $this->actingAs($user)->delete("/assets/{$asset->id}")->assertRedirect();
 
     expect(Asset::withoutGlobalScopes()->find($asset->id))->toBeNull();
 });
@@ -116,4 +119,155 @@ test('assets are scoped to workspace on index', function () {
 
     $this->actingAs($user1)->get('/assets')
         ->assertInertia(fn ($page) => $page->has('assets.data', 1));
+});
+
+test('index returns folders tree', function () {
+    [$user, $workspace] = createAssetTestUser();
+    AssetFolder::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Images']);
+
+    $this->actingAs($user)->get('/assets')
+        ->assertInertia(fn ($page) => $page->has('folders', 1));
+});
+
+test('can filter assets by folder_id', function () {
+    [$user, $workspace] = createAssetTestUser();
+    $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
+    Asset::factory()->create(['workspace_id' => $workspace->id, 'folder_id' => $folder->id, 'name' => 'In Folder']);
+    Asset::factory()->create(['workspace_id' => $workspace->id, 'folder_id' => null, 'name' => 'At Root']);
+
+    $this->actingAs($user)->get("/assets?folder_id={$folder->id}")
+        ->assertInertia(fn ($page) => $page->has('assets.data', 1)
+            ->where('assets.data.0.name', 'In Folder'));
+});
+
+test('can upload asset into a specific folder', function () {
+    Storage::fake('assets');
+    [$user, $workspace] = createAssetTestUser();
+    $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
+
+    $file = UploadedFile::fake()->create('logo.png', 512, 'image/png');
+
+    $this->actingAs($user)
+        ->post('/assets', [
+            'file' => $file,
+            'name' => 'Logo',
+            'description' => 'Brand logo',
+            'folder_id' => $folder->id,
+        ])
+        ->assertRedirect();
+
+    $asset = Asset::withoutGlobalScopes()->where('workspace_id', $workspace->id)->where('name', 'Logo')->first();
+    expect($asset->folder_id)->toBe($folder->id);
+});
+
+test('can move assets to a folder', function () {
+    [$user, $workspace] = createAssetTestUser();
+    $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
+    $asset1 = Asset::factory()->create(['workspace_id' => $workspace->id]);
+    $asset2 = Asset::factory()->create(['workspace_id' => $workspace->id]);
+
+    $this->actingAs($user)
+        ->post('/assets/move', [
+            'asset_ids' => [$asset1->id, $asset2->id],
+            'folder_id' => $folder->id,
+        ])
+        ->assertRedirect();
+
+    expect($asset1->fresh()->folder_id)->toBe($folder->id);
+    expect($asset2->fresh()->folder_id)->toBe($folder->id);
+});
+
+test('can move assets to root', function () {
+    [$user, $workspace] = createAssetTestUser();
+    $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
+    $asset = Asset::factory()->create(['workspace_id' => $workspace->id, 'folder_id' => $folder->id]);
+
+    $this->actingAs($user)
+        ->post('/assets/move', [
+            'asset_ids' => [$asset->id],
+            'folder_id' => null,
+        ])
+        ->assertRedirect();
+
+    expect($asset->fresh()->folder_id)->toBeNull();
+});
+
+test('can copy assets to a folder', function () {
+    [$user, $workspace] = createAssetTestUser();
+    $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
+    $tag = Tag::factory()->create(['workspace_id' => $workspace->id]);
+    $original = Asset::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Original']);
+    $original->tags()->attach($tag);
+
+    $this->actingAs($user)
+        ->post('/assets/copy', [
+            'asset_ids' => [$original->id],
+            'folder_id' => $folder->id,
+        ])
+        ->assertRedirect();
+
+    $copy = Asset::withoutGlobalScopes()
+        ->where('workspace_id', $workspace->id)
+        ->where('name', 'Original (copy)')
+        ->first();
+
+    expect($copy)->not->toBeNull();
+    expect($copy->folder_id)->toBe($folder->id);
+    expect($copy->storage_path)->toBe($original->storage_path);
+    expect($copy->tags->pluck('id')->toArray())->toBe([$tag->id]);
+});
+
+test('copy does not duplicate collection associations', function () {
+    [$user, $workspace] = createAssetTestUser();
+    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
+    $original = Asset::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Source']);
+    $original->collections()->attach($collection);
+
+    $this->actingAs($user)
+        ->post('/assets/copy', [
+            'asset_ids' => [$original->id],
+            'folder_id' => null,
+        ])
+        ->assertRedirect();
+
+    $copy = Asset::withoutGlobalScopes()
+        ->where('workspace_id', $workspace->id)
+        ->where('name', 'Source (copy)')
+        ->first();
+
+    expect($copy->collections)->toBeEmpty();
+});
+
+test('can batch delete assets', function () {
+    Storage::fake('assets');
+    [$user, $workspace] = createAssetTestUser();
+    $asset1 = Asset::factory()->create(['workspace_id' => $workspace->id, 'storage_path' => 'test/a1/file.pdf']);
+    $asset2 = Asset::factory()->create(['workspace_id' => $workspace->id, 'storage_path' => 'test/a2/file.pdf']);
+
+    Storage::disk('assets')->put('test/a1/file.pdf', 'c');
+    Storage::disk('assets')->put('test/a2/file.pdf', 'c');
+
+    $this->actingAs($user)
+        ->post('/assets/batch-delete', ['asset_ids' => [$asset1->id, $asset2->id]])
+        ->assertRedirect();
+
+    expect(Asset::withoutGlobalScopes()->find($asset1->id))->toBeNull();
+    expect(Asset::withoutGlobalScopes()->find($asset2->id))->toBeNull();
+});
+
+test('delete preserves R2 file when shared by copy', function () {
+    Storage::fake('assets');
+    [$user, $workspace] = createAssetTestUser();
+    $sharedPath = 'test/shared/file.pdf';
+
+    $original = Asset::factory()->create(['workspace_id' => $workspace->id, 'storage_path' => $sharedPath]);
+    $copy = Asset::factory()->create(['workspace_id' => $workspace->id, 'storage_path' => $sharedPath]);
+
+    Storage::disk('assets')->put($sharedPath, 'content');
+
+    $this->actingAs($user)->delete("/assets/{$original->id}")->assertRedirect();
+
+    expect(Asset::withoutGlobalScopes()->find($original->id))->toBeNull();
+    expect(Asset::withoutGlobalScopes()->find($copy->id))->not->toBeNull();
+    Storage::disk('assets')->assertExists($sharedPath);
 });

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\SystemDocumentType;
 use App\Models\Collection;
 use App\Models\SystemDocument;
 
@@ -18,77 +17,72 @@ class ContextMergingService
     public function merge(Collection $collection): string
     {
         $workspace = $collection->workspace;
-        $workspaceDocs = SystemDocument::withoutGlobalScopes()
-            ->where('workspace_id', $workspace->id)
-            ->where('content', '!=', '')
-            ->get()
-            ->keyBy('type');
-
-        $collectionDocs = $collection->collectionSystemDocuments()
-            ->where('content', '!=', '')
-            ->get()
-            ->keyBy('type');
-
         $sections = [];
 
-        // Iterate all workspace system documents (skip memory — now handled by MemoryContextBuilder)
-        foreach ($workspaceDocs as $type => $doc) {
-            if ($type === 'memory') {
-                continue;
-            }
+        // 1. Workspace Identity
+        $identity = SystemDocument::withoutGlobalScopes()
+            ->where('workspace_id', $workspace->id)
+            ->where('type', 'identity')
+            ->where('content', '!=', '')
+            ->first();
 
-            $label = strtoupper(SystemDocumentType::label($type));
-            $parts = [$doc->content];
-
-            // Append collection override if exists
-            $collectionDoc = $collectionDocs->get($type);
-            if ($collectionDoc) {
-                $parts[] = $collectionDoc->content;
-            }
-
-            $sections[] = "# {$label}\n\n".implode("\n\n", $parts);
+        if ($identity) {
+            $sections[] = "# IDENTITY\n\n".$identity->content;
         }
 
-        // Add collection-only docs (not in workspace, skip memory)
-        foreach ($collectionDocs as $type => $doc) {
-            if ($type === 'memory') {
-                continue;
-            }
+        // 2. Workspace Instructions
+        $instructions = SystemDocument::withoutGlobalScopes()
+            ->where('workspace_id', $workspace->id)
+            ->where('type', 'instructions')
+            ->where('content', '!=', '')
+            ->first();
 
-            if (! $workspaceDocs->has($type)) {
-                $label = strtoupper(SystemDocumentType::label($type));
-                $sections[] = "# {$label}\n\n".$doc->content;
+        if ($instructions) {
+            $sections[] = "# INSTRUCTIONS\n\n".$instructions->content;
+        }
+
+        // 3. Collection header
+        $collectionHeader = "# COLLECTION: {$collection->name}";
+        if ($collection->description) {
+            $collectionHeader .= "\n\n".$collection->description;
+        }
+        $sections[] = $collectionHeader;
+
+        // 4. Collection documents (in sort_order)
+        foreach ($collection->collectionDocuments as $doc) {
+            if ($doc->content) {
+                $sections[] = "## {$doc->name}\n\n".$doc->content;
             }
         }
 
-        // Memory section from structured entries
+        // 5. Memory (workspace + collection)
         $memoryMarkdown = $this->memoryBuilder->build($workspace, $collection);
         if ($memoryMarkdown) {
             $sections[] = "# MEMORY\n\n".$memoryMarkdown;
         }
 
-        // 5. Available Skills
+        // 6. Available Skills
         $skills = $collection->skills()->where('is_active', true)->get(['name', 'description']);
         if ($skills->isNotEmpty()) {
             $skillList = $skills->map(fn ($s) => "- **{$s->name}**: {$s->description}")->join("\n");
             $sections[] = "# AVAILABLE SKILLS\n\n{$skillList}";
         }
 
-        // 6. Available Documents
+        // 7. Available Documents
         $documents = $collection->documents()->where('is_active', true)->get(['title', 'type']);
         if ($documents->isNotEmpty()) {
             $docList = $documents->map(fn ($d) => "- {$d->title} ({$d->type})")->join("\n");
             $sections[] = "# AVAILABLE DOCUMENTS\n\n{$docList}";
         }
 
-        // 7. Available Snippets
+        // 8. Available Snippets
         $snippets = $collection->snippets()->where('is_active', true)->get(['name']);
         if ($snippets->isNotEmpty()) {
             $snippetList = $snippets->map(fn ($s) => "- {$s->name}")->join("\n");
             $sections[] = "# AVAILABLE SNIPPETS\n\n{$snippetList}";
         }
 
-        // 8. Available Assets
+        // 9. Available Assets
         $assets = $collection->assets()->where('is_active', true)->get(['name', 'description']);
         if ($assets->isNotEmpty()) {
             $assetList = $assets->map(fn ($a) => "- **{$a->name}**".($a->description ? ": {$a->description}" : ''))->join("\n");

@@ -9,6 +9,7 @@ use App\Models\Collection;
 use App\Models\Document;
 use App\Models\Skill;
 use App\Models\Snippet;
+use App\Services\CollectionTemplateService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,6 +17,9 @@ use Inertia\Response;
 
 class CollectionController extends Controller
 {
+    public function __construct(
+        private CollectionTemplateService $templateService,
+    ) {}
     public function index(Request $request): Response
     {
         $query = Collection::withCount(['documents', 'skills', 'snippets', 'assets']);
@@ -43,6 +47,8 @@ class CollectionController extends Controller
     {
         $collection = Collection::create($request->validated());
 
+        $this->templateService->seedDocuments($collection);
+
         return to_route('collections.show', $collection);
     }
 
@@ -52,10 +58,13 @@ class CollectionController extends Controller
 
         return Inertia::render('collections/show', [
             'collection' => $collection,
-            'systemDocuments' => $collection->collectionSystemDocuments()->get()->map(fn ($doc) => [
+            'collectionDocuments' => $collection->collectionDocuments()->get()->map(fn ($doc) => [
                 'id' => $doc->id,
-                'type' => $doc->type,
+                'name' => $doc->name,
+                'slug' => $doc->slug,
                 'content' => $doc->content,
+                'sort_order' => $doc->sort_order,
+                'is_required' => $doc->is_required,
                 'version' => $doc->version,
                 'updated_at' => $doc->updated_at->diffForHumans(),
             ]),

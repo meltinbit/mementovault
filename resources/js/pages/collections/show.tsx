@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from 'react';
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import {
     type BreadcrumbItem,
     type CollectionData,
-    type CollectionSystemDocumentData,
+    type CollectionDocumentData,
     type MemoryEntryData,
     type ApiTokenData,
     type DocumentData,
@@ -29,8 +29,7 @@ import {
     type SnippetData,
     type AssetData,
 } from '@/types';
-import { Link } from '@inertiajs/react';
-import { Archive, Copy, Check, Database, Pin, PinOff, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Copy, Check, Database, Lock, Plus, Trash2 } from 'lucide-react';
 
 interface AvailableItem {
     id: number;
@@ -42,7 +41,7 @@ interface AvailableItem {
 
 interface Props {
     collection: CollectionData;
-    systemDocuments: CollectionSystemDocumentData[];
+    collectionDocuments: CollectionDocumentData[];
     tokens: ApiTokenData[];
     documents: DocumentData[];
     skills: SkillData[];
@@ -57,47 +56,63 @@ interface Props {
     newToken?: string | null;
 }
 
-function SystemDocSection({
-    collectionId,
-    type,
-    label,
-    existing,
-}: {
-    collectionId: number;
-    type: string;
-    label: string;
-    existing?: CollectionSystemDocumentData;
-}) {
+function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc: CollectionDocumentData }) {
+    const [expanded, setExpanded] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
     const { data, setData, put, processing, recentlySuccessful } = useForm({
-        content: existing?.content || '',
+        name: doc.name,
+        content: doc.content,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('collections.system-documents.update', [collectionId, type]));
+        put(route('collections.docs.update', [collectionId, doc.id]), { preserveScroll: true });
     };
 
     return (
-        <div className="space-y-3">
-            <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{label}</span>
-                {existing && (
-                    <Badge variant="secondary" className="text-xs">
-                        v{existing.version}
-                    </Badge>
+        <div className="rounded-md border">
+            <div className="flex items-center gap-2 px-3 py-2">
+                <button type="button" onClick={() => setExpanded(!expanded)} className="flex items-center gap-2 flex-1 text-left">
+                    {expanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                    <span className="text-sm font-medium">{doc.name}</span>
+                    {doc.is_required && <Lock className="h-3 w-3 text-muted-foreground" />}
+                </button>
+                <Badge variant="secondary" className="text-xs">v{doc.version}</Badge>
+                {!doc.is_required && (
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => setDeleteConfirm(true)}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
                 )}
             </div>
-            <form onSubmit={submit} className="space-y-3">
-                <MarkdownEditor value={data.content} onChange={(v) => setData('content', v)} minRows={8} placeholder={`Collection-level ${label.toLowerCase()} override...`} />
-                <div className="flex items-center gap-4">
-                    <Button size="sm" disabled={processing}>
-                        Save {label}
-                    </Button>
-                    <Transition show={recentlySuccessful} enter="transition ease-in-out" enterFrom="opacity-0" leave="transition ease-in-out" leaveTo="opacity-0">
-                        <p className="text-sm text-neutral-600">Saved</p>
-                    </Transition>
-                </div>
-            </form>
+
+            {expanded && (
+                <form onSubmit={submit} className="space-y-3 border-t px-3 py-3">
+                    <div className="grid gap-2">
+                        <Label>Name</Label>
+                        <Input value={data.name} onChange={(e) => setData('name', e.target.value)} className="h-8" />
+                    </div>
+                    <MarkdownEditor value={data.content} onChange={(v) => setData('content', v)} minRows={8} placeholder={`Write ${doc.name.toLowerCase()} content...`} />
+                    <div className="flex items-center gap-4">
+                        <Button size="sm" disabled={processing}>Save</Button>
+                        <Transition show={recentlySuccessful} enter="transition ease-in-out" enterFrom="opacity-0" leave="transition ease-in-out" leaveTo="opacity-0">
+                            <p className="text-sm text-neutral-600">Saved</p>
+                        </Transition>
+                    </div>
+                </form>
+            )}
+
+            <DeleteConfirmation
+                open={deleteConfirm}
+                onClose={() => setDeleteConfirm(false)}
+                onConfirm={() => {
+                    router.delete(route('collections.docs.destroy', [collectionId, doc.id]), {
+                        onSuccess: () => setDeleteConfirm(false),
+                        preserveScroll: true,
+                    });
+                }}
+                title={`Delete "${doc.name}"?`}
+                description="This will permanently delete this document and its revision history."
+            />
         </div>
     );
 }
@@ -106,7 +121,7 @@ const colorPalette = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8
 
 export default function CollectionShow({
     collection,
-    systemDocuments,
+    collectionDocuments,
     tokens,
     documents,
     skills,
@@ -123,13 +138,14 @@ export default function CollectionShow({
     const [copied, setCopied] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+    const [showAddDoc, setShowAddDoc] = useState(false);
+
+    const addDocForm = useForm({ name: '', content: '' });
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Collections', href: '/collections' },
         { title: collection.name, href: `/collections/${collection.id}` },
     ];
-
-    const getSystemDoc = (type: string) => systemDocuments.find((d) => d.type === type);
 
     const copyEndpoint = () => {
         navigator.clipboard.writeText(mcpEndpoint);
@@ -150,6 +166,17 @@ export default function CollectionShow({
         detailsForm.put(route('collections.update', collection.id));
     };
 
+    const handleAddDoc: FormEventHandler = (e) => {
+        e.preventDefault();
+        addDocForm.post(route('collections.docs.store', collection.id), {
+            onSuccess: () => {
+                addDocForm.reset();
+                setShowAddDoc(false);
+            },
+            preserveScroll: true,
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={collection.name} />
@@ -161,7 +188,7 @@ export default function CollectionShow({
                     </div>
                     <div className="flex items-center gap-2">
                         <Badge variant="outline" className="capitalize">
-                            {collection.type.replace('_', ' ')}
+                            {collection.type.replace(/_/g, ' ')}
                         </Badge>
                         <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
                             {showDetails ? 'Hide Details' : 'Edit Details'}
@@ -191,6 +218,9 @@ export default function CollectionShow({
                                                 <SelectItem value="client_project">Client Project</SelectItem>
                                                 <SelectItem value="product_saas">Product / SaaS</SelectItem>
                                                 <SelectItem value="marketing">Marketing</SelectItem>
+                                                <SelectItem value="sales_agent">Sales Agent</SelectItem>
+                                                <SelectItem value="social_manager">Social Manager</SelectItem>
+                                                <SelectItem value="strategy_brainstorm">Strategy & Brainstorm</SelectItem>
                                                 <SelectItem value="custom">Custom</SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -226,11 +256,44 @@ export default function CollectionShow({
                 )}
 
                 <div className="grid gap-6 lg:grid-cols-[6fr_4fr]">
-                    {/* Left column: System Document Overrides */}
+                    {/* Left column: Collection Documents */}
                     <div className="space-y-6">
-                        <HeadingSmall title="System Document Overrides" description="Collection-level overrides that append to your workspace system documents. Use these to add project-specific instructions, context, or memory that only apply to this collection." />
-                        <SystemDocSection collectionId={collection.id} type="instructions" label="Instructions" existing={getSystemDoc('instructions')} />
-                        <SystemDocSection collectionId={collection.id} type="context" label="Context" existing={getSystemDoc('context')} />
+                        <div className="flex items-center justify-between">
+                            <HeadingSmall title="Collection Documents" description="These documents define how AI operates in this collection. They are always included in MCP context." />
+                            <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowAddDoc(!showAddDoc)}>
+                                <Plus className="h-4 w-4" />
+                                Add Document
+                            </Button>
+                        </div>
+
+                        {showAddDoc && (
+                            <form onSubmit={handleAddDoc} className="space-y-3 rounded-md border p-4">
+                                <div className="grid gap-2">
+                                    <Label>Document Name</Label>
+                                    <Input
+                                        value={addDocForm.data.name}
+                                        onChange={(e) => addDocForm.setData('name', e.target.value)}
+                                        placeholder="e.g. Brand Voice, Architecture, Sales Playbook"
+                                        autoFocus
+                                    />
+                                    <InputError message={addDocForm.errors.name} />
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button size="sm" type="submit" disabled={addDocForm.processing}>Create</Button>
+                                    <Button size="sm" type="button" variant="ghost" onClick={() => setShowAddDoc(false)}>Cancel</Button>
+                                </div>
+                            </form>
+                        )}
+
+                        {collectionDocuments.length === 0 ? (
+                            <p className="py-8 text-center text-sm text-muted-foreground">No documents yet. Add one to get started.</p>
+                        ) : (
+                            <div className="space-y-2">
+                                {collectionDocuments.map((doc) => (
+                                    <CollectionDocSection key={doc.id} collectionId={collection.id} doc={doc} />
+                                ))}
+                            </div>
+                        )}
 
                         <Separator />
 
@@ -315,7 +378,7 @@ export default function CollectionShow({
                 onClose={() => setShowDelete(false)}
                 onConfirm={() => router.delete(route('collections.destroy', collection.id))}
                 title={`Delete "${collection.name}"?`}
-                description="This deletes the collection, system documents, and all API tokens. Content items (documents, skills, etc.) are NOT deleted."
+                description="This deletes the collection, its documents, and all API tokens. Content items (documents, skills, etc.) are NOT deleted."
             />
         </AppLayout>
     );

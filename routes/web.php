@@ -5,7 +5,7 @@ use App\Http\Controllers\AssetFolderController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\CollectionItemController;
 use App\Http\Controllers\CollectionMemoryEntryController;
-use App\Http\Controllers\CollectionSystemDocumentController;
+use App\Http\Controllers\CollectionDocumentController;
 use App\Http\Controllers\CollectionTokenController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
@@ -75,9 +75,11 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::resource('collections', CollectionController::class);
     Route::post('collections/{collection}/items', [CollectionItemController::class, 'store'])->name('collections.items.store');
     Route::delete('collections/{collection}/items', [CollectionItemController::class, 'destroy'])->name('collections.items.destroy');
-    Route::put('collections/{collection}/documents/{type}', [CollectionSystemDocumentController::class, 'update'])
-        ->where('type', '[a-z][a-z0-9_-]*')
-        ->name('collections.system-documents.update');
+    // Collection documents
+    Route::post('collections/{collection}/docs/reorder', [CollectionDocumentController::class, 'reorder'])->name('collections.docs.reorder');
+    Route::post('collections/{collection}/docs', [CollectionDocumentController::class, 'store'])->name('collections.docs.store');
+    Route::put('collections/{collection}/docs/{document}', [CollectionDocumentController::class, 'update'])->name('collections.docs.update');
+    Route::delete('collections/{collection}/docs/{document}', [CollectionDocumentController::class, 'destroy'])->name('collections.docs.destroy');
     Route::post('collections/{collection}/tokens', [CollectionTokenController::class, 'store'])->name('collections.tokens.store');
     Route::delete('collections/{collection}/tokens/{token}', [CollectionTokenController::class, 'destroy'])->name('collections.tokens.destroy');
 

@@ -21,12 +21,24 @@ trait HasSlug
                     $query->where('workspace_id', $model->workspace_id);
                 }
 
+                if (isset($model->slugScopeColumns)) {
+                    foreach ($model->slugScopeColumns as $col) {
+                        $query->where($col, $model->{$col});
+                    }
+                }
+
                 while ($query->exists()) {
                     $slug = $baseSlug.'-'.$counter;
                     $query = static::withoutGlobalScopes()->where('slug', $slug);
 
                     if (isset($model->workspace_id)) {
                         $query->where('workspace_id', $model->workspace_id);
+                    }
+
+                    if (isset($model->slugScopeColumns)) {
+                        foreach ($model->slugScopeColumns as $col) {
+                            $query->where($col, $model->{$col});
+                        }
                     }
 
                     $counter++;

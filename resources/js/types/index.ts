@@ -170,6 +170,17 @@ export interface CollectionSystemDocumentData {
     updated_at: string;
 }
 
+export interface CollectionDocumentData {
+    id: number;
+    name: string;
+    slug: string;
+    content: string;
+    sort_order: number;
+    is_required: boolean;
+    version: number;
+    updated_at: string;
+}
+
 export interface ApiTokenData {
     id: number;
     name: string;

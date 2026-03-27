@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\CreateWorkspaceOnRegistration;
 use App\Models\Asset;
+use App\Models\AssetFolder;
 use App\Models\Collection;
 use App\Models\CollectionSystemDocument;
 use App\Models\Document;
@@ -43,5 +44,6 @@ class AppServiceProvider extends ServiceProvider
         Collection::observe(ActivityLogObserver::class);
         SystemDocument::observe(ActivityLogObserver::class);
         CollectionSystemDocument::observe(ActivityLogObserver::class);
+        AssetFolder::observe(ActivityLogObserver::class);
     }
 }

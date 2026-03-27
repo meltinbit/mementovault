@@ -1,0 +1,28 @@
+{
+  "type": "software_project",
+  "label": "Software Project",
+  "description": "Development project with codebase, architecture, roadmap",
+  "documents": [
+    {
+      "name": "Instructions",
+      "slug": "instructions",
+      "sort_order": 0,
+      "is_required": true,
+      "placeholder": "# Development rules for this project\n\n## Stack\nLanguages, frameworks, tools.\n\n## Code Style\nConventions, linting, formatting.\n\n## Things to avoid\nAnti-patterns, forbidden libraries, bad practices."
+    },
+    {
+      "name": "Architecture",
+      "slug": "architecture",
+      "sort_order": 1,
+      "is_required": false,
+      "placeholder": "# System architecture\n\n## Overview\nHigh-level architecture description.\n\n## Database\nSchema overview, key tables, relationships.\n\n## API\nEndpoints, authentication, data flow.\n\n## Infrastructure\nHosting, CI/CD, deployment."
+    },
+    {
+      "name": "Roadmap",
+      "slug": "roadmap",
+      "sort_order": 2,
+      "is_required": false,
+      "placeholder": "# Project status and plan\n\n## Current State\nWhat's built, what's working, known issues.\n\n## Next Steps\nImmediate priorities.\n\n## Backlog\nFuture features and improvements."
+    }
+  ]
+}

@@ -22,6 +22,7 @@ class StoreAssetRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:1000'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
+            'folder_id' => ['nullable', 'integer', 'exists:asset_folders,id'],
         ];
     }
 }

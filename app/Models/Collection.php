@@ -35,6 +35,11 @@ class Collection extends Model
         return $this->hasMany(CollectionSystemDocument::class);
     }
 
+    public function collectionDocuments(): HasMany
+    {
+        return $this->hasMany(CollectionDocument::class)->orderBy('sort_order');
+    }
+
     public function apiTokens(): HasMany
     {
         return $this->hasMany(ApiToken::class);

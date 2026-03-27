@@ -1,0 +1,35 @@
+{
+  "type": "sales_agent",
+  "label": "Sales Agent",
+  "description": "Outbound sales, lead generation, client prospecting",
+  "documents": [
+    {
+      "name": "Instructions",
+      "slug": "instructions",
+      "sort_order": 0,
+      "is_required": true,
+      "placeholder": "# How to operate as my Sales Agent\n\n## Tone\nHow should you communicate with prospects?\n\n## Language\nWhat language for outreach?\n\n## Rules\nWhat to always do / never do?"
+    },
+    {
+      "name": "Products & Services",
+      "slug": "products-services",
+      "sort_order": 1,
+      "is_required": false,
+      "placeholder": "# What I sell\n\n## Products\nList your products, features, pricing.\n\n## Services\nList your services, deliverables, pricing.\n\n## Value Proposition\nWhy should someone buy from you?"
+    },
+    {
+      "name": "Target Market",
+      "slug": "target-market",
+      "sort_order": 2,
+      "is_required": false,
+      "placeholder": "# Who I sell to\n\n## Ideal Customer Profile\nIndustry, company size, role, pain points.\n\n## Segments\nDifferent customer segments and how to approach each.\n\n## Disqualifiers\nWho is NOT a good fit?"
+    },
+    {
+      "name": "Sales Playbook",
+      "slug": "sales-playbook",
+      "sort_order": 3,
+      "is_required": false,
+      "placeholder": "# How I sell\n\n## Process\nSteps from first contact to close.\n\n## Common Objections\nFrequent pushbacks and how to handle them.\n\n## Email Templates\nOutreach templates, follow-up templates.\n\n## Qualification Criteria\nHow to determine if a lead is worth pursuing."
+    }
+  ]
+}

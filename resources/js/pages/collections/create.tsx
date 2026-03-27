@@ -90,11 +90,14 @@ export default function CollectionCreate() {
                                 <SelectItem value="client_project">Client Project</SelectItem>
                                 <SelectItem value="product_saas">Product / SaaS</SelectItem>
                                 <SelectItem value="marketing">Marketing</SelectItem>
+                                <SelectItem value="sales_agent">Sales Agent</SelectItem>
+                                <SelectItem value="social_manager">Social Manager</SelectItem>
+                                <SelectItem value="strategy_brainstorm">Strategy & Brainstorm</SelectItem>
                                 <SelectItem value="custom">Custom</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.type} />
-                        <p className="text-xs text-muted-foreground">Software Project: dev work with architecture and code context. Client Project: client deliverables and communication. Product/SaaS: roadmap, pricing, brand. Marketing: campaigns, content, channels.</p>
+                        <p className="text-xs text-muted-foreground">Each type pre-populates relevant documents. You can always add, rename, or remove documents later.</p>
                     </div>
 
                     <div className="grid gap-1.5">

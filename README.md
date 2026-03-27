@@ -1,8 +1,8 @@
-# 🔐 Context Vault
+# 🔐 MementoVault
 
 **Your AI brain, centralized.**
 
-Context Vault is an AI Context Manager that lets you organize, version, and serve your entire AI context — identity, instructions, memory, documents, skills, and assets — to any MCP-compatible client via authenticated endpoints.
+MementoVault is an AI Context Manager that lets you organize, version, and serve your entire AI context — identity, instructions, memory, documents, skills, and assets — to any MCP-compatible client via authenticated endpoints.
 
 Stop repeating yourself to AI. Build your vault once, connect it everywhere.
 
@@ -22,7 +22,7 @@ Every new AI conversation starts from zero. You waste time re-explaining who you
 
 ## The Solution
 
-Context Vault centralizes your entire AI "brain" and serves it via **MCP (Model Context Protocol)** to any compatible client.
+MementoVault centralizes your entire AI "brain" and serves it via **MCP (Model Context Protocol)** to any compatible client.
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -32,7 +32,7 @@ Context Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
        └────────────────────┼────────────────────┘
                             │
                     ┌───────▼───────┐
-                    │ Context Vault │
+                    │ MementoVault  │
                     │  MCP Server   │
                     └───────┬───────┘
                             │
@@ -57,7 +57,7 @@ Create **Collections** — curated packages of documents, skills, snippets, and 
 Each collection gets its own authenticated MCP endpoint. Paste the URL into any Claude client and your AI has full context instantly.
 
 ```
-https://vault.yourdomain.com/mcp/noisy-mind?token=cv_live_...
+https://mementovault.dev/mcp/noisy-mind?token=mv_live_...
 ```
 
 ## Core Concepts
@@ -82,7 +82,7 @@ https://vault.yourdomain.com/mcp/noisy-mind?token=cv_live_...
 - **Version history** — every change tracked, rollback anytime
 - **Collection-based organization** — separate context per project/client
 - **Smart merging** — workspace identity + collection overrides = complete context
-- **Asset management** — upload files with AI-readable descriptions
+- **File manager for assets** — folders, drag & drop, move, copy, batch operations
 - **Token auth** — per-collection access tokens, generate and revoke anytime
 - **Template system** — start fast with pre-built structures for developers, marketers, consultants
 - **Full-text search** — find anything across your entire vault
@@ -106,7 +106,7 @@ https://vault.yourdomain.com/mcp/noisy-mind?token=cv_live_...
 
 ## Self-Hosting
 
-Context Vault is designed to be self-hosted. Recommended setup:
+MementoVault is designed to be self-hosted. Recommended setup:
 
 - Any VPS with 1GB+ RAM (Hetzner, DigitalOcean, etc.)
 - MySQL 8
@@ -117,8 +117,8 @@ Context Vault is designed to be self-hosted. Recommended setup:
 
 ```bash
 # Clone
-git clone https://github.com/yourusername/context-vault.git
-cd context-vault
+git clone https://github.com/meltinbit/memento-vault.git
+cd memento-vault
 
 # Install
 composer install
@@ -143,21 +143,21 @@ php artisan serve
 ### Environment Variables
 
 ```env
-APP_NAME="Context Vault"
-APP_URL=https://vault.yourdomain.com
+APP_NAME="MementoVault"
+APP_URL=https://mementovault.dev
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=context_vault
+DB_DATABASE=memento_vault
 DB_USERNAME=vault
 DB_PASSWORD=secret
 
 R2_ACCESS_KEY_ID=your_key
 R2_SECRET_ACCESS_KEY=your_secret
-R2_BUCKET=context-vault-assets
+R2_BUCKET=mementovault-assets
 R2_ENDPOINT=https://account-id.r2.cloudflarestorage.com
-R2_URL=https://assets.yourdomain.com
+R2_URL=https://assets.mementovault.dev
 ```
 
 ## Connecting to Claude Clients
@@ -165,8 +165,8 @@ R2_URL=https://assets.yourdomain.com
 ### Claude.ai
 Settings → MCP Servers → Add server:
 ```
-Name: Context Vault - Project Name
-URL: https://vault.yourdomain.com/mcp/your-collection?token=cv_live_...
+Name: MementoVault - Project Name
+URL: https://mementovault.dev/mcp/your-collection?token=mv_live_...
 ```
 
 ### Claude Code
@@ -174,9 +174,9 @@ Add to `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "context-vault": {
+    "memento-vault": {
       "type": "url",
-      "url": "https://vault.yourdomain.com/mcp/your-collection?token=cv_live_..."
+      "url": "https://mementovault.dev/mcp/your-collection?token=mv_live_..."
     }
   }
 }
@@ -191,7 +191,8 @@ Add MCP server in Cowork settings with the same URL format.
 - [x] Collection-based organization
 - [x] MCP server with SSE transport
 - [x] Version history and revisions
-- [x] S3/R2 asset storage
+- [x] S3/R2 asset storage with folder management
+- [x] Drag & drop asset organization with move/copy
 - [ ] Setup wizard for first-time onboarding
 - [ ] AI-assisted context generation
 - [ ] Import from existing .md folder structures

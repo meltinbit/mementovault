@@ -1,0 +1,28 @@
+{
+  "type": "client_project",
+  "label": "Client Project",
+  "description": "Client-facing project with brief, deliverables, communication rules",
+  "documents": [
+    {
+      "name": "Instructions",
+      "slug": "instructions",
+      "sort_order": 0,
+      "is_required": true,
+      "placeholder": "# How to work on this client project\n\n## Communication Style\nHow to communicate about/for this client.\n\n## Deliverable Format\nExpected formats, quality standards.\n\n## Boundaries\nWhat's in scope, what's out of scope."
+    },
+    {
+      "name": "Client Brief",
+      "slug": "client-brief",
+      "sort_order": 1,
+      "is_required": false,
+      "placeholder": "# About the client\n\n## Who they are\nCompany, industry, size.\n\n## What they need\nProject goals, desired outcomes.\n\n## Key Contacts\nWho to reference, decision makers."
+    },
+    {
+      "name": "Deliverables",
+      "slug": "deliverables",
+      "sort_order": 2,
+      "is_required": false,
+      "placeholder": "# What we're delivering\n\n## Scope\nDetailed deliverables list.\n\n## Timeline\nMilestones and deadlines.\n\n## Status\nCurrent progress per deliverable."
+    }
+  ]
+}

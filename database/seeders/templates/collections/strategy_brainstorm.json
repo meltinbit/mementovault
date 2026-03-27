@@ -1,0 +1,35 @@
+{
+  "type": "strategy_brainstorm",
+  "label": "Strategy & Brainstorm",
+  "description": "Strategic thinking, MVP validation, idea exploration",
+  "documents": [
+    {
+      "name": "Instructions",
+      "slug": "instructions",
+      "sort_order": 0,
+      "is_required": true,
+      "placeholder": "# How to think with me\n\n## Role\nBe a critical sparring partner. Challenge my assumptions.\n\n## Approach\nPropose alternatives, think about market fit, be honest about weaknesses.\n\n## Format\nHow to structure analysis: SWOT, lean canvas, pros/cons?"
+    },
+    {
+      "name": "Ideas Pipeline",
+      "slug": "ideas-pipeline",
+      "sort_order": 1,
+      "is_required": false,
+      "placeholder": "# Ideas I'm exploring\n\nList current ideas, their status, initial thoughts on each."
+    },
+    {
+      "name": "Market Context",
+      "slug": "market-context",
+      "sort_order": 2,
+      "is_required": false,
+      "placeholder": "# Market landscape\n\n## Trends\nWhat's happening in the market.\n\n## Competitors\nWho's doing similar things.\n\n## Opportunities\nGaps I see."
+    },
+    {
+      "name": "Validation Framework",
+      "slug": "validation-framework",
+      "sort_order": 3,
+      "is_required": false,
+      "placeholder": "# How I validate ideas\n\n## Criteria\nWhat makes an idea worth pursuing for me?\n\n## Process\nSteps from idea to MVP decision.\n\n## Kill Criteria\nWhen to abandon an idea."
+    }
+  ]
+}

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BatchDeleteAssetsRequest;
+use App\Http\Requests\CopyAssetsRequest;
+use App\Http\Requests\MoveAssetsRequest;
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
 use App\Models\Asset;
+use App\Models\AssetFolder;
 use App\Models\Tag;
 use App\Services\WorkspaceStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,7 +27,16 @@ class AssetController extends Controller
 
     public function index(Request $request): Response
     {
-        $query = Asset::with('tags');
+        $query = Asset::with(['tags', 'folder']);
+
+        if ($request->has('folder_id')) {
+            $folderId = $request->input('folder_id');
+            if ($folderId === null || $folderId === '' || $folderId === 'root') {
+                $query->whereNull('folder_id');
+            } else {
+                $query->where('folder_id', (int) $folderId);
+            }
+        }
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -39,7 +53,7 @@ class AssetController extends Controller
             $query->whereHas('tags', fn ($q) => $q->where('tags.id', $tagId));
         }
 
-        $paginated = $query->latest()->paginate(15)->withQueryString();
+        $paginated = $query->latest()->paginate(24)->withQueryString();
 
         $paginated->through(function (Asset $asset) {
             if (str_starts_with($asset->mime_type, 'image/')) {
@@ -49,17 +63,34 @@ class AssetController extends Controller
             return $asset;
         });
 
+        $folders = AssetFolder::whereNull('parent_id')
+            ->with(['allChildren' => fn ($q) => $q->withCount('assets')->orderBy('sort_order')->orderBy('name')])
+            ->withCount('assets')
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        $currentFolder = null;
+        if ($request->filled('folder_id') && $request->input('folder_id') !== 'root') {
+            $currentFolder = AssetFolder::with('parent.parent.parent')->find($request->input('folder_id'));
+        }
+
         return Inertia::render('assets/index', [
             'assets' => $paginated,
-            'filters' => $request->only(['search', 'mime', 'tag']),
+            'filters' => $request->only(['search', 'mime', 'tag', 'folder_id']),
             'tags' => Tag::orderBy('name')->get(),
+            'folders' => $folders,
+            'currentFolder' => $currentFolder,
+            'totalCount' => Asset::count(),
+            'rootCount' => Asset::whereNull('folder_id')->count(),
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
         return Inertia::render('assets/create', [
             'tags' => Tag::orderBy('name')->get(),
+            'folderId' => $request->input('folder_id'),
         ]);
     }
 
@@ -78,6 +109,7 @@ class AssetController extends Controller
         );
 
         $asset = Asset::create([
+            'folder_id' => $request->validated('folder_id'),
             'name' => $request->validated('name'),
             'original_filename' => $file->getClientOriginalName(),
             'storage_path' => $path,
@@ -90,16 +122,24 @@ class AssetController extends Controller
             $asset->tags()->sync($request->validated('tag_ids', []));
         }
 
-        return to_route('assets.index');
+        return back();
     }
 
     public function edit(Asset $asset): Response
     {
-        $asset->load('tags');
+        $asset->load(['tags', 'folder']);
+
+        $folders = AssetFolder::whereNull('parent_id')
+            ->with(['allChildren' => fn ($q) => $q->withCount('assets')->orderBy('sort_order')->orderBy('name')])
+            ->withCount('assets')
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
 
         return Inertia::render('assets/edit', [
             'asset' => $asset,
             'tags' => Tag::orderBy('name')->get(),
+            'folders' => $folders,
         ]);
     }
 
@@ -116,15 +156,100 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset): RedirectResponse
     {
-        $this->storage->disk()->deleteDirectory(dirname($asset->storage_path));
+        $otherAssetsSharePath = Asset::withoutGlobalScopes()
+            ->where('storage_path', $asset->storage_path)
+            ->where('id', '!=', $asset->id)
+            ->exists();
+
+        if (! $otherAssetsSharePath) {
+            $this->storage->disk()->deleteDirectory(dirname($asset->storage_path));
+        }
 
         $asset->delete();
 
-        return to_route('assets.index');
+        return back();
     }
 
     public function download(Asset $asset): StreamedResponse
     {
         return $this->storage->disk()->download($asset->storage_path, $asset->original_filename);
+    }
+
+    public function move(MoveAssetsRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        Asset::whereIn('id', $validated['asset_ids'])
+            ->update(['folder_id' => $validated['folder_id']]);
+
+        return back();
+    }
+
+    public function copy(CopyAssetsRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated) {
+            $assets = Asset::with('tags')->whereIn('id', $validated['asset_ids'])->get();
+
+            foreach ($assets as $original) {
+                $copyName = $this->generateCopyName($original->name);
+
+                $copy = Asset::create([
+                    'folder_id' => $validated['folder_id'],
+                    'name' => $copyName,
+                    'original_filename' => $original->original_filename,
+                    'storage_path' => $original->storage_path,
+                    'mime_type' => $original->mime_type,
+                    'size_bytes' => $original->size_bytes,
+                    'description' => $original->description,
+                    'is_active' => $original->is_active,
+                ]);
+
+                if ($original->tags->isNotEmpty()) {
+                    $copy->tags()->sync($original->tags->pluck('id'));
+                }
+            }
+        });
+
+        return back();
+    }
+
+    public function batchDelete(BatchDeleteAssetsRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated) {
+            $assets = Asset::whereIn('id', $validated['asset_ids'])->get();
+
+            foreach ($assets as $asset) {
+                $otherAssetsSharePath = Asset::withoutGlobalScopes()
+                    ->where('storage_path', $asset->storage_path)
+                    ->where('id', '!=', $asset->id)
+                    ->exists();
+
+                if (! $otherAssetsSharePath) {
+                    $this->storage->disk()->deleteDirectory(dirname($asset->storage_path));
+                }
+
+                $asset->delete();
+            }
+        });
+
+        return back();
+    }
+
+    private function generateCopyName(string $originalName): string
+    {
+        $baseName = preg_replace('/\s*\(copy(?:\s+\d+)?\)$/', '', $originalName);
+        $copyName = $baseName.' (copy)';
+        $counter = 2;
+
+        while (Asset::where('name', $copyName)->exists()) {
+            $copyName = $baseName." (copy {$counter})";
+            $counter++;
+        }
+
+        return $copyName;
     }
 }

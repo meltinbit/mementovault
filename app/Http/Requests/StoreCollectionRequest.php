@@ -19,7 +19,7 @@ class StoreCollectionRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'type' => ['required', 'string', 'in:software_project,client_project,product_saas,marketing,custom'],
+            'type' => ['required', 'string', 'in:software_project,client_project,product_saas,marketing,sales_agent,social_manager,strategy_brainstorm,custom'],
             'color' => ['required', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'is_active' => ['boolean'],
         ];

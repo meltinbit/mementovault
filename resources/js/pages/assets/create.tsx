@@ -18,19 +18,22 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Props {
     tags: TagData[];
+    folderId?: number | null;
 }
 
-export default function AssetCreate({ tags }: Props) {
+export default function AssetCreate({ tags, folderId }: Props) {
     const { data, setData, post, processing, errors } = useForm<{
         file: File | null;
         name: string;
         description: string;
         tag_ids: number[];
+        folder_id: number | null;
     }>({
         file: null,
         name: '',
         description: '',
         tag_ids: [],
+        folder_id: folderId ?? null,
     });
 
     const submit: FormEventHandler = (e) => {

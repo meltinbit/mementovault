@@ -5,17 +5,19 @@ import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
 import { TagInput } from '@/components/tag-input';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
+import { FolderPickerModal } from '@/components/folder-picker-modal';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { type BreadcrumbItem, type AssetData, type TagData } from '@/types';
-import { Download, Trash2, FileText } from 'lucide-react';
+import { type BreadcrumbItem, type AssetData, type AssetFolderData, type TagData } from '@/types';
+import { Download, Folder, FolderInput, Trash2, FileText } from 'lucide-react';
 
 interface Props {
     asset: AssetData;
     tags: TagData[];
+    folders: AssetFolderData[];
 }
 
 function formatSize(bytes: number) {
@@ -24,8 +26,9 @@ function formatSize(bytes: number) {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-export default function AssetEdit({ asset, tags }: Props) {
+export default function AssetEdit({ asset, tags, folders }: Props) {
     const [showDelete, setShowDelete] = useState(false);
+    const [showFolderPicker, setShowFolderPicker] = useState(false);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Assets', href: '/assets' },
@@ -36,11 +39,20 @@ export default function AssetEdit({ asset, tags }: Props) {
         name: asset.name,
         description: asset.description || '',
         tag_ids: asset.tags.map((t) => t.id),
+        folder_id: asset.folder_id,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('assets.update', asset.id));
+    };
+
+    const handleMoveToFolder = (folderId: number | null) => {
+        router.post(
+            route('assets.move'),
+            { asset_ids: [asset.id], folder_id: folderId },
+            { preserveState: true },
+        );
     };
 
     const selectedTags = tags.filter((t) => data.tag_ids.includes(t.id));
@@ -62,11 +74,18 @@ export default function AssetEdit({ asset, tags }: Props) {
                     <div className="rounded-md bg-background p-2">
                         <FileText className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium">{asset.original_filename}</p>
                         <p className="text-xs text-muted-foreground">
                             {asset.mime_type} — {formatSize(asset.size_bytes)}
                         </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Folder className="h-4 w-4" />
+                        <span>{asset.folder?.name ?? 'Root'}</span>
+                        <Button variant="ghost" size="sm" onClick={() => setShowFolderPicker(true)} className="h-7 gap-1">
+                            <FolderInput className="h-3.5 w-3.5" /> Move
+                        </Button>
                     </div>
                 </div>
 
@@ -114,6 +133,14 @@ export default function AssetEdit({ asset, tags }: Props) {
                     </div>
                 </form>
             </div>
+
+            <FolderPickerModal
+                open={showFolderPicker}
+                onClose={() => setShowFolderPicker(false)}
+                onSelect={handleMoveToFolder}
+                folders={folders}
+                title="Move asset to folder"
+            />
 
             <DeleteConfirmation
                 open={showDelete}

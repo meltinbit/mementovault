@@ -1,0 +1,14 @@
+{
+  "type": "custom",
+  "label": "Custom",
+  "description": "Start from scratch with just Instructions",
+  "documents": [
+    {
+      "name": "Instructions",
+      "slug": "instructions",
+      "sort_order": 0,
+      "is_required": true,
+      "placeholder": "# Instructions\n\nDefine how Claude should operate in this collection."
+    }
+  ]
+}
