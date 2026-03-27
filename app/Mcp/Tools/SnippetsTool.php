@@ -11,7 +11,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('snippets')]
-#[Description('Manage reusable text snippets in this collection. Actions: list (no params), get (slug), create (name+content), update (slug+name/content).')]
+#[Description('Manage reusable text snippets in this collection. Actions: list, get, create, update, append. Use append to add content in chunks.')]
 class SnippetsTool extends Tool
 {
     public function handle(Request $request): Response
@@ -21,7 +21,8 @@ class SnippetsTool extends Tool
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update."),
+            'append' => $this->append($request),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append."),
         };
     }
 
@@ -98,10 +99,31 @@ class SnippetsTool extends Tool
         return Response::text("Updated snippet \"{$snippet->name}\".");
     }
 
+    private function append(Request $request): Response
+    {
+        $collection = app('mcp_collection');
+        $slug = $request->get('slug');
+
+        $snippet = $collection->snippets()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $snippet) {
+            return Response::error("Snippet with slug '{$slug}' not found in this collection.");
+        }
+
+        $snippet->update(['content' => $snippet->content.$request->get('content')]);
+
+        $length = mb_strlen($snippet->content);
+
+        return Response::text("Appended to \"{$snippet->name}\" ({$length} chars total).");
+    }
+
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get', 'create', 'update'])->description('The action to perform.')->required(),
+            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append'])->description('The action to perform. Use append to add content in chunks.')->required(),
             'slug' => $schema->string()->description('Snippet slug. Required for get/update.'),
             'name' => $schema->string()->description('Snippet name. Required for create.'),
             'content' => $schema->string()->description('Text content. Required for create.'),

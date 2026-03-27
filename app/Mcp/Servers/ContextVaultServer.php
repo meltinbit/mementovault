@@ -97,8 +97,18 @@ NOT for collection documents. Only for workspace-wide settings.
 ### `append_memory` — Save short memory entries
 For structured/long memory, use `collection_documents` with `{action: "update", slug: "memory"}`.
 
-## Writing Long Content
-Keep each update under 4000 characters. For longer content, split into multiple updates.
+## Writing Long Content — IMPORTANT
+NEVER send more than 2000 characters of content in a single tool call. For longer content:
+1. First call: `update` with the first chunk (up to 2000 chars)
+2. Next calls: `append` with subsequent chunks (up to 2000 chars each)
+3. Repeat until all content is written
+
+Example for a 5000-char document:
+- `{action: "update", slug: "instructions", content: "[first 2000 chars]"}`
+- `{action: "append", slug: "instructions", content: "[next 2000 chars]"}`
+- `{action: "append", slug: "instructions", content: "[final 1000 chars]"}`
+
+The `append` action is available on: collection_documents, documents, skills, snippets.
 GUIDELINES;
     }
 }

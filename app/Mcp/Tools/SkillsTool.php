@@ -11,7 +11,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('skills')]
-#[Description('Manage skills in this collection. Actions: list (no params), get (slug), create (name+description+content), update (slug+name/description/content).')]
+#[Description('Manage skills in this collection. Actions: list, get, create, update, append. Use append to add content in chunks.')]
 class SkillsTool extends Tool
 {
     public function handle(Request $request): Response
@@ -21,7 +21,8 @@ class SkillsTool extends Tool
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update."),
+            'append' => $this->append($request),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append."),
         };
     }
 
@@ -102,10 +103,31 @@ class SkillsTool extends Tool
         return Response::text("Updated skill \"{$skill->name}\" (now v{$skill->version}).");
     }
 
+    private function append(Request $request): Response
+    {
+        $collection = app('mcp_collection');
+        $slug = $request->get('slug');
+
+        $skill = $collection->skills()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $skill) {
+            return Response::error("Skill with slug '{$slug}' not found in this collection.");
+        }
+
+        $skill->update(['content' => $skill->content.$request->get('content')]);
+
+        $length = mb_strlen($skill->content);
+
+        return Response::text("Appended to \"{$skill->name}\" (now v{$skill->version}, {$length} chars total).");
+    }
+
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get', 'create', 'update'])->description('The action to perform.')->required(),
+            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append'])->description('The action to perform. Use append to add content in chunks.')->required(),
             'slug' => $schema->string()->description('Skill slug. Required for get/update.'),
             'name' => $schema->string()->description('Skill name. Required for create.'),
             'description' => $schema->string()->description('Trigger description — when should AI activate this skill? Required for create.'),

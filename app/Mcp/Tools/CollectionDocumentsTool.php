@@ -12,7 +12,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('collection_documents')]
-#[Description('Manage collection documents (Instructions, Memory, Architecture, etc.) — these define how AI operates and are always in context. Actions: list, get (slug), create (name/template), update (slug+name/content), delete (slug), reorder (slugs), list_templates.')]
+#[Description('Manage collection documents (Instructions, Memory, Architecture, etc.) — these define how AI operates and are always in context. Actions: list, get, create, update, append, delete, reorder, list_templates. Use append to add content in chunks.')]
 class CollectionDocumentsTool extends Tool
 {
     public function handle(Request $request): Response
@@ -22,10 +22,11 @@ class CollectionDocumentsTool extends Tool
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
+            'append' => $this->append($request),
             'delete' => $this->delete($request),
             'reorder' => $this->reorder($request),
             'list_templates' => $this->listTemplates(),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, delete, reorder, list_templates."),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append, delete, reorder, list_templates."),
         };
     }
 
@@ -120,6 +121,26 @@ class CollectionDocumentsTool extends Tool
         return Response::text("Updated collection document \"{$doc->name}\" (now v{$doc->version}).");
     }
 
+    private function append(Request $request): Response
+    {
+        $collection = app('mcp_collection');
+        $slug = $request->get('slug');
+
+        $doc = $collection->collectionDocuments()
+            ->where('slug', $slug)
+            ->first();
+
+        if (! $doc) {
+            return Response::error("Collection document with slug '{$slug}' not found.");
+        }
+
+        $doc->update(['content' => $doc->content.$request->get('content')]);
+
+        $length = mb_strlen($doc->content);
+
+        return Response::text("Appended to \"{$doc->name}\" (now v{$doc->version}, {$length} chars total).");
+    }
+
     private function delete(Request $request): Response
     {
         $collection = app('mcp_collection');
@@ -173,7 +194,7 @@ class CollectionDocumentsTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'delete', 'reorder', 'list_templates'])->description('The action to perform.')->required(),
+            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append', 'delete', 'reorder', 'list_templates'])->description('The action to perform. Use append to add content in chunks to an existing document.')->required(),
             'slug' => $schema->string()->description('Document slug. Required for get/update/delete.'),
             'name' => $schema->string()->description('Document name. Required for create (unless using template).'),
             'content' => $schema->string()->description('Markdown content. For create/update. Keep under 4000 chars per call.'),
