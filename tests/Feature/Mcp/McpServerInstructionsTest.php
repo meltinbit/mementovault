@@ -27,7 +27,7 @@ test('server instructions always include operating guidelines', function () {
 
     expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
     expect($instructions)->toContain('get_context');
-    expect($instructions)->toContain('update_collection_document');
+    expect($instructions)->toContain('collection_documents');
     expect($instructions)->toContain('update_system_document');
     expect($instructions)->toContain('Writing Long Content');
 });

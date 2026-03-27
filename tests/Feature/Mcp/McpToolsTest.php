@@ -1,15 +1,13 @@
 <?php
 
 use App\Mcp\Servers\ContextVaultServer;
+use App\Mcp\Tools\AssetsTool;
+use App\Mcp\Tools\CollectionDocumentsTool;
+use App\Mcp\Tools\DocumentsTool;
 use App\Mcp\Tools\GetContextTool;
-use App\Mcp\Tools\GetDocumentTool;
-use App\Mcp\Tools\GetSkillTool;
-use App\Mcp\Tools\GetSnippetTool;
-use App\Mcp\Tools\ListAssetsTool;
-use App\Mcp\Tools\ListDocumentsTool;
-use App\Mcp\Tools\ListSkillsTool;
-use App\Mcp\Tools\ListSnippetsTool;
 use App\Mcp\Tools\SearchTool;
+use App\Mcp\Tools\SkillsTool;
+use App\Mcp\Tools\SnippetsTool;
 use App\Models\Asset;
 use App\Models\Collection;
 use App\Models\Document;
@@ -27,7 +25,7 @@ function setupMcpToolTest(): array
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['user_id' => $user->id]);
 
-    foreach (['identity', 'instructions', 'context'] as $type) {
+    foreach (['identity', 'instructions'] as $type) {
         SystemDocument::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
             'type' => $type,
@@ -51,26 +49,26 @@ test('get_context returns merged context', function () {
     $response->assertOk()->assertSee('IDENTITY');
 });
 
-test('list_documents returns collection documents', function () {
+test('documents list returns collection documents', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $doc = Document::factory()->create(['workspace_id' => $workspace->id, 'title' => 'My Doc']);
     $collection->documents()->attach($doc->id);
 
-    $response = ContextVaultServer::tool(ListDocumentsTool::class);
+    $response = ContextVaultServer::tool(DocumentsTool::class, ['action' => 'list']);
 
     $response->assertOk()->assertSee('My Doc');
 });
 
-test('list_documents returns empty message when no documents', function () {
+test('documents list returns empty message when no documents', function () {
     setupMcpToolTest();
 
-    $response = ContextVaultServer::tool(ListDocumentsTool::class);
+    $response = ContextVaultServer::tool(DocumentsTool::class, ['action' => 'list']);
 
     $response->assertOk()->assertSee('No documents in this collection.');
 });
 
-test('get_document returns document content by slug', function () {
+test('documents get returns document content by slug', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $doc = Document::factory()->create([
@@ -81,31 +79,31 @@ test('get_document returns document content by slug', function () {
     ]);
     $collection->documents()->attach($doc->id);
 
-    $response = ContextVaultServer::tool(GetDocumentTool::class, ['slug' => 'test-document']);
+    $response = ContextVaultServer::tool(DocumentsTool::class, ['action' => 'get', 'slug' => 'test-document']);
 
     $response->assertOk()->assertSee('Full document content here');
 });
 
-test('get_document returns error for missing slug', function () {
+test('documents get returns error for missing slug', function () {
     setupMcpToolTest();
 
-    $response = ContextVaultServer::tool(GetDocumentTool::class, ['slug' => 'nonexistent']);
+    $response = ContextVaultServer::tool(DocumentsTool::class, ['action' => 'get', 'slug' => 'nonexistent']);
 
     $response->assertHasErrors();
 });
 
-test('list_skills returns collection skills', function () {
+test('skills list returns collection skills', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $skill = Skill::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Code Review']);
     $collection->skills()->attach($skill->id);
 
-    $response = ContextVaultServer::tool(ListSkillsTool::class);
+    $response = ContextVaultServer::tool(SkillsTool::class, ['action' => 'list']);
 
     $response->assertOk()->assertSee('Code Review');
 });
 
-test('get_skill returns skill content by slug', function () {
+test('skills get returns skill content by slug', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $skill = Skill::factory()->create([
@@ -116,31 +114,31 @@ test('get_skill returns skill content by slug', function () {
     ]);
     $collection->skills()->attach($skill->id);
 
-    $response = ContextVaultServer::tool(GetSkillTool::class, ['slug' => 'test-skill']);
+    $response = ContextVaultServer::tool(SkillsTool::class, ['action' => 'get', 'slug' => 'test-skill']);
 
     $response->assertOk()->assertSee('Skill instructions content');
 });
 
-test('get_skill returns error for missing slug', function () {
+test('skills get returns error for missing slug', function () {
     setupMcpToolTest();
 
-    $response = ContextVaultServer::tool(GetSkillTool::class, ['slug' => 'nonexistent']);
+    $response = ContextVaultServer::tool(SkillsTool::class, ['action' => 'get', 'slug' => 'nonexistent']);
 
     $response->assertHasErrors();
 });
 
-test('list_snippets returns collection snippets', function () {
+test('snippets list returns collection snippets', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $snippet = Snippet::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Email Sig']);
     $collection->snippets()->attach($snippet->id);
 
-    $response = ContextVaultServer::tool(ListSnippetsTool::class);
+    $response = ContextVaultServer::tool(SnippetsTool::class, ['action' => 'list']);
 
     $response->assertOk()->assertSee('Email Sig');
 });
 
-test('get_snippet returns snippet content by slug', function () {
+test('snippets get returns snippet content by slug', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $snippet = Snippet::factory()->create([
@@ -151,26 +149,26 @@ test('get_snippet returns snippet content by slug', function () {
     ]);
     $collection->snippets()->attach($snippet->id);
 
-    $response = ContextVaultServer::tool(GetSnippetTool::class, ['slug' => 'test-snippet']);
+    $response = ContextVaultServer::tool(SnippetsTool::class, ['action' => 'get', 'slug' => 'test-snippet']);
 
     $response->assertOk()->assertSee('Snippet text content');
 });
 
-test('get_snippet returns error for missing slug', function () {
+test('snippets get returns error for missing slug', function () {
     setupMcpToolTest();
 
-    $response = ContextVaultServer::tool(GetSnippetTool::class, ['slug' => 'nonexistent']);
+    $response = ContextVaultServer::tool(SnippetsTool::class, ['action' => 'get', 'slug' => 'nonexistent']);
 
     $response->assertHasErrors();
 });
 
-test('list_assets returns collection assets', function () {
+test('assets list returns collection assets', function () {
     [$workspace, $collection] = setupMcpToolTest();
 
     $asset = Asset::factory()->create(['workspace_id' => $workspace->id, 'name' => 'Logo']);
     $collection->assets()->attach($asset->id);
 
-    $response = ContextVaultServer::tool(ListAssetsTool::class);
+    $response = ContextVaultServer::tool(AssetsTool::class, ['action' => 'list']);
 
     $response->assertOk()->assertSee('Logo');
 });
