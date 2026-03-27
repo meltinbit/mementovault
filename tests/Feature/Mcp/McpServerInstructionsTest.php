@@ -22,7 +22,17 @@ function getServerInstructions(): string
     return $prop->getValue($server);
 }
 
-test('server instructions are read from workspace settings', function () {
+test('server instructions always include operating guidelines', function () {
+    $instructions = getServerInstructions();
+
+    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
+    expect($instructions)->toContain('get_context');
+    expect($instructions)->toContain('update_collection_document');
+    expect($instructions)->toContain('update_system_document');
+    expect($instructions)->toContain('Writing Long Content');
+});
+
+test('server instructions include workspace mcp_instructions', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create([
         'user_id' => $user->id,
@@ -35,7 +45,9 @@ test('server instructions are read from workspace settings', function () {
 
     $instructions = getServerInstructions();
 
-    expect($instructions)->toBe('Custom base instructions here.');
+    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
+    expect($instructions)->toContain('--- Workspace Instructions ---');
+    expect($instructions)->toContain('Custom base instructions here.');
 });
 
 test('server instructions use default when workspace has mcp_instructions set', function () {
@@ -51,7 +63,7 @@ test('server instructions use default when workspace has mcp_instructions set', 
 
     $instructions = getServerInstructions();
 
-    expect($instructions)->toContain('CRITICAL');
+    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
     expect($instructions)->toContain('get_context');
 });
 
@@ -89,12 +101,13 @@ test('server instructions do not include additional section when custom prompt i
 
     $instructions = getServerInstructions();
 
-    expect($instructions)->toBe('Base only.');
+    expect($instructions)->toContain('Base only.');
     expect($instructions)->not->toContain('Additional Instructions');
 });
 
-test('server instructions return empty string when no workspace is bound', function () {
+test('server guidelines are present even without workspace', function () {
     $instructions = getServerInstructions();
 
-    expect($instructions)->toBe('');
+    expect($instructions)->toContain('MementoVault MCP — Operating Guidelines');
+    expect($instructions)->not->toContain('Workspace Instructions');
 });

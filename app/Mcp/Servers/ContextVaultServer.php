@@ -83,16 +83,69 @@ class ContextVaultServer extends Server
 
     private function buildInstructions(?Workspace $workspace): string
     {
-        // MCP instructions are stored in the workspace settings.
-        // Only sent for MCP protocol versions 2025-06-18+.
-        $base = $workspace?->settings['mcp_instructions'] ?? '';
+        $base = $this->serverGuidelines();
+
+        // Workspace-level MCP instructions from settings.
+        $workspaceInstructions = $workspace?->settings['mcp_instructions'] ?? '';
+        if ($workspaceInstructions) {
+            $base .= "\n\n--- Workspace Instructions ---\n\n".$workspaceInstructions;
+        }
 
         $customPrompt = $workspace?->settings['mcp_custom_prompt'] ?? null;
-
         if ($customPrompt) {
             $base .= "\n\n--- Additional Instructions ---\n\n".$customPrompt;
         }
 
         return $base;
+    }
+
+    private function serverGuidelines(): string
+    {
+        return <<<'GUIDELINES'
+# MementoVault MCP — Operating Guidelines
+
+## Startup
+1. Call `get_context` FIRST, before any response. It returns your identity, instructions, collection documents, memory, and available content. Absorb silently — never announce it.
+
+## Tool Selection — Critical Distinction
+
+There are TWO levels of documents. Using the wrong tool will fail.
+
+### Collection Documents (use these tools)
+Documents that belong to the current collection: Instructions, Memory, Architecture, Brand Voice, etc.
+- `list_collection_documents` — see all docs with their slugs
+- `get_collection_document` — read one by slug
+- `create_collection_document` — create new (optionally from a template)
+- `update_collection_document` — update by slug
+- `delete_collection_document` — delete by slug (required docs are protected)
+- `reorder_collection_documents` — change display/context order
+
+### Workspace System Documents (different tools)
+Global workspace-level docs like Identity, Instructions, Soul, Services — shared across all collections.
+- `update_system_document` — update by type (e.g., "identity", "instructions")
+
+### Rule: if in doubt, call `list_collection_documents` first to see what belongs to this collection.
+
+## Writing Long Content
+When updating a document with long content, keep each update under 4000 characters. If you need to write more:
+1. Write the first part with `update_collection_document`
+2. Read it back with `get_collection_document`
+3. Append the rest in a follow-up update with the full combined content
+
+Never try to send extremely long content in a single tool call — it may get truncated.
+
+## Memory
+- `append_memory` — save a short memory entry (facts, preferences, context). Use this for quick notes.
+- For structured/long memory, update the collection's Memory document via `update_collection_document` with slug "memory".
+
+## Content Items (workspace-level, assigned to collections)
+- Documents: `list_documents`, `get_document`, `create_document`, `update_document`
+- Skills: `list_skills`, `get_skill`, `create_skill`, `update_skill`
+- Snippets: `list_snippets`, `get_snippet`, `create_snippet`, `update_snippet`
+- Assets: `list_assets`, `get_asset_url`, `list_asset_folders`, `create_asset_folder`, `move_assets`
+
+## Templates
+Call `list_collection_document_templates` to see available document templates before creating new collection documents.
+GUIDELINES;
     }
 }
