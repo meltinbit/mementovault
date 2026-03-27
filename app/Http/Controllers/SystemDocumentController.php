@@ -92,4 +92,17 @@ class SystemDocumentController extends Controller
 
         return to_route('workspace.show', $type);
     }
+
+    public function destroy(string $type): RedirectResponse
+    {
+        if (SystemDocumentType::isCore($type)) {
+            abort(403, 'Core workspace documents cannot be deleted.');
+        }
+
+        $document = SystemDocument::where('type', $type)->firstOrFail();
+        $document->revisions()->delete();
+        $document->delete();
+
+        return to_route('dashboard');
+    }
 }

@@ -3,9 +3,9 @@
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetFolderController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CollectionDocumentController;
 use App\Http\Controllers\CollectionItemController;
 use App\Http\Controllers\CollectionMemoryEntryController;
-use App\Http\Controllers\CollectionDocumentController;
 use App\Http\Controllers\CollectionTokenController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
@@ -46,6 +46,10 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
 
     Route::post('workspace', [SystemDocumentController::class, 'store'])
         ->name('workspace.store');
+
+    Route::delete('workspace/{type}', [SystemDocumentController::class, 'destroy'])
+        ->where('type', '[a-z][a-z0-9_-]*')
+        ->name('workspace.destroy');
 
     Route::resource('tags', TagController::class)->only(['index', 'store', 'destroy']);
     Route::resource('documents', DocumentController::class);

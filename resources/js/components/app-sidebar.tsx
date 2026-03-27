@@ -2,14 +2,15 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { GlobalSearch } from '@/components/global-search';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage, router } from '@inertiajs/react';
-import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Settings, Tag, Target, User, Zap } from 'lucide-react';
+import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Settings, Tag, Target, Trash2, User, Zap } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from './app-logo';
 
@@ -58,8 +59,10 @@ const builtinOptionalTypes = ['soul', 'services', 'portfolio', 'products', 'icp'
 
 export function AppSidebar() {
     const { workspaceSystemDocs } = usePage<SharedData>().props;
+    const page = usePage();
     const [showAddDoc, setShowAddDoc] = useState(false);
     const [customType, setCustomType] = useState('');
+    const [deleteType, setDeleteType] = useState<string | null>(null);
 
     // Build workspace nav: core types always, then extras
     const existingTypes = workspaceSystemDocs || [];
@@ -116,11 +119,33 @@ export function AppSidebar() {
                     <GlobalSearch />
                 </div>
                 <NavMain items={mainNavItems} />
-                <NavMain items={workspaceNavItems} label="Workspace" />
-
-                {/* Add workspace document button */}
                 <SidebarGroup className="px-2 py-0">
+                    <SidebarGroupLabel>Workspace</SidebarGroupLabel>
                     <SidebarMenu>
+                        {workspaceNavItems.map((item) => {
+                            const isActive = page.url === item.url || page.url.startsWith(item.url + '/');
+                            const itemType = item.url.replace('/workspace/', '').replace('/memory', 'memory');
+                            const isDeletable = !coreTypes.includes(itemType) && itemType !== 'memory';
+                            return (
+                                <SidebarMenuItem key={item.title} className="group/item">
+                                    <SidebarMenuButton asChild isActive={isActive}>
+                                        <Link href={item.url} prefetch>
+                                            {item.icon && <item.icon />}
+                                            <span className="flex-1">{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                    {isDeletable && (
+                                        <button
+                                            type="button"
+                                            onClick={(e) => { e.stopPropagation(); setDeleteType(itemType); }}
+                                            className="absolute right-1 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover/item:opacity-100"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                        </button>
+                                    )}
+                                </SidebarMenuItem>
+                            );
+                        })}
                         <SidebarMenuItem>
                             <Dialog open={showAddDoc} onOpenChange={setShowAddDoc}>
                                 <DialogTrigger asChild>
@@ -169,6 +194,20 @@ export function AppSidebar() {
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroup>
+
+                <DeleteConfirmation
+                    open={deleteType !== null}
+                    onClose={() => setDeleteType(null)}
+                    onConfirm={() => {
+                        if (deleteType) {
+                            router.delete(`/workspace/${deleteType}`, {
+                                onSuccess: () => setDeleteType(null),
+                            });
+                        }
+                    }}
+                    title={`Delete "${deleteType ? (typeLabels[deleteType] || deleteType.charAt(0).toUpperCase() + deleteType.slice(1).replace(/[-_]/g, ' ')) : ''}"?`}
+                    description="This will permanently delete this workspace document and all its revision history."
+                />
 
                 <NavMain items={contentNavItems} label="Content" />
                 <NavMain items={organizationNavItems} label="Organization" />

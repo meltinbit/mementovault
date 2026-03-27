@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCollectionRequest;
 use App\Http\Requests\UpdateCollectionRequest;
 use App\Models\Asset;
 use App\Models\Collection;
+use App\Models\CollectionDocumentTemplate;
 use App\Models\Document;
 use App\Models\Skill;
 use App\Models\Snippet;
@@ -20,6 +21,7 @@ class CollectionController extends Controller
     public function __construct(
         private CollectionTemplateService $templateService,
     ) {}
+
     public function index(Request $request): Response
     {
         $query = Collection::withCount(['documents', 'skills', 'snippets', 'assets']);
@@ -90,6 +92,7 @@ class CollectionController extends Controller
                 ->limit(10)
                 ->get(),
             'mcpEndpoint' => url('/mcp'),
+            'documentTemplates' => CollectionDocumentTemplate::orderBy('sort_order')->get(['id', 'name', 'description', 'placeholder']),
             'newToken' => session('newToken'),
         ]);
     }

@@ -181,6 +181,13 @@ export interface CollectionDocumentData {
     updated_at: string;
 }
 
+export interface CollectionDocumentTemplateData {
+    id: number;
+    name: string;
+    description: string | null;
+    placeholder: string;
+}
+
 export interface ApiTokenData {
     id: number;
     name: string;

@@ -22,6 +22,7 @@ import {
     type BreadcrumbItem,
     type CollectionData,
     type CollectionDocumentData,
+    type CollectionDocumentTemplateData,
     type MemoryEntryData,
     type ApiTokenData,
     type DocumentData,
@@ -42,6 +43,7 @@ interface AvailableItem {
 interface Props {
     collection: CollectionData;
     collectionDocuments: CollectionDocumentData[];
+    documentTemplates: CollectionDocumentTemplateData[];
     tokens: ApiTokenData[];
     documents: DocumentData[];
     skills: SkillData[];
@@ -122,6 +124,7 @@ const colorPalette = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8
 export default function CollectionShow({
     collection,
     collectionDocuments,
+    documentTemplates,
     tokens,
     documents,
     skills,
@@ -140,6 +143,7 @@ export default function CollectionShow({
     const [showDetails, setShowDetails] = useState(false);
     const [showAddDoc, setShowAddDoc] = useState(false);
 
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
     const addDocForm = useForm({ name: '', content: '' });
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -166,11 +170,24 @@ export default function CollectionShow({
         detailsForm.put(route('collections.update', collection.id));
     };
 
+    const handleTemplateChange = (value: string) => {
+        setSelectedTemplateId(value);
+        if (value === 'blank') {
+            addDocForm.setData({ name: '', content: '' });
+            return;
+        }
+        const template = documentTemplates.find((t) => String(t.id) === value);
+        if (template) {
+            addDocForm.setData({ name: template.name, content: template.placeholder });
+        }
+    };
+
     const handleAddDoc: FormEventHandler = (e) => {
         e.preventDefault();
         addDocForm.post(route('collections.docs.store', collection.id), {
             onSuccess: () => {
                 addDocForm.reset();
+                setSelectedTemplateId('');
                 setShowAddDoc(false);
             },
             preserveScroll: true,
@@ -269,6 +286,23 @@ export default function CollectionShow({
                         {showAddDoc && (
                             <form onSubmit={handleAddDoc} className="space-y-3 rounded-md border p-4">
                                 <div className="grid gap-2">
+                                    <Label>Template</Label>
+                                    <Select value={selectedTemplateId} onValueChange={handleTemplateChange}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Choose a template or start blank..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="blank">Blank Document</SelectItem>
+                                            {documentTemplates.map((t) => (
+                                                <SelectItem key={t.id} value={String(t.id)}>
+                                                    {t.name}
+                                                    {t.description && <span className="text-muted-foreground"> — {t.description}</span>}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid gap-2">
                                     <Label>Document Name</Label>
                                     <Input
                                         value={addDocForm.data.name}
@@ -280,7 +314,7 @@ export default function CollectionShow({
                                 </div>
                                 <div className="flex gap-2">
                                     <Button size="sm" type="submit" disabled={addDocForm.processing}>Create</Button>
-                                    <Button size="sm" type="button" variant="ghost" onClick={() => setShowAddDoc(false)}>Cancel</Button>
+                                    <Button size="sm" type="button" variant="ghost" onClick={() => { setShowAddDoc(false); setSelectedTemplateId(''); addDocForm.reset(); }}>Cancel</Button>
                                 </div>
                             </form>
                         )}

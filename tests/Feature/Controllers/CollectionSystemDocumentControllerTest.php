@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\Collection;
-use App\Models\CollectionSystemDocument;
-use App\Models\CollectionSystemDocumentRevision;
+use App\Models\CollectionDocument;
 use App\Models\User;
 use App\Models\Workspace;
 
-function createSysDocTestUser(): array
+function createCollectionDocTestUser(): array
 {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['user_id' => $user->id]);
@@ -14,105 +13,108 @@ function createSysDocTestUser(): array
     return [$user, $workspace];
 }
 
-test('can create a collection system document', function () {
-    [$user, $workspace] = createSysDocTestUser();
+test('can create a collection document', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
     $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/instructions", [
-            'content' => 'Collection instructions content',
+        ->post("/collections/{$collection->id}/docs", [
+            'name' => 'Architecture',
         ])
         ->assertRedirect();
 
-    $doc = CollectionSystemDocument::where('collection_id', $collection->id)->where('type', 'instructions')->first();
+    $doc = CollectionDocument::where('collection_id', $collection->id)->where('name', 'Architecture')->first();
     expect($doc)->not->toBeNull();
-    expect($doc->content)->toBe('Collection instructions content');
-    expect($doc->version)->toBe(1);
+    expect($doc->slug)->toBe('architecture');
 });
 
-test('can update an existing collection system document', function () {
-    [$user, $workspace] = createSysDocTestUser();
+test('can update a collection document', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
-    CollectionSystemDocument::create([
+    $doc = CollectionDocument::create([
         'collection_id' => $collection->id,
-        'type' => 'context',
-        'content' => 'Original context',
-        'version' => 1,
+        'name' => 'Instructions',
+        'content' => 'Original content',
+        'sort_order' => 0,
     ]);
 
     $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/context", [
-            'content' => 'Updated context',
+        ->put("/collections/{$collection->id}/docs/{$doc->id}", [
+            'name' => 'Instructions',
+            'content' => 'Updated content',
         ])
         ->assertRedirect();
 
-    $doc = CollectionSystemDocument::where('collection_id', $collection->id)->where('type', 'context')->first();
-    expect($doc->content)->toBe('Updated context');
-    expect($doc->version)->toBe(2);
+    $doc->refresh();
+    expect($doc->content)->toBe('Updated content');
 });
 
-test('revision is created on update', function () {
-    [$user, $workspace] = createSysDocTestUser();
+test('can delete a non-required collection document', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
-    CollectionSystemDocument::create([
+    $doc = CollectionDocument::create([
         'collection_id' => $collection->id,
-        'type' => 'memory',
-        'content' => 'V1 content',
-        'version' => 1,
+        'name' => 'Custom Doc',
+        'content' => 'Some content',
+        'sort_order' => 1,
+        'is_required' => false,
     ]);
 
     $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/memory", ['content' => 'V2 content']);
-
-    $doc = CollectionSystemDocument::where('collection_id', $collection->id)->where('type', 'memory')->first();
-    $revisions = CollectionSystemDocumentRevision::where('collection_system_document_id', $doc->id)->get();
-
-    expect($revisions)->toHaveCount(1);
-    expect($revisions->first()->content)->toBe('V1 content');
-    expect($revisions->first()->version)->toBe(1);
-});
-
-test('invalid type format returns 404', function () {
-    [$user, $workspace] = createSysDocTestUser();
-    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
-
-    $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/INVALID", ['content' => 'test'])
-        ->assertNotFound();
-});
-
-test('any valid type can be used for collection documents', function () {
-    [$user, $workspace] = createSysDocTestUser();
-    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
-
-    $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/identity", ['content' => 'Identity override'])
+        ->delete("/collections/{$collection->id}/docs/{$doc->id}")
         ->assertRedirect();
 
-    $doc = CollectionSystemDocument::where('collection_id', $collection->id)->where('type', 'identity')->first();
-    expect($doc)->not->toBeNull();
-    expect($doc->content)->toBe('Identity override');
+    expect(CollectionDocument::find($doc->id))->toBeNull();
 });
 
-test('validation rejects empty content', function () {
-    [$user, $workspace] = createSysDocTestUser();
+test('cannot delete a required collection document', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
+    $doc = CollectionDocument::create([
+        'collection_id' => $collection->id,
+        'name' => 'Instructions',
+        'content' => 'Required doc',
+        'sort_order' => 0,
+        'is_required' => true,
+    ]);
+
     $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/instructions", ['content' => ''])
-        ->assertSessionHasErrors('content');
+        ->delete("/collections/{$collection->id}/docs/{$doc->id}")
+        ->assertForbidden();
+
+    expect(CollectionDocument::find($doc->id))->not->toBeNull();
 });
 
-test('each type is independent per collection', function () {
-    [$user, $workspace] = createSysDocTestUser();
+test('can reorder collection documents', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
     $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
 
-    $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/instructions", ['content' => 'Instructions']);
-    $this->actingAs($user)
-        ->put("/collections/{$collection->id}/documents/context", ['content' => 'Context']);
+    $doc1 = CollectionDocument::create(['collection_id' => $collection->id, 'name' => 'First', 'sort_order' => 0]);
+    $doc2 = CollectionDocument::create(['collection_id' => $collection->id, 'name' => 'Second', 'sort_order' => 1]);
 
-    expect(CollectionSystemDocument::where('collection_id', $collection->id)->count())->toBe(2);
+    $this->actingAs($user)
+        ->post("/collections/{$collection->id}/docs/reorder", [
+            'ids' => [$doc2->id, $doc1->id],
+        ])
+        ->assertRedirect();
+
+    expect($doc2->fresh()->sort_order)->toBe(0);
+    expect($doc1->fresh()->sort_order)->toBe(1);
+});
+
+test('new document gets next sort order', function () {
+    [$user, $workspace] = createCollectionDocTestUser();
+    $collection = Collection::factory()->create(['workspace_id' => $workspace->id]);
+
+    CollectionDocument::create(['collection_id' => $collection->id, 'name' => 'First', 'sort_order' => 0]);
+
+    $this->actingAs($user)
+        ->post("/collections/{$collection->id}/docs", ['name' => 'Second'])
+        ->assertRedirect();
+
+    $second = CollectionDocument::where('collection_id', $collection->id)->where('name', 'Second')->first();
+    expect($second->sort_order)->toBe(1);
 });

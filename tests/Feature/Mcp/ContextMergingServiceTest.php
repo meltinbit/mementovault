@@ -2,7 +2,7 @@
 
 use App\Models\Asset;
 use App\Models\Collection;
-use App\Models\CollectionSystemDocument;
+use App\Models\CollectionDocument;
 use App\Models\Document;
 use App\Models\MemoryEntry;
 use App\Models\Skill;
@@ -20,7 +20,7 @@ function createMergingTestSetup(): array
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['user_id' => $user->id]);
 
-    foreach (['identity', 'instructions', 'context'] as $type) {
+    foreach (['identity', 'instructions'] as $type) {
         SystemDocument::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
             'type' => $type,
@@ -52,26 +52,25 @@ test('merged context includes all sections including memory entries', function (
 
     expect($result)->toContain('# IDENTITY');
     expect($result)->toContain('# INSTRUCTIONS');
-    expect($result)->toContain('# CONTEXT');
     expect($result)->toContain('# MEMORY');
     expect($result)->toContain('Test memory');
 });
 
-test('collection overrides are appended to workspace content', function () {
+test('collection documents are included in merged context', function () {
     [, $collection] = createMergingTestSetup();
 
-    CollectionSystemDocument::create([
+    CollectionDocument::create([
         'collection_id' => $collection->id,
-        'type' => 'instructions',
-        'content' => 'Collection-specific instructions',
-        'version' => 1,
+        'name' => 'Architecture',
+        'content' => 'System architecture details',
+        'sort_order' => 0,
     ]);
 
     $service = app(ContextMergingService::class);
     $result = $service->merge($collection);
 
-    expect($result)->toContain('Workspace instructions content');
-    expect($result)->toContain('Collection-specific instructions');
+    expect($result)->toContain('## Architecture');
+    expect($result)->toContain('System architecture details');
 });
 
 test('merged context lists available skills', function () {

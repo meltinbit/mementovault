@@ -3,19 +3,29 @@
 namespace App\Mcp\Servers;
 
 use App\Mcp\Tools\AppendMemoryTool;
+use App\Mcp\Tools\CreateAssetFolderTool;
+use App\Mcp\Tools\CreateCollectionDocumentTool;
 use App\Mcp\Tools\CreateDocumentTool;
 use App\Mcp\Tools\CreateSkillTool;
 use App\Mcp\Tools\CreateSnippetTool;
+use App\Mcp\Tools\DeleteCollectionDocumentTool;
 use App\Mcp\Tools\GetAssetUrlTool;
+use App\Mcp\Tools\GetCollectionDocumentTool;
 use App\Mcp\Tools\GetContextTool;
 use App\Mcp\Tools\GetDocumentTool;
 use App\Mcp\Tools\GetSkillTool;
 use App\Mcp\Tools\GetSnippetTool;
+use App\Mcp\Tools\ListAssetFoldersTool;
 use App\Mcp\Tools\ListAssetsTool;
+use App\Mcp\Tools\ListCollectionDocumentsTool;
+use App\Mcp\Tools\ListCollectionDocumentTemplatesTool;
 use App\Mcp\Tools\ListDocumentsTool;
 use App\Mcp\Tools\ListSkillsTool;
 use App\Mcp\Tools\ListSnippetsTool;
+use App\Mcp\Tools\MoveAssetsTool;
+use App\Mcp\Tools\ReorderCollectionDocumentsTool;
 use App\Mcp\Tools\SearchTool;
+use App\Mcp\Tools\UpdateCollectionDocumentTool;
 use App\Mcp\Tools\UpdateDocumentTool;
 use App\Mcp\Tools\UpdateSkillTool;
 use App\Mcp\Tools\UpdateSnippetTool;
@@ -43,6 +53,9 @@ class ContextVaultServer extends Server
         GetSnippetTool::class,
         ListAssetsTool::class,
         GetAssetUrlTool::class,
+        ListAssetFoldersTool::class,
+        CreateAssetFolderTool::class,
+        MoveAssetsTool::class,
         SearchTool::class,
         UpdateSystemDocumentTool::class,
         AppendMemoryTool::class,
@@ -52,6 +65,13 @@ class ContextVaultServer extends Server
         UpdateSkillTool::class,
         CreateSnippetTool::class,
         UpdateSnippetTool::class,
+        ListCollectionDocumentsTool::class,
+        GetCollectionDocumentTool::class,
+        CreateCollectionDocumentTool::class,
+        UpdateCollectionDocumentTool::class,
+        DeleteCollectionDocumentTool::class,
+        ReorderCollectionDocumentsTool::class,
+        ListCollectionDocumentTemplatesTool::class,
     ];
 
     protected function boot(): void
