@@ -11,7 +11,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('update_system_document')]
-#[Description('Updates a workspace system document (e.g., identity, instructions, context, memory, soul, services, portfolio, products, icp, or any custom type). The HasRevisions trait automatically creates a version history entry.')]
+#[Description('Updates a WORKSPACE-level system document (e.g., identity, instructions, soul, services, portfolio, products, icp). NOT for collection documents — use update_collection_document for those.')]
 class UpdateSystemDocumentTool extends Tool
 {
     public function handle(Request $request): Response
@@ -37,7 +37,7 @@ class UpdateSystemDocumentTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'type' => $schema->string()->description('The system document type to update (e.g., identity, instructions, context, memory, soul, services, portfolio, products, icp, or any custom type).')->required(),
+            'type' => $schema->string()->description('The workspace system document type to update (e.g., identity, instructions, soul, services, portfolio, products, icp). For collection documents use update_collection_document instead.')->required(),
             'content' => $schema->string()->description('The new markdown content.')->required(),
         ];
     }

@@ -10,7 +10,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('update_collection_document')]
-#[Description('Updates an existing collection document by slug. Creates a revision automatically.')]
+#[Description('Updates a collection document by slug. Use this to update documents like Instructions, Architecture, Memory, Brand Voice, etc. that belong to the current collection. Creates a revision automatically.')]
 class UpdateCollectionDocumentTool extends Tool
 {
     public function handle(Request $request): Response

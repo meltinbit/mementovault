@@ -10,7 +10,7 @@ use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 
 #[Name('list_collection_documents')]
-#[Description('Returns a list of all collection documents (system-level documents that define how AI operates in this collection). These are always included in MCP context.')]
+#[Description('Returns a list of all collection documents (e.g., Instructions, Memory, Architecture, Brand Voice, etc.). These are the documents that belong to and define this collection. Always included in MCP context.')]
 #[IsReadOnly]
 class ListCollectionDocumentsTool extends Tool
 {
