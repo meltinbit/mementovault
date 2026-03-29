@@ -1,8 +1,8 @@
-# 🔐 MementoVault
+# Memento Vault
 
 **Your AI brain, centralized.**
 
-MementoVault is an AI Context Manager that lets you organize, version, and serve your entire AI context — identity, instructions, memory, documents, skills, and assets — to any MCP-compatible client via authenticated endpoints.
+Memento Vault is an AI Context Manager that lets you organize, version, and serve your entire AI context — identity, instructions, documents, skills, snippets, and assets — to any MCP-compatible client via authenticated endpoints.
 
 Stop repeating yourself to AI. Build your vault once, connect it everywhere.
 
@@ -22,7 +22,7 @@ Every new AI conversation starts from zero. You waste time re-explaining who you
 
 ## The Solution
 
-MementoVault centralizes your entire AI "brain" and serves it via **MCP (Model Context Protocol)** to any compatible client.
+Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model Context Protocol)** to any compatible client.
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -32,7 +32,7 @@ MementoVault centralizes your entire AI "brain" and serves it via **MCP (Model C
        └────────────────────┼────────────────────┘
                             │
                     ┌───────▼───────┐
-                    │ MementoVault  │
+                    │ Memento Vault │
                     │  MCP Server   │
                     └───────┬───────┘
                             │
@@ -40,24 +40,24 @@ MementoVault centralizes your entire AI "brain" and serves it via **MCP (Model C
               │             │             │
          ┌────▼───┐   ┌────▼───┐   ┌────▼────┐
          │Identity│   │ Skills │   │ Assets  │
-         │Context │   │  Docs  │   │Snippets │
-         │Memory  │   │        │   │         │
+         │  Docs  │   │  Docs  │   │Snippets │
+         │        │   │        │   │         │
          └────────┘   └────────┘   └─────────┘
 ```
 
 ## How It Works
 
 ### 1. Define Your AI Identity
-Set up who you are, how you communicate, your preferences and constraints. This follows you across every project and every AI client.
+Set up workspace documents — Identity, Instructions, and optional documents like Soul, Services, Products, ICP. These follow you across every project and AI client.
 
 ### 2. Organize by Project
-Create **Collections** — curated packages of documents, skills, snippets, and assets for specific projects or clients. Each collection can override workspace-level context.
+Create **Collections** with their own named documents (Instructions, Architecture, Brand Voice, Roadmap, etc.). Assign workspace content (documents, skills, snippets, assets) to collections.
 
 ### 3. Connect via MCP
-Each collection gets its own authenticated MCP endpoint. Paste the URL into any Claude client and your AI has full context instantly.
+Use a **workspace token** for access to all collections with dynamic switching, or a **collection token** for a dedicated single-project connection.
 
 ```
-https://mementovault.dev/mcp/noisy-mind?token=mv_live_...
+https://yourdomain.com/mcp?token=cv_ws_...
 ```
 
 ## Core Concepts
@@ -65,27 +65,28 @@ https://mementovault.dev/mcp/noisy-mind?token=mv_live_...
 | Concept | What it is | Example |
 |---------|-----------|---------|
 | **Workspace** | Your account container | "MeltinBit" |
-| **Identity** | Who you are, always present | Brand voice, stack, values |
-| **Instructions** | How AI should work with you | Language, code style, things to avoid |
-| **Context** | What's happening now | Active projects, priorities |
-| **Memory** | What's been learned over time | Past decisions, patterns |
-| **Collection** | Project context package + MCP endpoint | "Noisy Mind", "Client X" |
-| **Document** | Project docs, specs, notes | API architecture, brand guidelines |
-| **Skill** | Operational instruction for AI | Screenshot generator, code reviewer |
-| **Snippet** | Reusable text block | Email signature, prompt template |
-| **Asset** | Binary file with AI description | Logo, mockup, template file |
+| **Workspace Documents** | Global AI persona docs (Identity, Instructions + optional) | Brand voice, stack, values |
+| **Collection** | Project package with own documents + MCP endpoint | "Noisy Mind", "Client X" |
+| **Collection Documents** | Project-specific docs (Instructions, Architecture, etc.) | Architecture, Roadmap, Brand Voice |
+| **Document** | Reference material AI retrieves on demand | API specs, guidelines |
+| **Skill** | Operational instruction with trigger description | Code reviewer, content writer |
+| **Snippet** | Reusable text block inserted as-is | Email signature, disclaimer |
+| **Asset** | Binary file with AI description, organized in folders | Logo, mockup, video |
+| **Memory** | Structured entries (workspace or collection scoped) | Past decisions, preferences |
 
 ## Features
 
 - **Centralized context** — one source of truth for all your AI interactions
-- **MCP-native** — serves context via Model Context Protocol to any compatible client
-- **Version history** — every change tracked, rollback anytime
-- **Collection-based organization** — separate context per project/client
-- **Smart merging** — workspace identity + collection overrides = complete context
-- **File manager for assets** — folders, drag & drop, move, copy, batch operations
-- **Token auth** — per-collection access tokens, generate and revoke anytime
-- **Template system** — start fast with pre-built structures for developers, marketers, consultants
+- **MCP-native** — 9 consolidated tools with action-based API
+- **Lazy context loading** — minimal initial context, everything fetched on demand
+- **Workspace tokens** — single token for all collections with dynamic switching
+- **Collection tokens** — dedicated per-project access
+- **Collection documents** — flexible named documents per project (template-based)
+- **Document templates** — 20+ built-in templates (Architecture, Brand Voice, FAQ, etc.)
+- **Version history** — every change tracked with revision history
+- **Asset management** — folders, drag & drop, move, copy, batch operations, video playback
 - **Full-text search** — find anything across your entire vault
+- **Chunked writing** — append action for writing long content via MCP
 - **Self-hostable** — your data, your server, your control
 
 ## Who Is This For
@@ -93,20 +94,35 @@ https://mementovault.dev/mcp/noisy-mind?token=mv_live_...
 - **Indie developers** — manage context for multiple products and side projects
 - **Freelancers** — separate context per client, reuse skills across projects
 - **Marketers** — centralize brand voice, campaign context, content guidelines
-- **Small agencies** — per-client AI context with team-wide shared skills
+- **Small agencies** — per-client AI context with shared skills and identity
 - **Consultants** — project-specific context with consistent personal identity
+
+## MCP Tools
+
+| Tool | Actions | Description |
+|------|---------|-------------|
+| `get_context` | — | Load context, list/switch collections (workspace tokens) |
+| `collection_documents` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents |
+| `documents` | list, get, create, update, append | Manage workspace documents |
+| `skills` | list, get, create, update, append | Manage skills |
+| `snippets` | list, get, create, update, append | Manage snippets |
+| `assets` | list, get_url, list_folders, create_folder, move | Manage assets and folders |
+| `search` | — | Full-text search across all content |
+| `update_system_document` | — | Update workspace-level documents |
+| `append_memory` | — | Save memory entries |
 
 ## Tech Stack
 
-- **Backend:** Laravel 12 (PHP 8.3+)
-- **Frontend:** React 19 + Inertia.js + Tailwind CSS
+- **Backend:** Laravel 12 (PHP 8.2+)
+- **Frontend:** React 19 + Inertia.js v2 + Tailwind CSS v4
 - **Database:** MySQL 8
 - **Storage:** S3-compatible (Cloudflare R2)
-- **MCP:** SSE transport with token authentication
+- **MCP:** Streamable HTTP transport with token authentication
+- **Testing:** Pest 3
 
 ## Self-Hosting
 
-MementoVault is designed to be self-hosted. Recommended setup:
+Memento Vault is designed to be self-hosted. Recommended setup:
 
 - Any VPS with 1GB+ RAM (Hetzner, DigitalOcean, etc.)
 - MySQL 8
@@ -117,8 +133,8 @@ MementoVault is designed to be self-hosted. Recommended setup:
 
 ```bash
 # Clone
-git clone https://github.com/meltinbit/memento-vault.git
-cd memento-vault
+git clone https://github.com/meltinbit/mementovault.git
+cd mementovault
 
 # Install
 composer install
@@ -127,11 +143,11 @@ npm install
 # Configure
 cp .env.example .env
 php artisan key:generate
-# Edit .env with your DB and R2 credentials
+# Edit .env with your DB and storage credentials
 
 # Database
 php artisan migrate
-php artisan db:seed
+php artisan db:seed --class=CollectionDocumentTemplateSeeder
 
 # Build
 npm run build
@@ -140,70 +156,32 @@ npm run build
 php artisan serve
 ```
 
-### Environment Variables
+### Connecting to Claude
 
-```env
-APP_NAME="MementoVault"
-APP_URL=https://mementovault.dev
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=memento_vault
-DB_USERNAME=vault
-DB_PASSWORD=secret
-
-R2_ACCESS_KEY_ID=your_key
-R2_SECRET_ACCESS_KEY=your_secret
-R2_BUCKET=mementovault-assets
-R2_ENDPOINT=https://account-id.r2.cloudflarestorage.com
-R2_URL=https://assets.mementovault.dev
+**Claude.ai** — Settings → Connectors → Add custom connector:
+```
+https://yourdomain.com/mcp?token=YOUR_TOKEN
 ```
 
-## Connecting to Claude Clients
-
-### Claude.ai
-Settings → MCP Servers → Add server:
-```
-Name: MementoVault - Project Name
-URL: https://mementovault.dev/mcp/your-collection?token=mv_live_...
-```
-
-### Claude Code
-Add to `.claude/settings.json`:
+**Claude Code** — Add to `.claude/settings.json`:
 ```json
 {
   "mcpServers": {
     "memento-vault": {
-      "type": "url",
-      "url": "https://mementovault.dev/mcp/your-collection?token=mv_live_..."
+      "url": "https://yourdomain.com/mcp?token=YOUR_TOKEN"
     }
   }
 }
 ```
 
-### Cowork
-Add MCP server in Cowork settings with the same URL format.
-
-## Roadmap
-
-- [x] Core workspace and context management
-- [x] Collection-based organization
-- [x] MCP server with SSE transport
-- [x] Version history and revisions
-- [x] S3/R2 asset storage with folder management
-- [x] Drag & drop asset organization with move/copy
-- [ ] Setup wizard for first-time onboarding
-- [ ] AI-assisted context generation
-- [ ] Import from existing .md folder structures
-- [ ] Workspace sharing and collaboration
-- [ ] Public skill marketplace
-- [ ] Webhook notifications on context changes
+Token types:
+- `cv_ws_*` — Workspace token (access all collections, switch dynamically)
+- `cv_live_*` — Collection token (scoped to one collection)
 
 ## License
 
-MIT
+[Business Source License 1.1](LICENSE) — Source available, non-competing use allowed. Converts to Apache 2.0 after 4 years.
 
 ---
 
-Built with ☕ by [MeltinBit](https://meltinbit.com)
+Built with care by [MeltinBit](https://meltinbit.com)
