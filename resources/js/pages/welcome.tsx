@@ -563,7 +563,9 @@ export default function Welcome() {
                             </Link>
                         </div>
                         <p className="text-sm" style={{ color: '#55556a' }}>
-                            &copy; {new Date().getFullYear()} {appName}
+                            &copy; {new Date().getFullYear()} {appName} — Built by{' '}
+                            <a href="https://meltinbit.com" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white">MeltinBit</a>
+                            {' '}| BSL 1.1 Licensed
                         </p>
                     </div>
                 </footer>

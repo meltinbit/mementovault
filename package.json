@@ -1,5 +1,6 @@
 {
     "private": true,
+    "license": "BSL-1.1",
     "type": "module",
     "scripts": {
         "build": "vite build",
