@@ -58,6 +58,8 @@ class AssetController extends Controller
         $paginated->through(function (Asset $asset) {
             if (str_starts_with($asset->mime_type, 'image/')) {
                 $asset->thumbnail_url = route('assets.download', $asset->id);
+            } elseif (str_starts_with($asset->mime_type, 'video/')) {
+                $asset->thumbnail_url = route('assets.download', ['asset' => $asset->id, 'inline' => 1]);
             }
 
             return $asset;
@@ -151,7 +153,9 @@ class AssetController extends Controller
             $asset->tags()->sync($request->validated('tag_ids', []));
         }
 
-        return back();
+        $params = $asset->folder_id ? ['folder_id' => $asset->folder_id] : [];
+
+        return to_route('assets.index', $params);
     }
 
     public function destroy(Asset $asset): RedirectResponse
@@ -172,6 +176,18 @@ class AssetController extends Controller
 
     public function download(Asset $asset): StreamedResponse
     {
+        if (request()->query('inline')) {
+            return new StreamedResponse(function () use ($asset) {
+                $stream = $this->storage->disk()->readStream($asset->storage_path);
+                fpassthru($stream);
+                fclose($stream);
+            }, 200, [
+                'Content-Type' => $asset->mime_type,
+                'Content-Length' => $asset->size_bytes,
+                'Accept-Ranges' => 'bytes',
+            ]);
+        }
+
         return $this->storage->disk()->download($asset->storage_path, $asset->original_filename);
     }
 

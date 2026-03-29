@@ -33,10 +33,12 @@ import {
     Square,
     Trash2,
     Upload,
+    Video,
 } from 'lucide-react';
 
 const mimeOptions = [
     { value: 'image/', label: 'Images' },
+    { value: 'video/', label: 'Videos' },
     { value: 'application/pdf', label: 'PDFs' },
     { value: 'text/', label: 'Text files' },
 ];
@@ -49,6 +51,7 @@ function formatSize(bytes: number) {
 
 function MimeIcon({ mime, className = 'h-5 w-5' }: { mime: string; className?: string }) {
     if (mime.startsWith('image/')) return <ImageIcon className={className} />;
+    if (mime.startsWith('video/')) return <Video className={className} />;
     if (mime === 'application/pdf') return <FileText className={className} />;
     return <File className={className} />;
 }
@@ -546,7 +549,12 @@ function DraggableAssetCard({ asset, index, isSelected, anySelected, onToggleSel
             {...listeners}
         >
             <CardContent className="p-4">
-                {asset.thumbnail_url && (
+                {asset.thumbnail_url && asset.mime_type.startsWith('video/') && (
+                    <div className="mb-3 overflow-hidden rounded-md bg-muted" onClick={(e) => e.stopPropagation()}>
+                        <video src={asset.thumbnail_url} controls className="h-32 w-full object-contain" preload="metadata" />
+                    </div>
+                )}
+                {asset.thumbnail_url && asset.mime_type.startsWith('image/') && (
                     <button
                         type="button"
                         className="mb-3 w-full cursor-zoom-in overflow-hidden rounded-md bg-muted"

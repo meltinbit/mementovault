@@ -57,7 +57,11 @@ export function AssetDetailPanel({ asset, onClose, tags }: AssetDetailPanelProps
                     </SheetHeader>
 
                     <div className="mt-4 space-y-6">
-                        {asset.thumbnail_url ? (
+                        {asset.thumbnail_url && asset.mime_type.startsWith('video/') ? (
+                            <div className="overflow-hidden rounded-lg border bg-muted">
+                                <video src={asset.thumbnail_url} controls className="max-h-64 w-full" preload="metadata" />
+                            </div>
+                        ) : asset.thumbnail_url && asset.mime_type.startsWith('image/') ? (
                             <button
                                 type="button"
                                 className="w-full cursor-zoom-in overflow-hidden rounded-lg border bg-muted"
