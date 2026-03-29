@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://mementovault.meltinbitfarm.cloud/sitemap.xml
