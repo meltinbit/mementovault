@@ -16,7 +16,7 @@ const sections: Section[] = [
         id: 'getting-started',
         title: 'Getting Started',
         children: [
-            { id: 'what-is-context-vault', title: 'What is Context Vault' },
+            { id: 'what-is-it', title: 'What is it' },
             { id: 'create-your-workspace', title: 'Create Your Workspace' },
             { id: 'set-up-identity-instructions', title: 'Set Up Identity & Instructions' },
             { id: 'create-your-first-collection', title: 'Create Your First Collection' },
@@ -192,7 +192,7 @@ function SidebarNav({
 }
 
 export default function DocsIndex() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, name: appName } = usePage<SharedData>().props;
     const [activeSection, setActiveSection] = useState('getting-started');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -240,7 +240,7 @@ export default function DocsIndex() {
                                 <div className="flex size-8 items-center justify-center overflow-hidden rounded-md">
                                     <img src="/logo.jpg" alt="Logo" className="size-8 object-cover" />
                                 </div>
-                                <span className="text-sm font-semibold text-white">Context Vault</span>
+                                <span className="text-sm font-semibold text-white">{appName}</span>
                             </Link>
                             <span className="hidden text-sm text-[#71717a] sm:inline">Documentation</span>
                         </div>
@@ -313,10 +313,10 @@ export default function DocsIndex() {
                         <section id="getting-started" className="mb-16">
                             <h1 className="mb-8 text-3xl font-bold text-white">Getting Started</h1>
 
-                            <section id="what-is-context-vault" className="mb-12">
-                                <Markdown>{`## What is Context Vault
+                            <section id="what-is-it" className="mb-12">
+                                <Markdown>{`## What is ${appName}
 
-Context Vault is an **AI Context Manager** — a centralized platform for managing all the context your AI assistants need. Think of it as **1Password for AI context**.
+${appName} is an **AI Context Manager** — a centralized platform for managing all the context your AI assistants need. Think of it as **1Password for AI context**.
 
 Instead of repeating yourself in every conversation, you define your identity, instructions, project details, and reusable content once. Then any AI client (Claude Desktop, Claude Code, Cowork) connects via MCP and receives everything it needs automatically.
 
@@ -415,7 +415,7 @@ Key features:
                             <section id="documents-skills-snippets-assets" className="mb-12">
                                 <Markdown>{`## Documents, Skills, Snippets, Assets
 
-Context Vault supports four content types:
+${appName} supports four content types:
 
 **Documents** — Markdown content like specifications, reference notes, technical docs, or anything you want AI to be able to read. Documents support full markdown with preview.
 
@@ -429,7 +429,7 @@ Context Vault supports four content types:
                             <section id="context-merging" className="mb-12">
                                 <Markdown>{`## How Context Merging Works
 
-When Claude connects to Context Vault via MCP, it receives a **merged context** assembled from multiple layers:
+When Claude connects to ${appName} via MCP, it receives a **merged context** assembled from multiple layers:
 
 1. **Workspace Identity** — Always included, cannot be overridden
 2. **Instructions** — Workspace instructions, with collection override appended if present
@@ -448,7 +448,7 @@ Collection overrides don't replace workspace content — they **extend** it. Thi
                             <section id="claude-desktop" className="mb-12">
                                 <Markdown>{`## Claude Desktop
 
-To connect Claude Desktop to Context Vault:
+To connect Claude Desktop to ${appName}:
 
 1. Open Claude Desktop
 2. Go to **Customize**
@@ -460,7 +460,7 @@ To connect Claude Desktop to Context Vault:
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Replace \`yourdomain.com\` with your Context Vault domain and \`YOUR_TOKEN\` with a token generated from your collection.
+Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a token generated from your collection.
 
 Once connected, Claude Desktop will automatically have access to all the context, documents, skills, and assets in that collection.`}</Markdown>
                             </section>
@@ -468,7 +468,7 @@ Once connected, Claude Desktop will automatically have access to all the context
                             <section id="claude-code" className="mb-12">
                                 <Markdown>{`## Claude Code
 
-Add Context Vault to your \`.claude/settings.json\` file:
+Add ${appName} to your \`.claude/settings.json\` file:
 
 \`\`\`json
 {
@@ -480,13 +480,13 @@ Add Context Vault to your \`.claude/settings.json\` file:
 }
 \`\`\`
 
-Claude Code will automatically connect to Context Vault and have access to all your collection's context and content.`}</Markdown>
+Claude Code will automatically connect to ${appName} and have access to all your collection's context and content.`}</Markdown>
                             </section>
 
                             <section id="cowork" className="mb-12">
                                 <Markdown>{`## Cowork
 
-Cowork supports the same MCP configuration. Add your Context Vault MCP server URL in Cowork's settings using the same format:
+Cowork supports the same MCP configuration. Add your ${appName} MCP server URL in Cowork's settings using the same format:
 
 \`\`\`
 https://yourdomain.com/mcp?token=YOUR_TOKEN
@@ -649,7 +649,7 @@ There's no lock-in — templates simply save you from starting with a blank page
                             <section id="available-tools" className="mb-12">
                                 <Markdown>{`## Available Tools
 
-Context Vault exposes the following tools via MCP:
+${appName} exposes the following tools via MCP:
 
 | Tool | Description |
 |------|-------------|

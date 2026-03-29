@@ -105,7 +105,7 @@ const steps = [
 ];
 
 export default function Welcome() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, name: appName } = usePage<SharedData>().props;
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -116,7 +116,7 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="Context Vault — Your AI brain, centralized">
+            <Head title={`${appName} — Your AI brain, centralized`}>
                 <style>{`
                     @keyframes gradient-shift {
                         0%, 100% { background-position: 0% 50%; }
@@ -235,7 +235,7 @@ export default function Welcome() {
                                 <div className="flex size-8 items-center justify-center overflow-hidden rounded-md">
                                     <img src="/logo.jpg" alt="Logo" className="size-8 object-cover" />
                                 </div>
-                                Context Vault
+                                {appName}
                             </Link>
                             <div className="hidden items-center gap-6 text-sm font-medium md:flex" style={{ color: '#8888a0' }}>
                                 <a href="#features" className="transition-colors duration-200 hover:text-white">
@@ -479,7 +479,7 @@ export default function Welcome() {
                     <div className="mb-16 text-center lg:mb-20">
                         <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Built for every workflow</h2>
                         <p className="animate-fade-in-up stagger-1 mt-5 text-base lg:text-lg" style={{ color: '#8888a0' }}>
-                            Context Vault adapts to how you work with AI.
+                            {appName} adapts to how you work with AI.
                         </p>
                     </div>
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -549,7 +549,7 @@ export default function Welcome() {
                             <div className="flex size-6 items-center justify-center overflow-hidden rounded">
                                 <img src="/logo.jpg" alt="Logo" className="size-6 object-cover" />
                             </div>
-                            Context Vault
+                            {appName}
                         </div>
                         <div className="flex items-center gap-6 text-sm" style={{ color: '#55556a' }}>
                             <Link href="/docs" className="transition-colors duration-200 hover:text-white">
@@ -563,7 +563,7 @@ export default function Welcome() {
                             </Link>
                         </div>
                         <p className="text-sm" style={{ color: '#55556a' }}>
-                            &copy; {new Date().getFullYear()} Context Vault
+                            &copy; {new Date().getFullYear()} {appName}
                         </p>
                     </div>
                 </footer>

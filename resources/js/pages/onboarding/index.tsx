@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
 import { MarkdownEditor } from '@/components/markdown-editor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -57,6 +58,7 @@ interface Props {
 }
 
 export default function Onboarding({ workspace }: Props) {
+    const { name: appName } = usePage<SharedData>().props;
     const [step, setStep] = useState(1);
     const { data, setData, post, processing } = useForm({
         template: 'developer',
@@ -76,7 +78,7 @@ export default function Onboarding({ workspace }: Props) {
 
     return (
         <>
-            <Head title="Welcome to Context Vault" />
+            <Head title={`Welcome to ${appName}`} />
             <div className="flex min-h-screen items-center justify-center bg-background p-4">
                 <div className="w-full max-w-2xl">
                     {/* Progress */}
@@ -92,7 +94,7 @@ export default function Onboarding({ workspace }: Props) {
                     {step === 1 && (
                         <div className="space-y-6">
                             <div className="text-center">
-                                <h1 className="text-2xl font-bold">Welcome to Context Vault</h1>
+                                <h1 className="text-2xl font-bold">Welcome to {appName}</h1>
                                 <p className="mt-2 text-muted-foreground">
                                     Choose a template to get started with pre-filled content.
                                 </p>

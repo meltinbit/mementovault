@@ -18,7 +18,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Attributes\Version;
 use Laravel\Mcp\Server\Tool;
 
-#[Name('Context Vault')]
+#[Name('Memento Vault')]
 #[Version('2.1.0')]
 #[Description('AI Context Manager — serves identity, instructions, documents, skills, snippets, and assets via MCP.')]
 class ContextVaultServer extends Server
