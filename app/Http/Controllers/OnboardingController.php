@@ -42,9 +42,8 @@ class OnboardingController extends Controller
         $workspace = $request->user()->workspace;
         $template = $this->templateService->getTemplate($validated['template']);
 
-        // Update system documents with template content
-        $types = ['identity', 'instructions', 'context', 'memory'];
-        foreach ($types as $type) {
+        // Update core workspace documents with template content
+        foreach (['identity', 'instructions'] as $type) {
             $content = $type === 'identity' && $validated['identity_content']
                 ? $validated['identity_content']
                 : ($template[$type]['content'] ?? '');

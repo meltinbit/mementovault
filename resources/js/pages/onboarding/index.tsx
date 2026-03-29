@@ -165,15 +165,16 @@ export default function Onboarding({ workspace }: Props) {
                             </div>
                             <div className="mx-auto max-w-sm space-y-3 text-left">
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">1.</span> Complete your Instructions and Context in
-                                    the workspace section
+                                    <span className="font-medium">1.</span> Complete your Instructions in the
+                                    Workspace section
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
                                     <span className="font-medium">2.</span> Create your first Collection to organize
                                     content by project
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">3.</span> Generate an API token and connect via MCP
+                                    <span className="font-medium">3.</span> Generate a workspace token in Settings and
+                                    connect via MCP
                                 </div>
                             </div>
                             <div className="flex justify-between">
