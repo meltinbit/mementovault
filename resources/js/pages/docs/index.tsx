@@ -27,16 +27,18 @@ const sections: Section[] = [
         title: 'Core Concepts',
         children: [
             { id: 'workspace', title: 'Workspace' },
-            { id: 'system-documents', title: 'System Documents' },
+            { id: 'workspace-documents', title: 'Workspace Documents' },
             { id: 'collections', title: 'Collections' },
-            { id: 'documents-skills-snippets-assets', title: 'Documents, Skills, Snippets, Assets' },
-            { id: 'context-merging', title: 'How Context Merging Works' },
+            { id: 'collection-documents', title: 'Collection Documents' },
+            { id: 'content-types', title: 'Documents, Skills, Snippets, Assets' },
+            { id: 'context-merging', title: 'How Context Loading Works' },
         ],
     },
     {
         id: 'connecting-to-clients',
         title: 'Connecting to Clients',
         children: [
+            { id: 'workspace-vs-collection-tokens', title: 'Workspace vs Collection Tokens' },
             { id: 'claude-desktop', title: 'Claude Desktop' },
             { id: 'claude-code', title: 'Claude Code' },
             { id: 'cowork', title: 'Cowork' },
@@ -51,6 +53,7 @@ const sections: Section[] = [
             { id: 'writing-effective-skills', title: 'Writing Effective Skills' },
             { id: 'using-snippets', title: 'Using Snippets' },
             { id: 'uploading-assets', title: 'Uploading Assets' },
+            { id: 'asset-folders', title: 'Asset Folders' },
             { id: 'tagging', title: 'Tagging' },
         ],
     },
@@ -60,7 +63,7 @@ const sections: Section[] = [
         children: [
             { id: 'workspace-templates', title: 'Workspace Templates' },
             { id: 'collection-templates', title: 'Collection Templates' },
-            { id: 'customizing-templates', title: 'Customizing Templates' },
+            { id: 'document-templates', title: 'Document Templates' },
         ],
     },
     {
@@ -69,8 +72,8 @@ const sections: Section[] = [
         children: [
             { id: 'available-tools', title: 'Available Tools' },
             { id: 'authentication', title: 'Authentication' },
-            { id: 'context-merging-order', title: 'Context Merging Order' },
-            { id: 'rate-limits', title: 'Rate Limits' },
+            { id: 'collection-switching', title: 'Collection Switching' },
+            { id: 'writing-long-content', title: 'Writing Long Content' },
         ],
     },
 ];
@@ -321,15 +324,15 @@ ${appName} is an **AI Context Manager** — a centralized platform for managing 
 Instead of repeating yourself in every conversation, you define your identity, instructions, project details, and reusable content once. Then any AI client (Claude Desktop, Claude Code, Cowork) connects via MCP and receives everything it needs automatically.
 
 - **One source of truth** for all your AI context
-- **Project-specific packages** via collections with their own MCP endpoints
+- **Project-specific packages** via collections with their own documents and MCP endpoints
 - **Rich content types**: documents, skills, snippets, and assets
-- **Smart merging** of workspace and collection-level context`}</Markdown>
+- **Lazy context loading** — minimal initial context, everything else fetched on demand`}</Markdown>
                             </section>
 
                             <section id="create-your-workspace" className="mb-12">
                                 <Markdown>{`## Create Your Workspace
 
-After registration, a workspace is automatically created for you with **4 system documents** (Identity, Instructions, Context, and Memory).
+After registration, a workspace is automatically created for you with core system documents (Identity and Instructions).
 
 During setup, you'll choose a **template** that pre-populates your workspace with relevant starting content:
 
@@ -345,31 +348,34 @@ Templates are just starting points — you can modify everything freely after cr
                             <section id="set-up-identity-instructions" className="mb-12">
                                 <Markdown>{`## Set Up Your Identity & Instructions
 
-Navigate to **Workspace** and find the **Identity** and **Instructions** tabs. Use markdown to define:
+Navigate to the **Workspace** section in the sidebar and find **Identity** and **Instructions**:
 
-**Identity** — Who you are. This tells AI about your background, role, and expertise. For example:
+**Identity** — Who you are. This tells AI about your background, role, and expertise:
 
 > I'm a senior full-stack developer specializing in Laravel and React. I work at Acme Corp building SaaS products.
 
-**Instructions** — How AI should work with you. Define preferences for tone, code style, response format, and anything else that shapes AI behavior. For example:
+**Instructions** — How AI should work with you. Define preferences for tone, code style, and behavior:
 
-> Always use TypeScript. Prefer functional components. Write tests for all new features. Be concise — skip obvious explanations.`}</Markdown>
+> Always use TypeScript. Prefer functional components. Write tests for all new features. Be concise.
+
+These are always included when AI loads context via MCP.`}</Markdown>
                             </section>
 
                             <section id="create-your-first-collection" className="mb-12">
                                 <Markdown>{`## Create Your First Collection
 
-Collections are **project packages**. Each collection gets its own MCP endpoint, so you can connect different AI clients to different projects.
+Collections are **project packages**. Each collection has its own set of documents and MCP endpoint.
 
 1. Navigate to the **Collections** page
 2. Click **New Collection**
-3. Choose a name and type
-4. Pick a collection template if desired
+3. Choose a name and type (the type selects a template)
+4. The template pre-populates collection documents (Instructions, Architecture, etc.)
 
 Once created, you can:
-- Add documents, skills, snippets, and assets
-- Override workspace instructions, context, and memory at the collection level
-- Generate API tokens for MCP connections`}</Markdown>
+- Edit collection documents that define how AI operates in this project
+- Add workspace content (documents, skills, snippets, assets) to the collection
+- Generate API tokens for MCP connections
+- Manage project-specific memory entries`}</Markdown>
                             </section>
                         </section>
 
@@ -380,64 +386,96 @@ Once created, you can:
                             <section id="workspace" className="mb-12">
                                 <Markdown>{`## Workspace
 
-Your workspace is your **account container**. One user equals one workspace. It holds all your content — system documents, collections, documents, skills, snippets, assets, and tags.
+Your workspace is your **account container**. One user equals one workspace. It holds all your content — workspace documents, collections, documents, skills, snippets, assets, tags, and memory entries.
 
-Everything you create lives within your workspace, and workspace-level settings (like Identity and Instructions) apply globally to all MCP connections unless overridden at the collection level.`}</Markdown>
+Workspace-level settings (Identity and Instructions) apply globally to all MCP connections.`}</Markdown>
                             </section>
 
-                            <section id="system-documents" className="mb-12">
-                                <Markdown>{`## System Documents
+                            <section id="workspace-documents" className="mb-12">
+                                <Markdown>{`## Workspace Documents
 
-Every workspace has exactly **4 system documents**, each serving a distinct purpose:
+Workspace documents are global documents that define your AI persona across all collections:
 
 | Document | Purpose |
 |----------|---------|
-| **Identity** | Who you are — your background, role, expertise, and personality |
+| **Identity** | Who you are — background, role, expertise, personality |
 | **Instructions** | How AI should work — coding style, response format, behavior rules |
-| **Context** | Current projects and priorities — what you're working on right now |
-| **Memory** | Persistent information — things AI should remember across conversations |
 
-System documents use markdown and support versioning. Each edit creates a new version, so you can track changes over time.`}</Markdown>
+These two are **core** and always present. You can also add **optional** workspace documents:
+
+| Optional | Purpose |
+|----------|---------|
+| **Soul** | Mission, vision, core values, brand personality |
+| **Services** | What you offer and how you deliver it |
+| **Portfolio** | Past work, case studies, results |
+| **Products** | Products, features, pricing, positioning |
+| **ICP** | Ideal Customer Profile, pain points, buying behavior |
+
+You can also create **custom** workspace documents with any name. Optional and custom documents can be deleted; core documents (Identity, Instructions) cannot.
+
+All workspace documents support markdown and version history.`}</Markdown>
                             </section>
 
                             <section id="collections" className="mb-12">
                                 <Markdown>{`## Collections
 
-Collections are **project packages** with their own MCP endpoints. They let you scope AI context to specific projects.
+Collections are **project packages** with their own documents and MCP endpoints. They scope AI context to specific projects.
 
 Key features:
 - **Own MCP endpoint** — Each collection has a unique URL for AI client connections
-- **Override system documents** — Collections can override workspace-level Instructions, Context, and Memory (Identity is always workspace-level)
-- **Many-to-many content** — Documents, skills, snippets, and assets can belong to multiple collections
-- **API tokens** — Each token is scoped to one collection`}</Markdown>
+- **Collection documents** — Each collection has its own set of named documents (Instructions, Architecture, Brand Voice, etc.)
+- **Content assignment** — Workspace documents, skills, snippets, and assets can be assigned to multiple collections
+- **Memory** — Each collection can have its own memory entries
+- **Templates** — Collection type selects a template that pre-populates initial documents`}</Markdown>
                             </section>
 
-                            <section id="documents-skills-snippets-assets" className="mb-12">
+                            <section id="collection-documents" className="mb-12">
+                                <Markdown>{`## Collection Documents
+
+Collection documents are **system-level documents that belong to a collection**. They define how AI operates within that specific project and are always available in the MCP context.
+
+Unlike workspace content (documents, skills, snippets) which is shared across collections, collection documents are **exclusive** to one collection.
+
+Examples:
+- **Instructions** — Operating rules for this specific project
+- **Architecture** — System architecture, database schema, API design
+- **Brand Voice** — Tone guidelines specific to this project
+- **Memory** — Structured memory for this project
+- **Roadmap** — Project status, priorities, backlog
+
+Collection documents are created from **templates** when you create a collection, but you can add, rename, or remove them freely. Required documents (like Instructions) are protected from deletion.
+
+When adding a new document, you can choose from 20+ built-in templates (Architecture, Brand Voice, FAQ, Competitor Analysis, etc.) or start blank.`}</Markdown>
+                            </section>
+
+                            <section id="content-types" className="mb-12">
                                 <Markdown>{`## Documents, Skills, Snippets, Assets
 
-${appName} supports four content types:
+${appName} supports four workspace-level content types that can be assigned to collections:
 
-**Documents** — Markdown content like specifications, reference notes, technical docs, or anything you want AI to be able to read. Documents support full markdown with preview.
+**Documents** — Markdown reference materials. API docs, specs, technical guides. AI retrieves them on demand — they're listed in context so AI knows they exist, and fetches full content when needed.
 
-**Skills** — Operational instructions with a **trigger description**. The description field is critical — it tells AI *when* to activate the skill. The content contains the full instruction set. Skills are like specialized playbooks that AI activates on demand.
+**Skills** — Operational instructions with a **trigger description**. The description tells AI *when* to activate the skill. The content contains the full instruction set. Think of skills as specialized playbooks.
 
-**Snippets** — Reusable text blocks. No markdown rendering — raw text that gets inserted as-is. Great for email signatures, disclaimers, prompt templates, or boilerplate text.
+**Snippets** — Reusable text blocks inserted as-is. Email signatures, disclaimers, prompt templates, boilerplate. No markdown — raw text.
 
-**Assets** — Binary files (images, PDFs, etc.) with AI-readable descriptions. The description is what Claude sees via MCP. Without a description, assets are listed but not understood by AI.`}</Markdown>
+**Assets** — Binary files (images, videos, PDFs) with AI-readable descriptions. Assets can be organized in **folders** with nested hierarchy. Videos can be played inline.`}</Markdown>
                             </section>
 
                             <section id="context-merging" className="mb-12">
-                                <Markdown>{`## How Context Merging Works
+                                <Markdown>{`## How Context Loading Works
 
-When Claude connects to ${appName} via MCP, it receives a **merged context** assembled from multiple layers:
+When AI connects via MCP, it calls \`get_context\` which returns a **minimal, lazy context**:
 
-1. **Workspace Identity** — Always included, cannot be overridden
-2. **Instructions** — Workspace instructions, with collection override appended if present
-3. **Context** — Workspace context, with collection override appended if present
-4. **Memory** — Workspace memory, with collection override appended if present
-5. **Available content lists** — Skills, documents, snippets, and assets available in the collection
+1. **Workspace Identity** — Your identity content
+2. **Workspace Instructions** — Your global instructions
+3. **Collection name** and description
+4. **Collection document slugs** — Just the names, no content
+5. **Content counts** — How many skills, documents, snippets, assets are available
 
-Collection overrides don't replace workspace content — they **extend** it. This means your global preferences always apply, with project-specific additions layered on top.`}</Markdown>
+This keeps the initial context small (under 2KB). AI then fetches specific content on demand using tools like \`collection_documents\`, \`documents\`, \`skills\`, etc.
+
+This lazy approach is intentional — it prevents context overflow and lets AI decide what it needs based on the conversation.`}</Markdown>
                             </section>
                         </section>
 
@@ -445,24 +483,39 @@ Collection overrides don't replace workspace content — they **extend** it. Thi
                         <section id="connecting-to-clients" className="mb-16">
                             <h1 className="mb-8 text-3xl font-bold text-white">Connecting to Clients</h1>
 
+                            <section id="workspace-vs-collection-tokens" className="mb-12">
+                                <Markdown>{`## Workspace vs Collection Tokens
+
+${appName} supports two types of API tokens:
+
+**Workspace tokens** (\`cv_ws_\` prefix) — A single token that gives access to **all collections** in your workspace. AI can list available collections and switch between them dynamically. Great when you want one MCP connection for everything.
+
+**Collection tokens** (\`cv_live_\` prefix) — Scoped to a single collection. AI only sees that collection's content. Use when you want a dedicated, focused connection.
+
+| Feature | Workspace Token | Collection Token |
+|---------|----------------|-----------------|
+| Prefix | \`cv_ws_\` | \`cv_live_\` |
+| Scope | All collections | One collection |
+| Collection switching | Yes, via \`get_context\` | No |
+| Create from | Settings → Workspace | Collection page |
+
+With a workspace token, AI calls \`get_context\` to see available collections, then \`get_context(collection: "slug")\` to select one. After selection, all tools work as if using a collection token.`}</Markdown>
+                            </section>
+
                             <section id="claude-desktop" className="mb-12">
                                 <Markdown>{`## Claude Desktop
 
 To connect Claude Desktop to ${appName}:
 
-1. Open Claude Desktop
-2. Go to **Customize**
-3. Click **Connectors**
-4. Click the **+** button, then **Add custom connector**
-5. Enter your MCP endpoint URL:
+1. Open Claude Desktop → **Customize** → **Connectors**
+2. Click **+** → **Add custom connector**
+3. Enter your MCP endpoint URL:
 
 \`\`\`
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a token generated from your collection.
-
-Once connected, Claude Desktop will automatically have access to all the context, documents, skills, and assets in that collection.`}</Markdown>
+Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a workspace or collection token.`}</Markdown>
                             </section>
 
                             <section id="claude-code" className="mb-12">
@@ -473,20 +526,20 @@ Add ${appName} to your \`.claude/settings.json\` file:
 \`\`\`json
 {
   "mcpServers": {
-    "context-vault": {
+    "memento-vault": {
       "url": "https://yourdomain.com/mcp?token=YOUR_TOKEN"
     }
   }
 }
 \`\`\`
 
-Claude Code will automatically connect to ${appName} and have access to all your collection's context and content.`}</Markdown>
+Claude Code will automatically connect and have access to your context and content.`}</Markdown>
                             </section>
 
                             <section id="cowork" className="mb-12">
                                 <Markdown>{`## Cowork
 
-Cowork supports the same MCP configuration. Add your ${appName} MCP server URL in Cowork's settings using the same format:
+Cowork supports the same MCP configuration. Add your MCP server URL in Cowork's settings:
 
 \`\`\`
 https://yourdomain.com/mcp?token=YOUR_TOKEN
@@ -498,15 +551,16 @@ Refer to Cowork's documentation for the exact location of MCP server settings.`}
                             <section id="token-management" className="mb-12">
                                 <Markdown>{`## Token Management
 
-API tokens authenticate MCP connections. Key details:
+Key details about API tokens:
 
-- **Generate tokens** from the collection detail page
-- **Each token is scoped** to exactly one collection
-- **Token format**: tokens start with \`cv_live_\`
-- **Security**: tokens are shown only once at creation — store them securely
-- **Server-side**: tokens are SHA-256 hashed before storage
+- **Workspace tokens**: generated from **Settings → Workspace**
+- **Collection tokens**: generated from the **collection detail page**
+- **Security**: tokens are SHA-256 hashed — the plain token is shown only once at creation
+- **Expiration**: optional expiration date per token
+- **Last used**: automatically tracked for each token
+- **Revocation**: tokens can be revoked independently at any time
 
-You can create multiple tokens per collection (e.g., one for Claude Desktop, one for Claude Code) and revoke them independently.`}</Markdown>
+You can create multiple tokens per collection or workspace (e.g., one for Claude Desktop, one for Claude Code).`}</Markdown>
                             </section>
                         </section>
 
@@ -517,15 +571,15 @@ You can create multiple tokens per collection (e.g., one for Claude Desktop, one
                             <section id="creating-documents" className="mb-12">
                                 <Markdown>{`## Creating Documents
 
-**Documents are reference materials that AI retrieves on demand.** They're the knowledge base your AI draws from when it needs deeper context — think of them as the files in a shared drive that a colleague would read before starting work.
+**Documents are reference materials that AI retrieves on demand.** They're the knowledge base your AI draws from.
 
 **What to put in documents:**
-- **Technical:** API documentation, architecture decisions, database schemas, deployment guides
+- **Technical:** API documentation, architecture decisions, database schemas
 - **Copy:** Brand guidelines, tone of voice docs, content templates
-- **Process:** SOPs, workflows, review checklists, onboarding guides
+- **Process:** SOPs, workflows, review checklists
 - **General:** Meeting notes, project briefs, research findings
 
-**How AI uses them:** Documents are NOT sent to AI automatically. They're listed in the collection context so AI *knows they exist*, and AI can retrieve specific documents when relevant using \`get_document\`. This keeps context lean while making deep knowledge available.
+**How AI uses them:** Documents are NOT sent automatically. They're listed in context so AI *knows they exist*, and AI retrieves them on demand using the \`documents\` tool with \`action: "get"\`.
 
 **To create a document:**
 1. Go to **Documents** → **New Document**
@@ -539,48 +593,56 @@ You can create multiple tokens per collection (e.g., one for Claude Desktop, one
 
 Skills have two key fields:
 
-**Description** — This is the most important field. It tells AI *when* to activate the skill. Write it as a trigger condition. For example:
+**Description** — The most important field. It tells AI *when* to activate the skill. Write it as a trigger condition:
 
 > "Apply when writing React components or discussing frontend architecture."
 
 > "Use when the user asks about database schema design or migration strategies."
 
-**Content** — The full instruction set that AI follows when the skill is activated. This can be as detailed as needed — coding standards, step-by-step processes, decision frameworks, etc.
+**Content** — The full instruction set that AI follows when activated. Can be as detailed as needed.
 
-A well-written description ensures your skills activate at the right time, not too broadly and not too narrowly.`}</Markdown>
+A well-written description ensures skills activate at the right time.`}</Markdown>
                             </section>
 
                             <section id="using-snippets" className="mb-12">
                                 <Markdown>{`## Using Snippets
 
-**Snippets are short, reusable text blocks that AI can insert as-is.** Think of them as copy-paste templates — they're not markdown documents, they're raw text that gets used exactly as written.
+**Snippets are short, reusable text blocks that AI inserts as-is.** They're raw text, not markdown documents.
 
 **The difference from documents:**
-- **Documents** = reference material AI reads to understand context (markdown, can be long)
-- **Snippets** = ready-to-use text AI copies verbatim (raw text, typically short)
+- **Documents** = reference material AI reads for context (markdown, can be long)
+- **Snippets** = ready-to-use text AI copies verbatim (raw text, short)
 
 **What to put in snippets:**
-- **Email signatures** — your standard sign-off with contact info
-- **Legal disclaimers** — standard notices, terms, copyright text
-- **Prompt templates** — reusable prompts for common tasks
-- **Boilerplate** — standard paragraphs, code snippets, response templates
-- **Quick references** — API keys format, standard headers, common replies
-
-**How AI uses them:** AI can list all available snippets and retrieve any by name via \`get_snippet\`. When it needs to include standard text in a response, it pulls the snippet directly.`}</Markdown>
+- Email signatures, legal disclaimers, prompt templates
+- Boilerplate paragraphs, standard responses, code snippets
+- API keys format, standard headers, quick references`}</Markdown>
                             </section>
 
                             <section id="uploading-assets" className="mb-12">
                                 <Markdown>{`## Uploading Assets
 
-Upload files by **dragging and dropping** onto the upload area, or click to browse.
+Upload files by **dragging and dropping** onto the upload area, or click to browse. Supported: images, videos, PDFs, and other files.
 
 The **AI description** field is critical:
-- This is what Claude sees when it accesses the asset via MCP
+- This is what AI sees when it accesses the asset
 - **Without a description**, assets are listed but not understood by AI
 - Write descriptions that explain what the file contains and when it's relevant
 
-Example description for a design mockup:
-> "Homepage redesign mockup showing the new hero section with gradient background, feature cards, and updated navigation. Use this as reference when implementing frontend changes."`}</Markdown>
+Videos can be **played inline** directly from the asset list. Images show thumbnails with lightbox zoom.`}</Markdown>
+                            </section>
+
+                            <section id="asset-folders" className="mb-12">
+                                <Markdown>{`## Asset Folders
+
+Organize assets into **folders** with nested hierarchy:
+
+- Create folders and sub-folders
+- Drag assets between folders or use batch move
+- Batch operations: move, copy, or delete multiple assets at once
+- Folder tree navigation in the sidebar
+
+Folders are workspace-level — the same folder structure is visible regardless of which collection you're in.`}</Markdown>
                             </section>
 
                             <section id="tagging" className="mb-12">
@@ -592,7 +654,7 @@ Tags help organize your content across all types:
 - **Apply tags** to documents, skills, snippets, and assets
 - **Filter lists** by tag to quickly find related content
 
-Tags are workspace-level — the same tag can be applied to any content type, making it easy to group related items across different categories.`}</Markdown>
+Tags are workspace-level — the same tag can be applied to any content type.`}</Markdown>
                             </section>
                         </section>
 
@@ -603,7 +665,7 @@ Tags are workspace-level — the same tag can be applied to any content type, ma
                             <section id="workspace-templates" className="mb-12">
                                 <Markdown>{`## Workspace Templates
 
-Workspace templates pre-populate your system documents with relevant starting content:
+Workspace templates pre-populate your workspace documents during setup:
 
 | Template | Focus |
 |----------|-------|
@@ -617,28 +679,29 @@ Workspace templates pre-populate your system documents with relevant starting co
                             <section id="collection-templates" className="mb-12">
                                 <Markdown>{`## Collection Templates
 
-Collection templates provide starting content tailored to specific project types:
+When creating a collection, the **type** you choose determines which collection documents are pre-created:
 
-| Template | Focus |
-|----------|-------|
-| **Software Project** | Architecture decisions, coding conventions, tech stack |
-| **Client Project** | Project brief, communication preferences, deliverables |
-| **Product / SaaS** | Product roadmap, brand guidelines, feature specs |
-| **Marketing** | Campaign plans, tone of voice, content calendar |
-| **Custom** | Blank collection — define your own structure |`}</Markdown>
+| Type | Documents Created |
+|------|------------------|
+| **Software Project** | Instructions, Architecture, Roadmap |
+| **Client Project** | Instructions, Client Brief, Deliverables |
+| **Sales Agent** | Instructions, Products & Services, Target Market, Sales Playbook |
+| **Social Manager** | Instructions, Content Strategy, Brand Voice, Channels & Formats |
+| **Marketing** | Instructions, Brand & Positioning, Campaigns, Content Bank |
+| **Strategy & Brainstorm** | Instructions, Ideas Pipeline, Market Context, Validation Framework |
+| **Custom** | Instructions only |
+
+Each template pre-fills documents with placeholder content to guide you.`}</Markdown>
                             </section>
 
-                            <section id="customizing-templates" className="mb-12">
-                                <Markdown>{`## Customizing Templates
+                            <section id="document-templates" className="mb-12">
+                                <Markdown>{`## Document Templates
 
-Templates are **just starting content**. After creation, you can modify everything freely:
+When adding a new collection document, you can choose from **20+ built-in templates**:
 
-- Edit or replace all system documents
-- Add, remove, or reorganize content
-- Change collection settings and overrides
-- Create your own patterns and structures
+Architecture, Roadmap, Brand Voice, Products & Services, Target Market, Sales Playbook, Content Strategy, Channels & Formats, Client Brief, Deliverables, Ideas Pipeline, Market Context, Validation Framework, Brand & Positioning, Campaigns, Content Bank, FAQ, Competitor Analysis, Guidelines, and more.
 
-There's no lock-in — templates simply save you from starting with a blank page.`}</Markdown>
+Each template pre-fills the document name and placeholder content. You can also start with a **blank document** and name it anything.`}</Markdown>
                             </section>
                         </section>
 
@@ -649,20 +712,19 @@ There's no lock-in — templates simply save you from starting with a blank page
                             <section id="available-tools" className="mb-12">
                                 <Markdown>{`## Available Tools
 
-${appName} exposes the following tools via MCP:
+${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter to select the operation:
 
-| Tool | Description |
-|------|-------------|
-| \`get_context\` | Returns the full merged context (identity + instructions + context + memory) |
-| \`list_documents\` | Browse available documents with titles and types |
-| \`get_document\` | Read the full content of a specific document |
-| \`list_skills\` | Browse available skills with names and descriptions |
-| \`get_skill\` | Read the full content of a specific skill |
-| \`list_snippets\` | Browse available snippets |
-| \`get_snippet\` | Read the full content of a specific snippet |
-| \`list_assets\` | Browse available assets with descriptions |
-| \`get_asset_url\` | Get a download URL for a specific asset |
-| \`search\` | Full-text search across all content types |`}</Markdown>
+| Tool | Actions | Description |
+|------|---------|-------------|
+| \`get_context\` | — | Load context. Pass a collection slug to switch collections (workspace tokens). |
+| \`collection_documents\` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents (Instructions, Architecture, etc.) |
+| \`documents\` | list, get, create, update, append | Manage workspace documents assigned to the collection |
+| \`skills\` | list, get, create, update, append | Manage skills |
+| \`snippets\` | list, get, create, update, append | Manage snippets |
+| \`assets\` | list, get_url, list_folders, create_folder, move | Manage assets and folders |
+| \`search\` | — | Full-text search across documents, skills, and snippets |
+| \`update_system_document\` | — | Update workspace-level documents (Identity, Instructions, etc.) |
+| \`append_memory\` | — | Save short memory entries (workspace or collection scoped) |`}</Markdown>
                             </section>
 
                             <section id="authentication" className="mb-12">
@@ -672,43 +734,47 @@ API requests are authenticated using bearer tokens:
 
 **Header authentication:**
 \`\`\`
-Authorization: Bearer cv_live_YOUR_TOKEN
+Authorization: Bearer YOUR_TOKEN
 \`\`\`
 
 **Query parameter authentication:**
 \`\`\`
-https://yourdomain.com/mcp?token=cv_live_YOUR_TOKEN
+https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Security details:
-- Tokens are **SHA-256 hashed** server-side — the plain token is never stored
-- Each token is **scoped to one collection** — it can only access that collection's content
-- Tokens are shown **only once** at creation — store them in a secure location`}</Markdown>
+Token types:
+- \`cv_ws_\` — **Workspace token**: access to all collections, supports switching
+- \`cv_live_\` — **Collection token**: scoped to one collection
+
+Tokens are SHA-256 hashed server-side. The plain token is shown only once at creation.`}</Markdown>
                             </section>
 
-                            <section id="context-merging-order" className="mb-12">
-                                <Markdown>{`## Context Merging Order
+                            <section id="collection-switching" className="mb-12">
+                                <Markdown>{`## Collection Switching
 
-When \`get_context\` is called, the response is assembled in this order:
+With a **workspace token**, you can switch between collections dynamically:
 
-1. **Identity** — Workspace identity (always included)
-2. **Instructions** — Workspace instructions + collection override (if present)
-3. **Context** — Workspace context + collection override (if present)
-4. **Memory** — Workspace memory + collection override (if present)
-5. **Available Skills** — List of skills in the collection
-6. **Available Documents** — List of documents in the collection
-7. **Available Snippets** — List of snippets in the collection
-8. **Available Assets** — List of assets in the collection
+1. Call \`get_context\` with no parameters — returns list of available collections
+2. Call \`get_context(collection: "project-slug")\` — switches to that collection
+3. All subsequent tool calls are scoped to the selected collection
+4. Call \`get_context(collection: "other-slug")\` — switches to a different collection
 
-Each layer builds on the previous one, giving AI a complete picture of who you are, how to work with you, what you're working on, and what resources are available.`}</Markdown>
+The active collection is **persisted on the token**, so it survives across conversations using the same MCP endpoint.
+
+With a **collection token**, the collection is fixed — no switching is needed or possible.`}</Markdown>
                             </section>
 
-                            <section id="rate-limits" className="mb-12">
-                                <Markdown>{`## Rate Limits
+                            <section id="writing-long-content" className="mb-12">
+                                <Markdown>{`## Writing Long Content
 
-**Current (v1):** There are no rate limits. All MCP tools can be called without restriction.
+Due to AI output token limits, content updates should be **chunked**:
 
-**Future:** Per-token rate limiting is planned for a future release to support multi-tenant and team usage scenarios.`}</Markdown>
+- **Max 1500 characters** per tool call
+- Use \`update\` for the first chunk
+- Use \`append\` for subsequent chunks
+- **One document per conversation turn** — updating multiple documents in a single turn may cause output truncation
+
+The \`append\` action is available on: \`collection_documents\`, \`documents\`, \`skills\`, \`snippets\`.`}</Markdown>
                             </section>
                         </section>
                     </main>
