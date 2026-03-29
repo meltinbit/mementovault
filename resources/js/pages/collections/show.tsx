@@ -53,6 +53,7 @@ interface Props {
     availableSkills: AvailableItem[];
     availableSnippets: AvailableItem[];
     availableAssets: AvailableItem[];
+    assetFolders: { id: number; name: string; assets_count: number }[];
     memoryEntries: MemoryEntryData[];
     mcpEndpoint: string;
     newToken?: string | null;
@@ -134,6 +135,7 @@ export default function CollectionShow({
     availableSkills,
     availableSnippets,
     availableAssets,
+    assetFolders,
     memoryEntries,
     mcpEndpoint,
     newToken,
@@ -377,6 +379,7 @@ export default function CollectionShow({
                                 availableSkills={availableSkills}
                                 availableSnippets={availableSnippets}
                                 availableAssets={availableAssets}
+                                assetFolders={assetFolders}
                             />
                         </div>
 

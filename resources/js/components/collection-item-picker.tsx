@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { type DocumentData, type SkillData, type SnippetData, type AssetData } from '@/types';
-import { FileText, Zap, Code, Image, X, Plus, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Zap, Code, Image, Folder, X, Plus, Search, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AvailableItem {
     id: number;
@@ -13,6 +13,12 @@ interface AvailableItem {
     name?: string;
     type?: string;
     mime_type?: string;
+}
+
+interface AssetFolderItem {
+    id: number;
+    name: string;
+    assets_count: number;
 }
 
 interface CollectionItemPickerProps {
@@ -25,6 +31,7 @@ interface CollectionItemPickerProps {
     availableSkills: AvailableItem[];
     availableSnippets: AvailableItem[];
     availableAssets: AvailableItem[];
+    assetFolders?: AssetFolderItem[];
 }
 
 const contentTypes = [
@@ -43,6 +50,7 @@ function ContentSection({
     attached,
     available,
     collectionId,
+    folders,
 }: {
     type: string;
     label: string;
@@ -52,9 +60,11 @@ function ContentSection({
     attached: any[];
     available: AvailableItem[];
     collectionId: number;
+    folders?: AssetFolderItem[];
 }) {
     const [expanded, setExpanded] = useState(false);
     const [selected, setSelected] = useState<number[]>([]);
+    const [selectedFolders, setSelectedFolders] = useState<number[]>([]);
     const [search, setSearch] = useState('');
 
     const detach = (id: number) => {
@@ -65,11 +75,15 @@ function ContentSection({
     };
 
     const attach = () => {
-        if (selected.length === 0) return;
+        if (selected.length === 0 && selectedFolders.length === 0) return;
+        const items = [
+            ...selected.map((id) => ({ type, id })),
+            ...selectedFolders.map((id) => ({ type: 'asset_folder', id })),
+        ];
         router.post(
             route('collections.items.store', collectionId),
-            { items: selected.map((id) => ({ type, id })) },
-            { preserveScroll: true, onSuccess: () => { setSelected([]); setSearch(''); } },
+            { items },
+            { preserveScroll: true, onSuccess: () => { setSelected([]); setSelectedFolders([]); setSearch(''); } },
         );
     };
 
@@ -128,7 +142,7 @@ function ContentSection({
                     )}
 
                     {/* Add items */}
-                    {available.length > 0 ? (
+                    {(available.length > 0 || (folders && folders.length > 0)) ? (
                         <div className="px-4 py-3">
                             <div className="relative mb-2">
                                 <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -139,7 +153,26 @@ function ContentSection({
                                     className="h-8 pl-7 text-xs"
                                 />
                             </div>
-                            <div className="max-h-36 space-y-0.5 overflow-y-auto">
+                            <div className="max-h-48 space-y-0.5 overflow-y-auto">
+                                {folders && folders.filter((f) => f.name.toLowerCase().includes(search.toLowerCase())).map((folder) => (
+                                    <label
+                                        key={`folder-${folder.id}`}
+                                        className="flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors hover:bg-muted"
+                                    >
+                                        <Checkbox
+                                            checked={selectedFolders.includes(folder.id)}
+                                            onCheckedChange={(checked) => {
+                                                setSelectedFolders(checked ? [...selectedFolders, folder.id] : selectedFolders.filter((id) => id !== folder.id));
+                                            }}
+                                        />
+                                        <Folder className="h-3.5 w-3.5 text-muted-foreground" />
+                                        <span className="truncate">{folder.name}</span>
+                                        <span className="ml-auto text-xs text-muted-foreground">{folder.assets_count} assets</span>
+                                    </label>
+                                ))}
+                                {folders && folders.length > 0 && filteredAvailable.length > 0 && (
+                                    <div className="my-1 border-t" />
+                                )}
                                 {filteredAvailable.map((item) => (
                                     <label
                                         key={item.id}
@@ -154,13 +187,13 @@ function ContentSection({
                                         <span className="truncate">{(item as any)[labelKey] || item.title || item.name}</span>
                                     </label>
                                 ))}
-                                {filteredAvailable.length === 0 && (
+                                {filteredAvailable.length === 0 && (!folders || folders.filter((f) => f.name.toLowerCase().includes(search.toLowerCase())).length === 0) && (
                                     <p className="py-2 text-center text-xs text-muted-foreground">No matches</p>
                                 )}
                             </div>
-                            {selected.length > 0 && (
+                            {(selected.length > 0 || selectedFolders.length > 0) && (
                                 <Button size="sm" onClick={attach} className="mt-2 h-7 w-full gap-1 text-xs">
-                                    <Plus className="h-3 w-3" /> Add {selected.length} {label.toLowerCase()}
+                                    <Plus className="h-3 w-3" /> Add {selected.length + selectedFolders.length} item{selected.length + selectedFolders.length !== 1 ? 's' : ''}
                                 </Button>
                             )}
                         </div>
@@ -179,10 +212,10 @@ function ContentSection({
 
 export function CollectionItemPicker(props: CollectionItemPickerProps) {
     const dataMap = {
-        document: { attached: props.documents, available: props.availableDocuments },
-        skill: { attached: props.skills, available: props.availableSkills },
-        snippet: { attached: props.snippets, available: props.availableSnippets },
-        asset: { attached: props.assets, available: props.availableAssets },
+        document: { attached: props.documents, available: props.availableDocuments, folders: undefined as AssetFolderItem[] | undefined },
+        skill: { attached: props.skills, available: props.availableSkills, folders: undefined as AssetFolderItem[] | undefined },
+        snippet: { attached: props.snippets, available: props.availableSnippets, folders: undefined as AssetFolderItem[] | undefined },
+        asset: { attached: props.assets, available: props.availableAssets, folders: props.assetFolders },
     };
 
     const totalAttached = props.documents.length + props.skills.length + props.snippets.length + props.assets.length;
@@ -205,6 +238,7 @@ export function CollectionItemPicker(props: CollectionItemPickerProps) {
                     attached={dataMap[ct.key].attached}
                     available={dataMap[ct.key].available}
                     collectionId={props.collectionId}
+                    folders={dataMap[ct.key].folders}
                 />
             ))}
         </div>

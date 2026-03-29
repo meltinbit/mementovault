@@ -16,11 +16,20 @@ class CollectionItemController extends Controller
     {
         $validated = $request->validate([
             'items' => ['required', 'array', 'min:1'],
-            'items.*.type' => ['required', 'string', 'in:document,skill,snippet,asset'],
+            'items.*.type' => ['required', 'string', 'in:document,skill,snippet,asset,asset_folder'],
             'items.*.id' => ['required', 'integer'],
         ]);
 
         foreach ($validated['items'] as $item) {
+            if ($item['type'] === 'asset_folder') {
+                $assetIds = Asset::where('folder_id', $item['id'])->pluck('id')->toArray();
+                if ($assetIds) {
+                    $collection->assets()->syncWithoutDetaching($assetIds);
+                }
+
+                continue;
+            }
+
             $model = match ($item['type']) {
                 'document' => Document::findOrFail($item['id']),
                 'skill' => Skill::findOrFail($item['id']),

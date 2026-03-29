@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCollectionRequest;
 use App\Http\Requests\UpdateCollectionRequest;
 use App\Models\Asset;
+use App\Models\AssetFolder;
 use App\Models\Collection;
 use App\Models\CollectionDocumentTemplate;
 use App\Models\Document;
@@ -85,6 +86,7 @@ class CollectionController extends Controller
             'availableSkills' => Skill::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
             'availableSnippets' => Snippet::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
             'availableAssets' => Asset::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name', 'mime_type']),
+            'assetFolders' => AssetFolder::withCount('assets')->orderBy('name')->get(['id', 'name']),
             'memoryEntries' => $collection->collectionMemoryEntries()
                 ->active()
                 ->orderByDesc('is_pinned')
