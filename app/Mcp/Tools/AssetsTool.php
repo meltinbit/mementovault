@@ -63,10 +63,17 @@ class AssetsTool extends Tool
             return Response::error("Asset '{$name}' not found in this collection.");
         }
 
-        try {
-            $url = $storage->temporaryUrl($asset->storage_path, now()->addMinutes(30));
-        } catch (\Exception) {
-            $url = route('assets.download', $asset);
+        $storageConfig = app('current_workspace')?->settings['storage'] ?? null;
+        $publicUrl = $storageConfig['url'] ?? null;
+
+        if ($publicUrl && ($storageConfig['driver'] ?? 'local') !== 'local') {
+            $url = rtrim($publicUrl, '/').'/'.$asset->storage_path;
+        } else {
+            try {
+                $url = $storage->temporaryUrl($asset->storage_path, now()->addMinutes(30));
+            } catch (\Exception) {
+                $url = route('assets.download', $asset);
+            }
         }
 
         return Response::text($url);
