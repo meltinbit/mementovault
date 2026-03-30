@@ -193,7 +193,7 @@ export default function Welcome() {
                         </p>
 
                         {/* Visual flow diagram */}
-                        <div className="animate-fade-in-up stagger-1 mx-auto mt-16 max-w-3xl">
+                        <div className="animate-fade-in-up stagger-1 mx-auto mt-16 max-w-4xl">
                             <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center md:gap-6">
                                 {/* AI Clients */}
                                 <div className="flex gap-3 md:flex-col md:gap-3">
@@ -206,7 +206,7 @@ export default function Welcome() {
 
                                 {/* Arrow */}
                                 <div className="flex items-center">
-                                    <div className="hidden h-px w-12 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
+                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
                                     <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
                                 </div>
 
@@ -218,21 +218,29 @@ export default function Welcome() {
 
                                 {/* Arrow */}
                                 <div className="flex items-center">
-                                    <div className="hidden h-px w-12 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
+                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
                                     <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
                                 </div>
 
-                                {/* Content */}
-                                <div className="flex gap-3 md:flex-col md:gap-3">
-                                    {[
-                                        { label: 'Identity & Instructions', color: '#6366f1' },
-                                        { label: 'Skills & Documents', color: '#8b5cf6' },
-                                        { label: 'Assets & Snippets', color: '#a78bfa' },
-                                    ].map((item) => (
-                                        <div key={item.label} className="glass-card rounded-lg px-4 py-2.5 text-xs font-medium" style={{ color: item.color }}>
-                                            {item.label}
-                                        </div>
-                                    ))}
+                                {/* Your Vault — grouped by sidebar structure */}
+                                <div className="flex gap-4 md:flex-col md:gap-4">
+                                    {/* Workspace */}
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Workspace</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Identity & Instructions</div>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Memory</div>
+                                    </div>
+                                    {/* Content */}
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Content</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Documents & Skills</div>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Snippets & Assets</div>
+                                    </div>
+                                    {/* Organization */}
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Organization</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#a78bfa' }}>Collections</div>
+                                    </div>
                                 </div>
                             </div>
 
