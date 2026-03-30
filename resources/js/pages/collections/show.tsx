@@ -262,7 +262,7 @@ export default function CollectionShow({
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="is_active" checked={detailsForm.data.is_active} onCheckedChange={(checked) => detailsForm.setData('is_active', !!checked)} />
-                                    <Label htmlFor="is_active" className="text-sm">Active</Label>
+                                    <Label htmlFor="is_active" className="text-sm">Active <span className="font-normal text-muted-foreground">— visible to AI via MCP</span></Label>
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <Button size="sm" disabled={detailsForm.processing}>Save Details</Button>

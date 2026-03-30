@@ -119,12 +119,12 @@ export default function CollectionCreate() {
                     <div className="flex items-center gap-2">
                         <Checkbox id="is_active" checked={data.is_active} onCheckedChange={(checked) => setData('is_active', !!checked)} />
                         <Label htmlFor="is_active" className="text-sm">
-                            Active
+                            Active <span className="font-normal text-muted-foreground">— visible to AI via MCP when enabled</span>
                         </Label>
                     </div>
 
                     <Button disabled={processing} className="gap-2">
-                        Create & Continue <ArrowRight className="h-4 w-4" />
+                        Create Collection <ArrowRight className="h-4 w-4" />
                     </Button>
                 </form>
             </div>

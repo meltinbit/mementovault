@@ -39,7 +39,7 @@ export default function SnippetCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Snippet" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Snippet" description="Add a reusable text block to your workspace." />
+                <Heading title="Create Snippet" description="Snippets are reusable text blocks that AI inserts as-is — email signatures, disclaimers, prompt templates." />
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
@@ -53,7 +53,7 @@ export default function SnippetCreate({ tags }: Props) {
                         <InputError message={errors.content} />
                     </div>
                     <div className="space-y-2">
-                        <Label>Tags</Label>
+                        <Label>Tags <span className="font-normal text-muted-foreground">(optional)</span></Label>
                         <TagInput
                             selectedTags={selectedTags}
                             availableTags={tags}
@@ -67,7 +67,7 @@ export default function SnippetCreate({ tags }: Props) {
                             onCheckedChange={(checked) => setData('is_active', !!checked)}
                         />
                         <Label htmlFor="is_active" className="text-sm">
-                            Active
+                            Active <span className="font-normal text-muted-foreground">— visible to AI via MCP when enabled</span>
                         </Label>
                     </div>
                     <Button disabled={processing}>Create Snippet</Button>

@@ -7,7 +7,7 @@ import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { type BreadcrumbItem, type SnippetData, type TagData, type PaginatedResponse } from '@/types';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Code } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Snippets', href: '/snippets' }];
 
@@ -37,7 +37,18 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
                 <ResourceFilters route="/snippets" filters={filters} tagOptions={tags} />
 
                 {snippets.data.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">No snippets found. Create your first snippet to get started.</p>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                        <Code className="mb-3 h-8 w-8 text-muted-foreground" />
+                        <p className="text-sm font-medium">No snippets yet</p>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            Snippets are reusable text blocks AI inserts as-is — email signatures, disclaimers, prompt templates.
+                        </p>
+                        <Button asChild size="sm" className="mt-4 gap-1">
+                            <Link href={route('snippets.create')}>
+                                <Plus className="h-4 w-4" /> Create your first snippet
+                            </Link>
+                        </Button>
+                    </div>
                 ) : (
                     <div className="space-y-2">
                         {snippets.data.map((snippet) => (

@@ -41,7 +41,7 @@ export default function SkillCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Skill" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Skill" description="Add a new skill to your workspace." />
+                <Heading title="Create Skill" description="Skills are operational instructions that AI activates automatically. Define when it should trigger and what it should do." />
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
@@ -51,7 +51,7 @@ export default function SkillCreate({ tags }: Props) {
                     <div className="grid gap-2">
                         <Label htmlFor="description">Trigger Description</Label>
                         <p className="text-xs text-muted-foreground">
-                            When should AI activate this skill? This description is used for automatic triggering.
+                            When should AI activate this skill? This is shown in the available skills list.
                         </p>
                         <Textarea
                             id="description"
@@ -59,16 +59,18 @@ export default function SkillCreate({ tags }: Props) {
                             onChange={(e) => setData('description', e.target.value)}
                             rows={3}
                             required
+                            placeholder='e.g. "Apply when writing React components or discussing frontend architecture."'
                         />
                         <InputError message={errors.description} />
                     </div>
                     <div className="space-y-2">
                         <Label>Skill Content</Label>
+                        <p className="text-xs text-muted-foreground">The full instructions AI follows when this skill is activated. Use markdown.</p>
                         <MarkdownEditor value={data.content} onChange={(v) => setData('content', v)} />
                         <InputError message={errors.content} />
                     </div>
                     <div className="space-y-2">
-                        <Label>Tags</Label>
+                        <Label>Tags <span className="font-normal text-muted-foreground">(optional)</span></Label>
                         <TagInput
                             selectedTags={selectedTags}
                             availableTags={tags}
@@ -82,7 +84,7 @@ export default function SkillCreate({ tags }: Props) {
                             onCheckedChange={(checked) => setData('is_active', !!checked)}
                         />
                         <Label htmlFor="is_active" className="text-sm">
-                            Active
+                            Active <span className="font-normal text-muted-foreground">— visible to AI via MCP when enabled</span>
                         </Label>
                     </div>
                     <Button disabled={processing}>Create Skill</Button>

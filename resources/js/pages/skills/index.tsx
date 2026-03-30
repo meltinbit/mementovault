@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem, type SkillData, type TagData, type PaginatedResponse } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Pencil, Trash2, PackageOpen, Download, Check, Github, Loader2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, PackageOpen, Download, Check, Github, Loader2, Zap } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Skills', href: '/skills' }];
 
@@ -120,7 +120,23 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
                 <ResourceFilters route="/skills" filters={filters} tagOptions={tags} />
 
                 {skills.data.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">No skills found. Create your first skill to get started.</p>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                        <Zap className="mb-3 h-8 w-8 text-muted-foreground" />
+                        <p className="text-sm font-medium">No skills yet</p>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            Skills are instructions that AI activates automatically based on triggers. Browse community skills or create your own.
+                        </p>
+                        <div className="mt-4 flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
+                                <PackageOpen className="h-4 w-4" /> Browse Community
+                            </Button>
+                            <Button asChild size="sm" className="gap-1">
+                                <Link href={route('skills.create')}>
+                                    <Plus className="h-4 w-4" /> Create Skill
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
                 ) : (
                     <div className="space-y-2">
                         {skills.data.map((skill) => (

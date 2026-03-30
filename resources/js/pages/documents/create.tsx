@@ -41,7 +41,7 @@ export default function DocumentCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Document" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Document" description="Add a new document to your workspace." />
+                <Heading title="Create Document" description="Documents are reference materials that AI retrieves on demand. They're listed in context so AI knows they exist, and fetches the full content when needed." />
 
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">
@@ -71,19 +71,20 @@ export default function DocumentCreate({ tags }: Props) {
 
                     <div className="space-y-2">
                         <Label>Content</Label>
+                        <p className="text-xs text-muted-foreground">Write in markdown. This is the full content AI will read when it retrieves this document.</p>
                         <MarkdownEditor value={data.content} onChange={(v) => setData('content', v)} />
                         <InputError message={errors.content} />
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Tags</Label>
+                        <Label>Tags <span className="font-normal text-muted-foreground">(optional)</span></Label>
                         <TagInput selectedTags={selectedTags} availableTags={tags} onChange={(newTags) => setData('tag_ids', newTags.map((t) => t.id))} />
                     </div>
 
                     <div className="flex items-center gap-2">
                         <Checkbox id="is_active" checked={data.is_active} onCheckedChange={(checked) => setData('is_active', !!checked)} />
                         <Label htmlFor="is_active" className="text-sm">
-                            Active
+                            Active <span className="font-normal text-muted-foreground">— visible to AI via MCP when enabled</span>
                         </Label>
                     </div>
 

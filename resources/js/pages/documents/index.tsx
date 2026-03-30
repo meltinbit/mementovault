@@ -7,7 +7,7 @@ import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { type BreadcrumbItem, type DocumentData, type TagData, type PaginatedResponse } from '@/types';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, FileText } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Documents', href: '/documents' }];
 
@@ -52,7 +52,18 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
                 <ResourceFilters route="/documents" filters={filters} typeOptions={typeOptions} typePlaceholder="All types" tagOptions={tags} />
 
                 {documents.data.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">No documents found. Create your first document to get started.</p>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                        <FileText className="mb-3 h-8 w-8 text-muted-foreground" />
+                        <p className="text-sm font-medium">No documents yet</p>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            Documents are reference materials that AI retrieves on demand — specs, guides, notes. Assign them to collections.
+                        </p>
+                        <Button asChild size="sm" className="mt-4 gap-1">
+                            <Link href={route('documents.create')}>
+                                <Plus className="h-4 w-4" /> Create your first document
+                            </Link>
+                        </Button>
+                    </div>
                 ) : (
                     <div className="space-y-2">
                         {documents.data.map((doc) => (

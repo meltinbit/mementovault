@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { type BreadcrumbItem, type CollectionData, type PaginatedResponse } from '@/types';
-import { Plus, Pencil, Trash2, FileText, Zap, Code, Image } from 'lucide-react';
+import { Plus, Pencil, Trash2, FileText, Zap, Code, Image, FolderOpen } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Collections', href: '/collections' }];
 
@@ -52,7 +52,18 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                 <ResourceFilters route="/collections" filters={filters} typeOptions={typeOptions} typePlaceholder="All types" />
 
                 {collections.data.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">No collections yet. Create your first collection.</p>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                        <FolderOpen className="mb-3 h-8 w-8 text-muted-foreground" />
+                        <p className="text-sm font-medium">No collections yet</p>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            Collections are project packages with their own MCP endpoint. Create one to start organizing your AI context by project.
+                        </p>
+                        <Button asChild size="sm" className="mt-4 gap-1">
+                            <Link href={route('collections.create')}>
+                                <Plus className="h-4 w-4" /> Create your first collection
+                            </Link>
+                        </Button>
+                    </div>
                 ) : (
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {collections.data.map((col) => (
@@ -66,12 +77,12 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                             </Link>
                                         </div>
                                         <div className="flex gap-1">
-                                            <Button variant="ghost" size="sm" asChild className="h-7 w-7 p-0">
+                                            <Button variant="ghost" size="sm" asChild className="h-7 w-7 p-0" title="Edit">
                                                 <Link href={route('collections.show', col.id)}>
                                                     <Pencil className="h-3 w-3" />
                                                 </Link>
                                             </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => setDeleteCollection(col)} className="h-7 w-7 p-0 text-destructive">
+                                            <Button variant="ghost" size="sm" onClick={() => setDeleteCollection(col)} className="h-7 w-7 p-0 text-destructive" title="Delete">
                                                 <Trash2 className="h-3 w-3" />
                                             </Button>
                                         </div>
