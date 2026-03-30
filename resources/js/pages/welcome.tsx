@@ -302,7 +302,7 @@ export default function Welcome() {
                 </section>
 
                 {/* How it works */}
-                <section id="how-it-works" className="relative mx-auto max-w-6xl px-6 py-20 lg:py-32">
+                <section id="how-it-works" className="relative mx-auto max-w-6xl overflow-hidden px-6 py-20 lg:py-32">
                     <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
 
                     <div className="mb-16 text-center lg:mb-20">
@@ -322,7 +322,7 @@ export default function Welcome() {
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/identity.png" alt="Workspace identity editor with markdown preview" className="w-full" />
+                                <img src="/screenshots/identity.png" alt="Workspace identity editor with markdown preview" className="w-full max-w-full" />
                             </div>
                         </div>
 
@@ -338,7 +338,7 @@ export default function Welcome() {
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl lg:order-1" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full" />
+                                <img src="/screenshots/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full max-w-full" />
                             </div>
                         </div>
 
@@ -354,13 +354,11 @@ export default function Welcome() {
                                 </p>
                                 <div className="mt-6 overflow-hidden rounded-lg" style={{ background: 'rgba(17, 17, 24, 0.9)', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
                                     <div className="px-4 py-2 text-xs" style={{ color: '#55556a', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>MCP Endpoint</div>
-                                    <pre className="px-4 py-3 text-sm" style={{ color: '#6366f1', fontFamily: "'JetBrains Mono', monospace" }}>
-                                        https://your-vault.com/mcp?token=cv_ws_...
-                                    </pre>
+                                    <pre className="overflow-x-auto px-4 py-3 text-sm" style={{ color: '#6366f1', fontFamily: "'JetBrains Mono', monospace" }}>https://your-vault.com/mcp?token=cv_ws_...</pre>
                                 </div>
                             </div>
                             <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full" />
+                                <img src="/screenshots/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full max-w-full" />
                             </div>
                         </div>
                     </div>
