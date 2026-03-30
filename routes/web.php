@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::resource('documents', DocumentController::class);
     Route::get('skills/marketplace', [SkillMarketplaceController::class, 'index'])->name('skills.marketplace');
     Route::post('skills/marketplace/install', [SkillMarketplaceController::class, 'install'])->name('skills.marketplace.install');
+    Route::post('skills/marketplace/fetch-github', [SkillMarketplaceController::class, 'fetchFromGithub'])->name('skills.marketplace.fetch-github');
     Route::resource('skills', SkillController::class);
     Route::resource('snippets', SnippetController::class);
     Route::post('assets/move', [AssetController::class, 'move'])->name('assets.move');
