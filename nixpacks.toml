@@ -12,12 +12,30 @@ cmds = [
     "..."
 ]
 
+[phases.postbuild]
+cmds = [
+    "mkdir -p storage/logs storage/framework/sessions storage/framework/views storage/framework/cache",
+    "php artisan optimize",
+    "php artisan storage:link || true",
+]
+
 [start]
 cmd = '/assets/start.sh'
 
 [staticAssets]
 "start.sh" = '''
 #!/bin/bash
+
+# Ensure storage directories exist and are writable
+mkdir -p /app/storage/logs /app/storage/framework/sessions /app/storage/framework/views /app/storage/framework/cache
+chmod -R 775 /app/storage /app/bootstrap/cache
+
+# Run migrations
+php /app/artisan migrate --force --no-interaction 2>&1 | tee /var/log/artisan-migrate.log
+
+# Clear and rebuild caches
+php /app/artisan optimize:clear
+php /app/artisan optimize
 
 # Transform the nginx configuration
 node /assets/scripts/prestart.mjs /assets/nginx.template.conf /etc/nginx.conf
@@ -99,6 +117,9 @@ pm.min_spare_servers = 4
 pm.max_spare_servers = 32
 pm.start_servers = 18
 clear_env = no
+catch_workers_output = yes
+php_admin_value[error_log] = /var/log/php-fpm-error.log
+php_admin_flag[log_errors] = on
 php_admin_value[post_max_size] = 35M
 php_admin_value[upload_max_filesize] = 30M
 '''
