@@ -7,7 +7,8 @@ import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { FolderPickerModal } from '@/components/folder-picker-modal';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { type AssetFolderData, type TagData } from '@/types';
-import { Copy, FolderInput, Tag, Trash2, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Copy, FolderInput, Plus, Tag, Trash2, X } from 'lucide-react';
 
 interface BatchActionsToolbarProps {
     selectedIds: number[];
@@ -22,6 +23,9 @@ export function BatchActionsToolbar({ selectedIds, onClearSelection, folders, ta
     const [showDelete, setShowDelete] = useState(false);
     const [showTag, setShowTag] = useState(false);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+    const [localTags, setLocalTags] = useState<TagData[]>(tags);
+    const [newTagName, setNewTagName] = useState('');
+    const [creatingTag, setCreatingTag] = useState(false);
     const [processing, setProcessing] = useState(false);
 
     if (selectedIds.length === 0) return null;
@@ -79,16 +83,39 @@ export function BatchActionsToolbar({ selectedIds, onClearSelection, folders, ta
         );
     };
 
+    const handleCreateTag = async () => {
+        const name = newTagName.trim();
+        if (!name) return;
+        setCreatingTag(true);
+        try {
+            const response = await fetch(route('tags.store'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': decodeURIComponent(document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || ''),
+                },
+                body: JSON.stringify({ name }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setLocalTags((prev) => [...prev, data.tag]);
+                setSelectedTagIds((prev) => [...prev, data.tag.id]);
+                setNewTagName('');
+            }
+        } finally {
+            setCreatingTag(false);
+        }
+    };
+
     return (
         <>
             <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-lg border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur">
                 <span className="text-sm font-medium">{selectedIds.length} selected</span>
                 <div className="ml-auto flex items-center gap-1">
-                    {tags.length > 0 && (
-                        <Button variant="outline" size="sm" onClick={() => setShowTag(true)} disabled={processing} className="gap-1.5">
-                            <Tag className="h-3.5 w-3.5" /> Tag
-                        </Button>
-                    )}
+                    <Button variant="outline" size="sm" onClick={() => setShowTag(true)} disabled={processing} className="gap-1.5">
+                        <Tag className="h-3.5 w-3.5" /> Tag
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => setShowMove(true)} disabled={processing} className="gap-1.5">
                         <FolderInput className="h-3.5 w-3.5" /> Move
                     </Button>
@@ -115,13 +142,29 @@ export function BatchActionsToolbar({ selectedIds, onClearSelection, folders, ta
                 processing={processing}
             />
 
-            <Dialog open={showTag} onOpenChange={(open) => { if (!open) { setShowTag(false); setSelectedTagIds([]); } }}>
+            <Dialog open={showTag} onOpenChange={(open) => { if (!open) { setShowTag(false); setSelectedTagIds([]); setNewTagName(''); } }}>
                 <DialogContent className="max-w-sm">
                     <DialogHeader>
                         <DialogTitle>Tag {selectedIds.length} asset{selectedIds.length > 1 ? 's' : ''}</DialogTitle>
                     </DialogHeader>
-                    <div className="max-h-64 space-y-1 overflow-y-auto">
-                        {tags.map((tag) => (
+
+                    {/* Quick create */}
+                    <div className="flex gap-2">
+                        <Input
+                            value={newTagName}
+                            onChange={(e) => setNewTagName(e.target.value)}
+                            placeholder="New tag name..."
+                            className="h-8 text-sm"
+                            onKeyDown={(e) => e.key === 'Enter' && handleCreateTag()}
+                        />
+                        <Button size="sm" variant="outline" onClick={handleCreateTag} disabled={creatingTag || !newTagName.trim()} className="h-8 shrink-0 gap-1">
+                            <Plus className="h-3.5 w-3.5" /> Add
+                        </Button>
+                    </div>
+
+                    {/* Tag list */}
+                    <div className="max-h-48 space-y-1 overflow-y-auto">
+                        {localTags.map((tag) => (
                             <label key={tag.id} className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted">
                                 <Checkbox
                                     checked={selectedTagIds.includes(tag.id)}
@@ -137,7 +180,11 @@ export function BatchActionsToolbar({ selectedIds, onClearSelection, folders, ta
                                 </Badge>
                             </label>
                         ))}
+                        {localTags.length === 0 && (
+                            <p className="py-4 text-center text-xs text-muted-foreground">No tags yet. Create one above.</p>
+                        )}
                     </div>
+
                     <DialogFooter>
                         <Button variant="outline" size="sm" onClick={() => { setShowTag(false); setSelectedTagIds([]); }}>Cancel</Button>
                         <Button size="sm" onClick={handleTag} disabled={processing || selectedTagIds.length === 0}>

@@ -18,7 +18,7 @@ class StoreTagRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'color' => ['required', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
+            'color' => ['nullable', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
         ];
     }
 }
