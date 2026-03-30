@@ -170,14 +170,15 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="storage_url">Public URL</Label>
+                                <Label htmlFor="storage_url">Public URL <span className="text-destructive">*</span></Label>
                                 <Input
                                     id="storage_url"
                                     value={data.storage_url}
                                     onChange={(e) => setData('storage_url', e.target.value)}
                                     placeholder="https://pub-xxxx.r2.dev"
+                                    required
                                 />
-                                <p className="text-xs text-muted-foreground">Public URL for direct asset access. Found in R2 bucket settings under "Public access".</p>
+                                <p className="text-xs text-muted-foreground">Required. Used by MCP to return direct asset URLs. Found in R2 bucket settings under "Public access".</p>
                                 <InputError message={errors.storage_url} />
                             </div>
 
