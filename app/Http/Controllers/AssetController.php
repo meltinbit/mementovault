@@ -9,6 +9,7 @@ use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
 use App\Models\Asset;
 use App\Models\AssetFolder;
+use App\Models\Collection;
 use App\Models\Tag;
 use App\Services\WorkspaceStorageService;
 use Illuminate\Http\RedirectResponse;
@@ -121,6 +122,17 @@ class AssetController extends Controller
 
         if ($request->has('tag_ids')) {
             $asset->tags()->sync($request->validated('tag_ids', []));
+        }
+
+        // Auto-assign to same collections as other assets in this folder
+        if ($asset->folder_id) {
+            $collectionIds = Collection::whereHas('assets', fn ($q) => $q->where('folder_id', $asset->folder_id)
+                ->where('assets.id', '!=', $asset->id)
+            )->pluck('id');
+
+            if ($collectionIds->isNotEmpty()) {
+                $asset->collections()->syncWithoutDetaching($collectionIds);
+            }
         }
 
         return back();
