@@ -28,13 +28,9 @@ class DashboardController extends Controller
                     ->where('content', '!=', '')
                     ->whereRaw("content NOT LIKE '%[%]%'")
                     ->exists(),
-                'context' => SystemDocument::where('type', 'context')
-                    ->where('content', '!=', '')
-                    ->whereRaw("content NOT LIKE '%[%]%'")
-                    ->exists(),
-                'hasDocument' => Document::exists(),
+                'hasStorage' => ! empty(current_workspace()?->settings['storage']['key']),
                 'hasCollection' => Collection::exists(),
-                'hasToken' => ApiToken::whereHas('collection')->exists(),
+                'hasToken' => ApiToken::exists(),
             ],
             'hideOnboarding' => current_workspace()?->settings['hide_onboarding'] ?? false,
             'stats' => Inertia::defer(fn () => [
