@@ -110,22 +110,22 @@ export function BatchActionsToolbar({ selectedIds, onClearSelection, folders, ta
 
     return (
         <>
-            <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-lg border bg-background/95 px-4 py-2.5 shadow-lg backdrop-blur">
+            <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-primary-foreground shadow-lg shadow-primary/25">
                 <span className="text-sm font-medium">{selectedIds.length} selected</span>
                 <div className="ml-auto flex items-center gap-1">
-                    <Button variant="outline" size="sm" onClick={() => setShowTag(true)} disabled={processing} className="gap-1.5">
+                    <Button size="sm" onClick={() => setShowTag(true)} disabled={processing} className="gap-1.5 bg-white/15 text-white hover:bg-white/25 border-0">
                         <Tag className="h-3.5 w-3.5" /> Tag
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setShowMove(true)} disabled={processing} className="gap-1.5">
+                    <Button size="sm" onClick={() => setShowMove(true)} disabled={processing} className="gap-1.5 bg-white/15 text-white hover:bg-white/25 border-0">
                         <FolderInput className="h-3.5 w-3.5" /> Move
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setShowCopy(true)} disabled={processing} className="gap-1.5">
+                    <Button size="sm" onClick={() => setShowCopy(true)} disabled={processing} className="gap-1.5 bg-white/15 text-white hover:bg-white/25 border-0">
                         <Copy className="h-3.5 w-3.5" /> Copy
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => setShowDelete(true)} disabled={processing} className="gap-1.5 text-destructive">
+                    <Button size="sm" onClick={() => setShowDelete(true)} disabled={processing} className="gap-1.5 bg-red-500/80 text-white hover:bg-red-500 border-0">
                         <Trash2 className="h-3.5 w-3.5" /> Delete
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={onClearSelection} className="ml-1 h-7 w-7 p-0">
+                    <Button size="sm" onClick={onClearSelection} className="ml-1 h-7 w-7 p-0 bg-white/15 text-white hover:bg-white/25 border-0">
                         <X className="h-4 w-4" />
                     </Button>
                 </div>
