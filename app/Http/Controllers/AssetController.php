@@ -83,6 +83,7 @@ class AssetController extends Controller
             'currentFolder' => $currentFolder,
             'totalCount' => Asset::count(),
             'rootCount' => Asset::whereNull('folder_id')->count(),
+            'storageConfigured' => ! empty(current_workspace()?->settings['storage']['key']),
         ]);
     }
 

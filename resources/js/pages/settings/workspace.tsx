@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
@@ -54,7 +53,6 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
         mcp_custom_prompt: mcpCustomPrompt || '',
         memory_max_entries: memoryMaxEntries || 50,
         collection_memory_max_entries: collectionMemoryMaxEntries || 20,
-        storage_driver: storageSettings?.driver || 'local',
         storage_key: storageSettings?.key || '',
         storage_secret: storageSettings?.secret || '',
         storage_region: storageSettings?.region || 'auto',
@@ -69,7 +67,6 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
         put(route('workspace.settings.update'));
     };
 
-    const isS3 = data.storage_driver === 's3';
     const [mcpInstructionsUnlocked, setMcpInstructionsUnlocked] = useState(false);
 
     return (
@@ -106,106 +103,95 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
                         <Separator />
 
-                        <HeadingSmall title="Asset Storage" description="Configure where your assets are stored. Use S3-compatible storage (AWS S3, Cloudflare R2) for production." />
+                        <HeadingSmall title="Asset Storage (S3 / R2)" description="Configure S3-compatible storage to upload assets." />
 
-                        <div className="grid gap-2">
-                            <Label>Storage Driver</Label>
-                            <Select value={data.storage_driver} onValueChange={(v) => setData('storage_driver', v)}>
-                                <SelectTrigger className="w-[200px]">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="local">Local (default)</SelectItem>
-                                    <SelectItem value="s3">S3 / R2</SelectItem>
-                                </SelectContent>
-                            </Select>
+                        <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-200">
+                            We recommend <a href="https://developers.cloudflare.com/r2/" target="_blank" rel="noopener noreferrer" className="font-medium underline">Cloudflare R2</a> — S3-compatible with 10GB free storage. No egress fees.
                         </div>
 
-                        {isS3 && (
-                            <div className="space-y-4 rounded-md border p-4">
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="storage_key">Access Key ID</Label>
-                                        <Input
-                                            id="storage_key"
-                                            value={data.storage_key}
-                                            onChange={(e) => setData('storage_key', e.target.value)}
-                                            placeholder="AKIAIOSFODNN7EXAMPLE"
-                                        />
-                                        <InputError message={errors.storage_key} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="storage_secret">Secret Access Key</Label>
-                                        <Input
-                                            id="storage_secret"
-                                            type="password"
-                                            value={data.storage_secret}
-                                            onChange={(e) => setData('storage_secret', e.target.value)}
-                                            placeholder="Enter secret key"
-                                        />
-                                        <InputError message={errors.storage_secret} />
-                                    </div>
-                                </div>
-
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="storage_bucket">Bucket</Label>
-                                        <Input
-                                            id="storage_bucket"
-                                            value={data.storage_bucket}
-                                            onChange={(e) => setData('storage_bucket', e.target.value)}
-                                            placeholder="my-assets-bucket"
-                                        />
-                                        <InputError message={errors.storage_bucket} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="storage_region">Region</Label>
-                                        <Input
-                                            id="storage_region"
-                                            value={data.storage_region}
-                                            onChange={(e) => setData('storage_region', e.target.value)}
-                                            placeholder="auto"
-                                        />
-                                        <InputError message={errors.storage_region} />
-                                    </div>
-                                </div>
-
+                        <div className="space-y-4 rounded-md border p-4">
+                            <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="storage_endpoint">Endpoint</Label>
+                                    <Label htmlFor="storage_key">Access Key ID</Label>
                                     <Input
-                                        id="storage_endpoint"
-                                        value={data.storage_endpoint}
-                                        onChange={(e) => setData('storage_endpoint', e.target.value)}
-                                        placeholder="https://account-id.r2.cloudflarestorage.com"
+                                        id="storage_key"
+                                        value={data.storage_key}
+                                        onChange={(e) => setData('storage_key', e.target.value)}
+                                        placeholder="AKIAIOSFODNN7EXAMPLE"
                                     />
-                                    <p className="text-xs text-muted-foreground">Required for Cloudflare R2 and other S3-compatible services.</p>
-                                    <InputError message={errors.storage_endpoint} />
+                                    <InputError message={errors.storage_key} />
                                 </div>
-
                                 <div className="grid gap-2">
-                                    <Label htmlFor="storage_url">Public URL (optional)</Label>
+                                    <Label htmlFor="storage_secret">Secret Access Key</Label>
                                     <Input
-                                        id="storage_url"
-                                        value={data.storage_url}
-                                        onChange={(e) => setData('storage_url', e.target.value)}
-                                        placeholder="https://assets.yourdomain.com"
+                                        id="storage_secret"
+                                        type="password"
+                                        value={data.storage_secret}
+                                        onChange={(e) => setData('storage_secret', e.target.value)}
+                                        placeholder="Enter secret key"
                                     />
-                                    <p className="text-xs text-muted-foreground">Custom domain for public asset access.</p>
-                                    <InputError message={errors.storage_url} />
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox
-                                        id="storage_use_path_style"
-                                        checked={data.storage_use_path_style_endpoint}
-                                        onCheckedChange={(checked) => setData('storage_use_path_style_endpoint', !!checked)}
-                                    />
-                                    <Label htmlFor="storage_use_path_style" className="text-sm">
-                                        Use path-style endpoint (required for R2)
-                                    </Label>
+                                    <InputError message={errors.storage_secret} />
                                 </div>
                             </div>
-                        )}
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="storage_bucket">Bucket</Label>
+                                    <Input
+                                        id="storage_bucket"
+                                        value={data.storage_bucket}
+                                        onChange={(e) => setData('storage_bucket', e.target.value)}
+                                        placeholder="my-assets-bucket"
+                                    />
+                                    <InputError message={errors.storage_bucket} />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="storage_region">Region</Label>
+                                    <Input
+                                        id="storage_region"
+                                        value={data.storage_region}
+                                        onChange={(e) => setData('storage_region', e.target.value)}
+                                        placeholder="auto"
+                                    />
+                                    <InputError message={errors.storage_region} />
+                                </div>
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="storage_endpoint">Endpoint</Label>
+                                <Input
+                                    id="storage_endpoint"
+                                    value={data.storage_endpoint}
+                                    onChange={(e) => setData('storage_endpoint', e.target.value)}
+                                    placeholder="https://account-id.r2.cloudflarestorage.com"
+                                />
+                                <p className="text-xs text-muted-foreground">Required for Cloudflare R2 and other S3-compatible services.</p>
+                                <InputError message={errors.storage_endpoint} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="storage_url">Public URL</Label>
+                                <Input
+                                    id="storage_url"
+                                    value={data.storage_url}
+                                    onChange={(e) => setData('storage_url', e.target.value)}
+                                    placeholder="https://pub-xxxx.r2.dev"
+                                />
+                                <p className="text-xs text-muted-foreground">Public URL for direct asset access. Found in R2 bucket settings under "Public access".</p>
+                                <InputError message={errors.storage_url} />
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="storage_use_path_style"
+                                    checked={data.storage_use_path_style_endpoint}
+                                    onCheckedChange={(checked) => setData('storage_use_path_style_endpoint', !!checked)}
+                                />
+                                <Label htmlFor="storage_use_path_style" className="text-sm">
+                                    Use path-style endpoint (required for R2)
+                                </Label>
+                            </div>
+                        </div>
 
                         <Separator />
 

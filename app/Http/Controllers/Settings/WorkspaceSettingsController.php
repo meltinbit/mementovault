@@ -56,37 +56,29 @@ class WorkspaceSettingsController extends Controller
         $data = $request->safe()->only(['name', 'description']);
         $workspace->fill($data);
 
-        // Handle storage settings
-        if ($request->has('storage_driver')) {
-            $driver = $request->input('storage_driver');
+        // Handle storage settings (always S3-compatible)
+        if ($request->has('storage_key')) {
+            $settings = $workspace->settings ?? [];
+            $storageConfig = [
+                'driver' => 's3',
+                'key' => $request->input('storage_key', ''),
+                'region' => $request->input('storage_region', 'auto'),
+                'bucket' => $request->input('storage_bucket', ''),
+                'endpoint' => $request->input('storage_endpoint', ''),
+                'url' => $request->input('storage_url', ''),
+                'use_path_style_endpoint' => (bool) $request->input('storage_use_path_style_endpoint', true),
+            ];
 
-            if ($driver === 'local') {
-                $settings = $workspace->settings ?? [];
-                unset($settings['storage']);
-                $workspace->settings = $settings ?: null;
+            // Only update secret if a new one is provided (not the masked value)
+            $newSecret = $request->input('storage_secret');
+            if ($newSecret && $newSecret !== '••••••••') {
+                $storageConfig['secret'] = $newSecret;
             } else {
-                $settings = $workspace->settings ?? [];
-                $storageConfig = [
-                    'driver' => $driver,
-                    'key' => $request->input('storage_key', ''),
-                    'region' => $request->input('storage_region', 'auto'),
-                    'bucket' => $request->input('storage_bucket', ''),
-                    'endpoint' => $request->input('storage_endpoint', ''),
-                    'url' => $request->input('storage_url', ''),
-                    'use_path_style_endpoint' => (bool) $request->input('storage_use_path_style_endpoint', true),
-                ];
-
-                // Only update secret if a new one is provided (not the masked value)
-                $newSecret = $request->input('storage_secret');
-                if ($newSecret && $newSecret !== '••••••••') {
-                    $storageConfig['secret'] = $newSecret;
-                } else {
-                    $storageConfig['secret'] = $settings['storage']['secret'] ?? '';
-                }
-
-                $settings['storage'] = $storageConfig;
-                $workspace->settings = $settings;
+                $storageConfig['secret'] = $settings['storage']['secret'] ?? '';
             }
+
+            $settings['storage'] = $storageConfig;
+            $workspace->settings = $settings;
         }
 
         // Handle MCP settings

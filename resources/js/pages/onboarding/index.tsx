@@ -169,11 +169,15 @@ export default function Onboarding({ workspace }: Props) {
                                     Workspace section
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">2.</span> Create your first Collection to organize
+                                    <span className="font-medium">2.</span> Configure S3/R2 storage in Settings to
+                                    upload assets
+                                </div>
+                                <div className="rounded-md border p-3 text-sm">
+                                    <span className="font-medium">3.</span> Create your first Collection to organize
                                     content by project
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">3.</span> Generate a workspace token in Settings and
+                                    <span className="font-medium">4.</span> Generate a workspace token in Settings and
                                     connect via MCP
                                 </div>
                             </div>

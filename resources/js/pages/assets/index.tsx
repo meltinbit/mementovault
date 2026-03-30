@@ -64,9 +64,10 @@ interface Props {
     currentFolder: AssetFolderData | null;
     totalCount: number;
     rootCount: number;
+    storageConfigured: boolean;
 }
 
-export default function AssetsIndex({ assets, filters, tags, folders, currentFolder, totalCount, rootCount }: Props) {
+export default function AssetsIndex({ assets, filters, tags, folders, currentFolder, totalCount, rootCount, storageConfigured }: Props) {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
     const [detailAsset, setDetailAsset] = useState<AssetData | null>(null);
@@ -344,7 +345,18 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
                                 </div>
                             )}
 
-                            {assets.data.length === 0 ? (
+                            {!storageConfigured && totalCount === 0 ? (
+                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                                    <Upload className="mb-3 h-8 w-8 text-muted-foreground" />
+                                    <p className="text-sm font-medium">Storage not configured</p>
+                                    <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                                        To upload assets, configure S3-compatible storage (like{' '}
+                                        <a href="https://developers.cloudflare.com/r2/" target="_blank" rel="noopener noreferrer" className="underline">Cloudflare R2</a>
+                                        {' '}— 10GB free) in{' '}
+                                        <Link href="/settings/workspace" className="underline">Settings</Link>.
+                                    </p>
+                                </div>
+                            ) : assets.data.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
                                     <Upload className="mb-3 h-8 w-8 text-muted-foreground" />
                                     <p className="text-sm text-muted-foreground">
