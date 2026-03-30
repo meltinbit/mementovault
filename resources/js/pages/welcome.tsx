@@ -321,11 +321,8 @@ export default function Welcome() {
                                     Tell AI who you are, how you work, and what you expect. Your identity and instructions follow you across every project and every AI client.
                                 </p>
                             </div>
-                            <div className="screenshot-placeholder flex aspect-[4/3] items-center justify-center rounded-xl">
-                                <div className="text-center">
-                                    <p className="text-sm" style={{ color: '#55556a' }}>screenshot-identity.png</p>
-                                    <p className="mt-1 text-xs" style={{ color: '#333345' }}>Workspace identity editor with markdown preview</p>
-                                </div>
+                            <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
+                                <img src="/assets/identity.png" alt="Workspace identity editor with markdown preview" className="w-full" />
                             </div>
                         </div>
 
@@ -340,11 +337,8 @@ export default function Welcome() {
                                     Create collections for each project or client. Add documents, skills, snippets, and assets. Each collection gets its own set of instructions and its own MCP endpoint.
                                 </p>
                             </div>
-                            <div className="screenshot-placeholder flex aspect-[4/3] items-center justify-center rounded-xl lg:order-1">
-                                <div className="text-center">
-                                    <p className="text-sm" style={{ color: '#55556a' }}>screenshot-collection.png</p>
-                                    <p className="mt-1 text-xs" style={{ color: '#333345' }}>Collection detail showing documents, content items, and MCP endpoint</p>
-                                </div>
+                            <div className="overflow-hidden rounded-xl lg:order-1" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
+                                <img src="/assets/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full" />
                             </div>
                         </div>
 
@@ -365,11 +359,8 @@ export default function Welcome() {
                                     </pre>
                                 </div>
                             </div>
-                            <div className="screenshot-placeholder flex aspect-[4/3] items-center justify-center rounded-xl">
-                                <div className="text-center">
-                                    <p className="text-sm" style={{ color: '#55556a' }}>screenshot-claude-connected.png</p>
-                                    <p className="mt-1 text-xs" style={{ color: '#333345' }}>Claude Desktop connected with context loaded</p>
-                                </div>
+                            <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
+                                <img src="/assets/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full" />
                             </div>
                         </div>
                     </div>
