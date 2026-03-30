@@ -16,10 +16,7 @@ import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Workspace settings',
-        href: '/settings/workspace',
-    },
+    { title: 'Workspace settings', href: '/settings/workspace' },
 ];
 
 interface StorageSettings {
@@ -74,36 +71,43 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
             <Head title="Workspace settings" />
 
             <SettingsLayout>
-                <div className="space-y-6">
-                    <HeadingSmall title="Workspace" description="Manage your workspace name and description." />
+                <form onSubmit={submit} className="space-y-10">
 
-                    <form onSubmit={submit} className="space-y-6">
+                    {/* ── General ── */}
+                    <section className="space-y-4">
+                        <HeadingSmall title="General" description="Your workspace name and description." />
+
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
-                            <Input
-                                id="name"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                required
-                            />
+                            <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
                             <InputError message={errors.name} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="description">Description</Label>
-                            <Textarea
-                                id="description"
-                                value={data.description}
-                                onChange={(e) => setData('description', e.target.value)}
-                                rows={3}
-                                placeholder="A brief description of your workspace"
-                            />
+                            <Textarea id="description" value={data.description} onChange={(e) => setData('description', e.target.value)} rows={2} placeholder="A brief description of your workspace" />
                             <InputError message={errors.description} />
                         </div>
+                    </section>
 
-                        <Separator />
+                    <Separator />
 
-                        <HeadingSmall title="Asset Storage (S3 / R2)" description="Configure S3-compatible storage to upload assets." />
+                    {/* ── MCP Connection ── */}
+                    <section className="space-y-4">
+                        <HeadingSmall title="MCP Connection" description="Generate a workspace token to connect any AI client. One token gives access to all your collections." />
+
+                        <WorkspaceTokenManager
+                            tokens={workspaceTokens}
+                            mcpEndpoint={mcpEndpoint}
+                            newToken={newWorkspaceToken}
+                        />
+                    </section>
+
+                    <Separator />
+
+                    {/* ── Asset Storage ── */}
+                    <section className="space-y-4">
+                        <HeadingSmall title="Asset Storage" description="S3-compatible storage for images, videos, and files." />
 
                         <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-200">
                             We recommend <a href="https://developers.cloudflare.com/r2/" target="_blank" rel="noopener noreferrer" className="font-medium underline">Cloudflare R2</a> — S3-compatible with 10GB free storage. No egress fees.
@@ -113,23 +117,12 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="storage_key">Access Key ID</Label>
-                                    <Input
-                                        id="storage_key"
-                                        value={data.storage_key}
-                                        onChange={(e) => setData('storage_key', e.target.value)}
-                                        placeholder="AKIAIOSFODNN7EXAMPLE"
-                                    />
+                                    <Input id="storage_key" value={data.storage_key} onChange={(e) => setData('storage_key', e.target.value)} placeholder="AKIAIOSFODNN7EXAMPLE" />
                                     <InputError message={errors.storage_key} />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="storage_secret">Secret Access Key</Label>
-                                    <Input
-                                        id="storage_secret"
-                                        type="password"
-                                        value={data.storage_secret}
-                                        onChange={(e) => setData('storage_secret', e.target.value)}
-                                        placeholder="Enter secret key"
-                                    />
+                                    <Input id="storage_secret" type="password" value={data.storage_secret} onChange={(e) => setData('storage_secret', e.target.value)} placeholder="Enter secret key" />
                                     <InputError message={errors.storage_secret} />
                                 </div>
                             </div>
@@ -137,179 +130,115 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="storage_bucket">Bucket</Label>
-                                    <Input
-                                        id="storage_bucket"
-                                        value={data.storage_bucket}
-                                        onChange={(e) => setData('storage_bucket', e.target.value)}
-                                        placeholder="my-assets-bucket"
-                                    />
+                                    <Input id="storage_bucket" value={data.storage_bucket} onChange={(e) => setData('storage_bucket', e.target.value)} placeholder="my-assets-bucket" />
                                     <InputError message={errors.storage_bucket} />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="storage_region">Region</Label>
-                                    <Input
-                                        id="storage_region"
-                                        value={data.storage_region}
-                                        onChange={(e) => setData('storage_region', e.target.value)}
-                                        placeholder="auto"
-                                    />
+                                    <Input id="storage_region" value={data.storage_region} onChange={(e) => setData('storage_region', e.target.value)} placeholder="auto" />
                                     <InputError message={errors.storage_region} />
                                 </div>
                             </div>
 
                             <div className="grid gap-2">
                                 <Label htmlFor="storage_endpoint">Endpoint</Label>
-                                <Input
-                                    id="storage_endpoint"
-                                    value={data.storage_endpoint}
-                                    onChange={(e) => setData('storage_endpoint', e.target.value)}
-                                    placeholder="https://account-id.r2.cloudflarestorage.com"
-                                />
-                                <p className="text-xs text-muted-foreground">Required for Cloudflare R2 and other S3-compatible services.</p>
+                                <Input id="storage_endpoint" value={data.storage_endpoint} onChange={(e) => setData('storage_endpoint', e.target.value)} placeholder="https://account-id.r2.cloudflarestorage.com" />
+                                <p className="text-xs text-muted-foreground">Your S3 API endpoint. For R2: found in bucket overview.</p>
                                 <InputError message={errors.storage_endpoint} />
                             </div>
 
                             <div className="grid gap-2">
                                 <Label htmlFor="storage_url">Public URL <span className="text-destructive">*</span></Label>
-                                <Input
-                                    id="storage_url"
-                                    value={data.storage_url}
-                                    onChange={(e) => setData('storage_url', e.target.value)}
-                                    placeholder="https://pub-xxxx.r2.dev"
-                                    required
-                                />
-                                <p className="text-xs text-muted-foreground">Required. Used by MCP to return direct asset URLs. Found in R2 bucket settings under "Public access".</p>
+                                <Input id="storage_url" value={data.storage_url} onChange={(e) => setData('storage_url', e.target.value)} placeholder="https://pub-xxxx.r2.dev" required />
+                                <p className="text-xs text-muted-foreground">Required. Used by MCP to return direct asset URLs. For R2: found in bucket settings under "Public access".</p>
                                 <InputError message={errors.storage_url} />
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <Checkbox
-                                    id="storage_use_path_style"
-                                    checked={data.storage_use_path_style_endpoint}
-                                    onCheckedChange={(checked) => setData('storage_use_path_style_endpoint', !!checked)}
-                                />
-                                <Label htmlFor="storage_use_path_style" className="text-sm">
-                                    Use path-style endpoint (required for R2)
-                                </Label>
+                                <Checkbox id="storage_use_path_style" checked={data.storage_use_path_style_endpoint} onCheckedChange={(checked) => setData('storage_use_path_style_endpoint', !!checked)} />
+                                <Label htmlFor="storage_use_path_style" className="text-sm">Use path-style endpoint (required for R2)</Label>
                             </div>
                         </div>
+                    </section>
 
-                        <Separator />
+                    <Separator />
 
-                        <HeadingSmall title="MCP Behavior" description="Configure how AI agents interact with your workspace via MCP." />
-
-                        <div className="grid gap-2">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="mcp_instructions">MCP Instructions</Label>
-                                {!mcpInstructionsUnlocked && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setMcpInstructionsUnlocked(true)}
-                                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                        Unlock editing
-                                    </button>
-                                )}
-                            </div>
-
-                            {!mcpInstructionsUnlocked && (
-                                <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
-                                    These instructions control how AI agents load your context via MCP. Editing them incorrectly may break auto-context loading. Only modify if you know what you are doing.
-                                </div>
-                            )}
-
-                            <Textarea
-                                id="mcp_instructions"
-                                value={data.mcp_instructions}
-                                onChange={(e) => setData('mcp_instructions', e.target.value)}
-                                rows={8}
-                                maxLength={5000}
-                                disabled={!mcpInstructionsUnlocked}
-                                className="font-mono text-sm"
-                            />
-                            <div className="flex justify-between">
-                                <p className="text-xs text-muted-foreground">Core instructions sent to the AI on every MCP connection. Controls auto-context loading behavior.</p>
-                                <p className="text-xs text-muted-foreground">{data.mcp_instructions.length}/5000</p>
-                            </div>
-                            <InputError message={errors.mcp_instructions} />
-                        </div>
+                    {/* ── AI Behavior ── */}
+                    <section className="space-y-4">
+                        <HeadingSmall title="AI Behavior" description="Fine-tune how AI agents interact with your workspace." />
 
                         <div className="grid gap-2">
-                            <Label htmlFor="mcp_custom_prompt">Custom MCP Prompt</Label>
+                            <Label htmlFor="mcp_custom_prompt">Custom Prompt</Label>
                             <Textarea
                                 id="mcp_custom_prompt"
                                 value={data.mcp_custom_prompt}
                                 onChange={(e) => setData('mcp_custom_prompt', e.target.value)}
-                                rows={4}
+                                rows={3}
                                 maxLength={2000}
-                                placeholder="e.g. Always respond in Italian. Be concise."
+                                placeholder="e.g. Always respond in Italian. Be concise. Call me by name."
                             />
                             <div className="flex justify-between">
-                                <p className="text-xs text-muted-foreground">Optional additional instructions appended after the main MCP instructions.</p>
+                                <p className="text-xs text-muted-foreground">Additional instructions appended to every MCP connection. Great for language, tone, or behavior preferences.</p>
                                 <p className="text-xs text-muted-foreground">{data.mcp_custom_prompt.length}/2000</p>
                             </div>
                             <InputError message={errors.mcp_custom_prompt} />
                         </div>
 
-                        <Separator />
-
-                        <HeadingSmall title="Workspace API Token" description="A single token that gives MCP access to all collections in this workspace. You can switch between collections dynamically." />
-
-                        <WorkspaceTokenManager
-                            tokens={workspaceTokens}
-                            mcpEndpoint={mcpEndpoint}
-                            newToken={newWorkspaceToken}
-                        />
-
-                        <Separator />
-
-                        <HeadingSmall title="Memory Limits" description="Control how many memory entries are included in the AI context." />
-
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="grid gap-2">
-                                <Label htmlFor="memory_max_entries">Workspace memory entries</Label>
-                                <Input
-                                    id="memory_max_entries"
-                                    type="number"
-                                    min={1}
-                                    max={500}
-                                    value={data.memory_max_entries}
-                                    onChange={(e) => setData('memory_max_entries', parseInt(e.target.value) || 50)}
-                                    className="w-24"
-                                />
+                                <Label htmlFor="memory_max_entries">Workspace memory limit</Label>
+                                <Input id="memory_max_entries" type="number" min={1} max={500} value={data.memory_max_entries} onChange={(e) => setData('memory_max_entries', parseInt(e.target.value) || 50)} className="w-24" />
                                 <InputError message={errors.memory_max_entries} />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="collection_memory_max_entries">Collection memory entries</Label>
-                                <Input
-                                    id="collection_memory_max_entries"
-                                    type="number"
-                                    min={1}
-                                    max={200}
-                                    value={data.collection_memory_max_entries}
-                                    onChange={(e) => setData('collection_memory_max_entries', parseInt(e.target.value) || 20)}
-                                    className="w-24"
-                                />
+                                <Label htmlFor="collection_memory_max_entries">Collection memory limit</Label>
+                                <Input id="collection_memory_max_entries" type="number" min={1} max={200} value={data.collection_memory_max_entries} onChange={(e) => setData('collection_memory_max_entries', parseInt(e.target.value) || 20)} className="w-24" />
                                 <InputError message={errors.collection_memory_max_entries} />
                             </div>
                         </div>
-                        <p className="text-xs text-muted-foreground">Pinned entries are always included regardless of these limits. Only the most recent entries up to this limit are sent to AI.</p>
+                        <p className="text-xs text-muted-foreground">Max memory entries included in AI context. Pinned entries are always included regardless.</p>
 
-                        <div className="flex items-center gap-4">
-                            <Button disabled={processing}>Save</Button>
+                        {/* Advanced: MCP Instructions (collapsed by default) */}
+                        <div className="rounded-md border p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium">MCP System Instructions</p>
+                                    <p className="text-xs text-muted-foreground">Core instructions that control how AI loads your context. Don't edit unless you know what you're doing.</p>
+                                </div>
+                                {!mcpInstructionsUnlocked && (
+                                    <Button type="button" variant="outline" size="sm" onClick={() => setMcpInstructionsUnlocked(true)}>
+                                        Unlock
+                                    </Button>
+                                )}
+                            </div>
 
-                            <Transition
-                                show={recentlySuccessful}
-                                enter="transition ease-in-out"
-                                enterFrom="opacity-0"
-                                leave="transition ease-in-out"
-                                leaveTo="opacity-0"
-                            >
-                                <p className="text-sm text-neutral-600">Saved.</p>
-                            </Transition>
+                            {mcpInstructionsUnlocked && (
+                                <div className="mt-4 grid gap-2">
+                                    <Textarea
+                                        id="mcp_instructions"
+                                        value={data.mcp_instructions}
+                                        onChange={(e) => setData('mcp_instructions', e.target.value)}
+                                        rows={8}
+                                        maxLength={5000}
+                                        className="font-mono text-sm"
+                                    />
+                                    <div className="flex justify-end">
+                                        <p className="text-xs text-muted-foreground">{data.mcp_instructions.length}/5000</p>
+                                    </div>
+                                    <InputError message={errors.mcp_instructions} />
+                                </div>
+                            )}
                         </div>
-                    </form>
-                </div>
+                    </section>
+
+                    {/* ── Save ── */}
+                    <div className="flex items-center gap-4">
+                        <Button disabled={processing}>Save Settings</Button>
+                        <Transition show={recentlySuccessful} enter="transition ease-in-out" enterFrom="opacity-0" leave="transition ease-in-out" leaveTo="opacity-0">
+                            <p className="text-sm text-neutral-600">Saved.</p>
+                        </Transition>
+                    </div>
+                </form>
             </SettingsLayout>
         </AppLayout>
     );
