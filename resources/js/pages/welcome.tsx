@@ -293,14 +293,10 @@ export default function Welcome() {
                         </p>
                     </div>
 
-                    {/* Main screenshot placeholder */}
+                    {/* Main screenshot */}
                     <div className="animate-fade-in-up stagger-2 mx-auto mt-12 max-w-5xl">
-                        <div className="screenshot-placeholder flex aspect-video items-center justify-center rounded-2xl">
-                            <div className="text-center">
-                                <div className="mx-auto mb-3 size-12 rounded-xl" style={{ background: 'rgba(99, 102, 241, 0.15)' }} />
-                                <p className="text-sm" style={{ color: '#55556a' }}>screenshot-dashboard.png</p>
-                                <p className="mt-1 text-xs" style={{ color: '#333345' }}>Dashboard overview showing collections, stats, and getting started guide</p>
-                            </div>
+                        <div className="overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)' }}>
+                            <img src="/assets/dashboard.png" alt="Memento Vault dashboard showing getting started checklist, stats, and recent activity" className="w-full" />
                         </div>
                     </div>
                 </section>
