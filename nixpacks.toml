@@ -12,13 +12,6 @@ cmds = [
     "..."
 ]
 
-[phases.postbuild]
-cmds = [
-    "mkdir -p storage/logs storage/framework/sessions storage/framework/views storage/framework/cache",
-    "php artisan optimize",
-    "php artisan storage:link || true",
-]
-
 [start]
 cmd = '/assets/start.sh'
 
