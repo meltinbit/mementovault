@@ -26,7 +26,7 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Claude.ai   │     │  Claude Code │     │    Cowork    │
+│  Claude.ai   │     │  Claude Code │     │  Any MCP     │
 └──────┬───────┘     └──────┬───────┘     └──────┬───────┘
        │                    │                    │
        └────────────────────┼────────────────────┘
@@ -36,13 +36,15 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
                     │  MCP Server   │
                     └───────┬───────┘
                             │
-              ┌─────────────┼─────────────┐
-              │             │             │
-         ┌────▼───┐   ┌────▼───┐   ┌────▼────┐
-         │Identity│   │ Skills │   │ Assets  │
-         │  Docs  │   │  Docs  │   │Snippets │
-         │        │   │        │   │         │
-         └────────┘   └────────┘   └─────────┘
+         ┌──────────────────┼──────────────────┐
+         │                  │                  │
+    WORKSPACE          CONTENT          ORGANIZATION
+  ┌──────────┐    ┌──────────────┐    ┌────────────┐
+  │ Identity │    │  Documents   │    │Collections │
+  │ Instruct.│    │   Skills     │    │  (project  │
+  │  Memory  │    │  Snippets    │    │  packages) │
+  │          │    │   Assets     │    │            │
+  └──────────┘    └──────────────┘    └────────────┘
 ```
 
 ## How It Works

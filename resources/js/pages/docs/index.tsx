@@ -323,10 +323,13 @@ ${appName} is an **AI Context Manager** — a centralized platform for managing 
 
 Instead of repeating yourself in every conversation, you define your identity, instructions, project details, and reusable content once. Then any AI client (Claude Desktop, Claude Code, Cowork) connects via MCP and receives everything it needs automatically.
 
-- **One source of truth** for all your AI context
-- **Project-specific packages** via collections with their own documents and MCP endpoints
-- **Rich content types**: documents, skills, snippets, and assets
-- **Lazy context loading** — minimal initial context, everything else fetched on demand`}</Markdown>
+Your vault is organized into three areas — matching the app sidebar:
+
+- **Workspace** — Identity, Instructions, Memory. Your global AI persona, shared across all projects.
+- **Content** — Documents, Skills, Snippets, Assets. Reference materials and tools AI can use.
+- **Organization** — Collections. Project packages that bundle workspace content with their own documents and MCP endpoints.
+
+AI clients connect via MCP and get lazy-loaded context: a minimal index first, then specific content on demand.`}</Markdown>
                             </section>
 
                             <section id="create-your-workspace" className="mb-12">
