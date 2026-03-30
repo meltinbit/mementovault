@@ -198,6 +198,10 @@ export default function Welcome() {
                                     </div>
                                 </div>
                             </div>
+                            <p className="mt-8 text-sm leading-relaxed sm:text-base" style={{ color: '#8888a0', fontWeight: 300 }}>
+                                Your AI context is scattered across local files and chat histories.{' '}
+                                <span className="font-semibold text-white">Every new conversation starts from zero.</span>
+                            </p>
                         </div>
 
                         <div className="animate-fade-in-up stagger-2 mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -218,17 +222,6 @@ export default function Welcome() {
                                 <span className="transition-colors duration-200 hover:text-white/50">Any MCP Client</span>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                {/* Problem */}
-                <section className="relative">
-                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent)' }} />
-                    <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:py-28">
-                        <p className="animate-fade-in-up text-xl leading-relaxed sm:text-2xl" style={{ color: '#8888a0', fontWeight: 300 }}>
-                            Your AI context is scattered across local files and chat histories.{' '}
-                            <span className="font-semibold text-white">Every new conversation starts from zero.</span>
-                        </p>
                     </div>
                 </section>
 
