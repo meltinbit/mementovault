@@ -161,33 +161,44 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
             const entries = Array.from(files).map((f) => ({ name: f.name, done: false }));
             setUploadingFiles((prev) => [...prev, ...entries]);
 
-            Array.from(files).forEach((file, i) => {
+            const csrfToken = decodeURIComponent(document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || '');
+            let completed = 0;
+            const total = files.length;
+
+            Array.from(files).forEach((file) => {
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('name', file.name.replace(/\.[^/.]+$/, ''));
                 if (currentFolderId && currentFolderId !== 'root') formData.append('folder_id', String(currentFolderId));
 
-                router.post(route('assets.store'), formData as any, {
-                    forceFormData: true,
-                    preserveState: true,
-                    onSuccess: () => {
-                        setUploadingFiles((prev) => {
-                            const next = prev.map((f) => (f.name === file.name && !f.done ? { ...f, done: true } : f));
-                            if (next.every((f) => f.done)) {
-                                setTimeout(() => setUploadingFiles([]), 1500);
-                            }
-                            return next;
-                        });
-                    },
-                    onError: () => {
-                        setUploadingFiles((prev) => {
-                            const next = prev.map((f) => (f.name === file.name && !f.done ? { ...f, done: true } : f));
-                            if (next.every((f) => f.done)) {
-                                setTimeout(() => setUploadingFiles([]), 1500);
-                            }
-                            return next;
-                        });
-                    },
+                fetch(route('assets.store'), {
+                    method: 'POST',
+                    headers: { 'X-XSRF-TOKEN': csrfToken, 'Accept': 'text/html' },
+                    body: formData,
+                }).then(() => {
+                    completed++;
+                    setUploadingFiles((prev) => {
+                        const next = prev.map((f) => (f.name === file.name && !f.done ? { ...f, done: true } : f));
+                        if (completed === total) {
+                            setTimeout(() => {
+                                setUploadingFiles([]);
+                                router.reload();
+                            }, 800);
+                        }
+                        return next;
+                    });
+                }).catch(() => {
+                    completed++;
+                    setUploadingFiles((prev) => {
+                        const next = prev.map((f) => (f.name === file.name && !f.done ? { ...f, done: true } : f));
+                        if (completed === total) {
+                            setTimeout(() => {
+                                setUploadingFiles([]);
+                                router.reload();
+                            }, 800);
+                        }
+                        return next;
+                    });
                 });
             });
         },
