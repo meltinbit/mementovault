@@ -56,10 +56,8 @@ class AssetController extends Controller
         $paginated = $query->latest()->paginate(24)->withQueryString();
 
         $paginated->through(function (Asset $asset) {
-            if (str_starts_with($asset->mime_type, 'image/')) {
-                $asset->thumbnail_url = route('assets.download', $asset->id);
-            } elseif (str_starts_with($asset->mime_type, 'video/')) {
-                $asset->thumbnail_url = route('assets.download', ['asset' => $asset->id, 'inline' => 1]);
+            if (str_starts_with($asset->mime_type, 'image/') || str_starts_with($asset->mime_type, 'video/')) {
+                $asset->thumbnail_url = $this->assetUrl($asset);
             }
 
             return $asset;
@@ -253,6 +251,18 @@ class AssetController extends Controller
         });
 
         return back();
+    }
+
+    private function assetUrl(Asset $asset): string
+    {
+        $storageConfig = current_workspace()?->settings['storage'] ?? null;
+        $publicUrl = $storageConfig['url'] ?? null;
+
+        if ($publicUrl && ($storageConfig['driver'] ?? 'local') !== 'local') {
+            return rtrim($publicUrl, '/').'/'.$asset->storage_path;
+        }
+
+        return route('assets.download', $asset->id);
     }
 
     private function generateCopyName(string $originalName): string
