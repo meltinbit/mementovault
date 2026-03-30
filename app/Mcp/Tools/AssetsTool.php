@@ -23,7 +23,7 @@ class AssetsTool extends Tool
         }
 
         return match ($request->get('action')) {
-            'list' => $this->list(),
+            'list' => $this->list($request),
             'get_url' => $this->getUrl($request, $storage),
             'list_folders' => $this->listFolders(),
             'create_folder' => $this->createFolder($request),
@@ -32,12 +32,16 @@ class AssetsTool extends Tool
         };
     }
 
-    private function list(): Response
+    private function list(Request $request): Response
     {
         $collection = app('mcp_collection');
-        $assets = $collection->assets()
-            ->where('is_active', true)
-            ->get(['assets.id', 'name', 'mime_type', 'description', 'size_bytes']);
+        $query = $collection->assets()->where('is_active', true);
+
+        if ($tag = $request->get('tag')) {
+            $query->whereHas('tags', fn ($q) => $q->where('name', $tag)->orWhere('slug', $tag));
+        }
+
+        $assets = $query->get(['assets.id', 'name', 'mime_type', 'description', 'size_bytes']);
 
         $list = $assets->map(function ($a) {
             $size = number_format($a->size_bytes / 1024, 1).' KB';
@@ -173,6 +177,7 @@ class AssetsTool extends Tool
             'name' => $schema->string()->description('Asset name (for get_url) or folder name (for create_folder).'),
             'slug' => $schema->string()->description('Asset or folder slug.'),
             'parent_slug' => $schema->string()->description('Parent folder slug for nesting (create_folder only).'),
+            'tag' => $schema->string()->description('Filter assets by tag name or slug (list only).'),
             'asset_names' => $schema->array()->description('List of asset names to move (move only).'),
             'folder_slug' => $schema->string()->description('Target folder slug for move. Omit to move to root.'),
         ];

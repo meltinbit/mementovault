@@ -61,6 +61,7 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::post('assets/move', [AssetController::class, 'move'])->name('assets.move');
     Route::post('assets/copy', [AssetController::class, 'copy'])->name('assets.copy');
     Route::post('assets/batch-delete', [AssetController::class, 'batchDelete'])->name('assets.batch-delete');
+    Route::post('assets/batch-tag', [AssetController::class, 'batchTag'])->name('assets.batch-tag');
     Route::resource('assets', AssetController::class);
     Route::get('assets/{asset}/download', [AssetController::class, 'download'])->name('assets.download');
     Route::resource('asset-folders', AssetFolderController::class)->except(['show', 'edit', 'create']);

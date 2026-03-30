@@ -254,6 +254,22 @@ class AssetController extends Controller
         return back();
     }
 
+    public function batchTag(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'asset_ids' => ['required', 'array', 'min:1'],
+            'asset_ids.*' => ['integer'],
+            'tag_ids' => ['required', 'array', 'min:1'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
+        ]);
+
+        Asset::whereIn('id', $validated['asset_ids'])->each(function (Asset $asset) use ($validated) {
+            $asset->tags()->syncWithoutDetaching($validated['tag_ids']);
+        });
+
+        return back();
+    }
+
     private function assetUrl(Asset $asset): string
     {
         $storageConfig = current_workspace()?->settings['storage'] ?? null;

@@ -470,6 +470,7 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
                                 selectedIds={Array.from(selectedIds)}
                                 onClearSelection={() => setSelectedIds(new Set())}
                                 folders={folders}
+                                tags={tags}
                             />
                         </div>
                     </div>
