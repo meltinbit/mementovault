@@ -167,7 +167,10 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                         )}
                         <Heading
                             title={isCollection ? `${collection!.name} — Memory` : 'Memory'}
-                            description="Structured entries that persist across AI conversations. Decisions, preferences, and patterns."
+                            description={isCollection
+                                ? 'Project-specific memory. Decisions, patterns, and context that AI should remember for this collection.'
+                                : 'Global memory shared across all collections. Use this for cross-project preferences, personal patterns, and things every AI interaction should know — beyond what Identity and Instructions cover.'
+                            }
                         />
                     </div>
                     <Button size="sm" className="gap-1" onClick={() => setShowAddForm(!showAddForm)}>
@@ -265,9 +268,15 @@ export default function MemoryIndex({ entries, filters, categories, collection }
 
                 {/* Entry list */}
                 {entries.data.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">
-                        No memory entries found. Add your first entry to get started.
-                    </p>
+                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
+                        <p className="text-sm font-medium">No memory entries yet</p>
+                        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
+                            {isCollection
+                                ? 'Add entries that AI should remember for this project — decisions, preferences, patterns.'
+                                : 'Add entries that apply across all your projects — personal preferences, recurring decisions, things every AI conversation should know.'
+                            }
+                        </p>
+                    </div>
                 ) : (
                     <div className="space-y-2">
                         {entries.data.map((entry) => (
