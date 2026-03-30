@@ -296,7 +296,7 @@ export default function Welcome() {
                     {/* Main screenshot */}
                     <div className="animate-fade-in-up stagger-2 mx-auto mt-12 max-w-5xl">
                         <div className="overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)' }}>
-                            <img src="/assets/dashboard.png" alt="Memento Vault dashboard showing getting started checklist, stats, and recent activity" className="w-full" />
+                            <img src="/screenshots/dashboard.png" alt="Memento Vault dashboard showing getting started checklist, stats, and recent activity" className="w-full" />
                         </div>
                     </div>
                 </section>
@@ -322,7 +322,7 @@ export default function Welcome() {
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/assets/identity.png" alt="Workspace identity editor with markdown preview" className="w-full" />
+                                <img src="/screenshots/identity.png" alt="Workspace identity editor with markdown preview" className="w-full" />
                             </div>
                         </div>
 
@@ -338,7 +338,7 @@ export default function Welcome() {
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl lg:order-1" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/assets/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full" />
+                                <img src="/screenshots/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full" />
                             </div>
                         </div>
 
@@ -360,7 +360,7 @@ export default function Welcome() {
                                 </div>
                             </div>
                             <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/assets/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full" />
+                                <img src="/screenshots/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full" />
                             </div>
                         </div>
                     </div>
