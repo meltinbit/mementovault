@@ -173,7 +173,7 @@ const Sidebar = React.forwardRef<
                     side={side}
                 >
                     <SheetTitle className="sr-only">Sidebar Navigation</SheetTitle>
-                    <div className="flex h-full w-full flex-col">{children}</div>
+                    <div className="flex h-full w-full flex-col overflow-hidden">{children}</div>
                 </SheetContent>
             </Sheet>
         );
