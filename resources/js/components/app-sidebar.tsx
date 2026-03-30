@@ -27,7 +27,6 @@ const contentNavItems: NavItem[] = [
 
 const organizationNavItems: NavItem[] = [
     { title: 'Collections', url: '/collections', icon: FolderOpen },
-    { title: 'Tags', url: '/tags', icon: Tag },
 ];
 
 const footerNavItems: NavItem[] = [
