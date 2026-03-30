@@ -225,6 +225,65 @@ export default function Welcome() {
                     </div>
                 </section>
 
+                {/* How it's structured */}
+                <section className="relative mx-auto max-w-5xl px-6 py-20 lg:py-28">
+                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent)' }} />
+
+                    <div className="mb-14 text-center">
+                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">How your vault is structured</h2>
+                    </div>
+
+                    {/* Top row: Workspace + Content */}
+                    <div className="grid gap-6 md:grid-cols-2">
+                        {/* Workspace */}
+                        <div className="glass-card rounded-2xl p-8">
+                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#6366f1' }}>Workspace</p>
+                            <p className="text-base" style={{ color: '#55556a' }}>Your global AI persona — always included</p>
+                            <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
+                                <li><span className="text-white font-medium">Identity</span> — who you are</li>
+                                <li><span className="text-white font-medium">Instructions</span> — how AI should work</li>
+                                <li><span className="text-white font-medium">Memory</span> — what to remember</li>
+                            </ul>
+                        </div>
+
+                        {/* Content */}
+                        <div className="glass-card rounded-2xl p-8">
+                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Content</p>
+                            <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base — assign to collections</p>
+                            <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
+                                <li><span className="text-white font-medium">Documents</span> — specs, guides, notes</li>
+                                <li><span className="text-white font-medium">Skills</span> — operational instructions</li>
+                                <li><span className="text-white font-medium">Snippets</span> — reusable text blocks</li>
+                                <li><span className="text-white font-medium">Assets</span> — images, videos, files</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Arrows down — differentiated */}
+                    <div className="grid gap-6 md:grid-cols-2">
+                        <div className="flex flex-col items-center py-4">
+                            <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.15))' }} />
+                            <p className="text-xs" style={{ color: '#6366f1' }}>always inherited <span style={{ color: '#55556a' }}>(Workspace)</span></p>
+                        </div>
+                        <div className="flex flex-col items-center py-4">
+                            <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.15))' }} />
+                            <p className="text-xs" style={{ color: '#8b5cf6' }}>you choose what to assign <span style={{ color: '#55556a' }}>(Content)</span></p>
+                        </div>
+                    </div>
+
+                    {/* Bottom: Organization */}
+                    <div className="glass-card mx-auto max-w-2xl rounded-2xl border-indigo-500/20 p-8" style={{ background: 'rgba(99, 102, 241, 0.04)' }}>
+                        <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#a78bfa' }}>Organization</p>
+                        <p className="text-base" style={{ color: '#55556a' }}>Create collections to organize context by project. Connect via a single workspace token or per-collection tokens.</p>
+                        <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
+                            <li><span style={{ color: '#6366f1' }}>+</span> Workspace identity & instructions <span className="text-sm" style={{ color: '#55556a' }}>(automatic)</span></li>
+                            <li><span style={{ color: '#8b5cf6' }}>+</span> Content you assign <span className="text-sm" style={{ color: '#55556a' }}>(you pick which docs, skills, assets)</span></li>
+                            <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own documents</span> — project-specific instructions, architecture, etc.</li>
+                            <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own memory</span> — project-specific memory</li>
+                        </ul>
+                    </div>
+                </section>
+
                 {/* Product Screenshot */}
                 <section id="product" className="relative mx-auto max-w-6xl px-6 py-16 lg:py-24">
                     <div className="text-center">
