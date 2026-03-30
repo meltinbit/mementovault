@@ -60,6 +60,7 @@ class CollectionController extends Controller
         $collection->loadCount(['documents', 'skills', 'snippets', 'assets']);
 
         return Inertia::render('collections/show', [
+            // Immediate props — essential for first render
             'collection' => $collection,
             'collectionDocuments' => $collection->collectionDocuments()->get()->map(fn ($doc) => [
                 'id' => $doc->id,
@@ -71,31 +72,33 @@ class CollectionController extends Controller
                 'version' => $doc->version,
                 'updated_at' => $doc->updated_at->diffForHumans(),
             ]),
-            'tokens' => $collection->apiTokens()->latest()->get()->map(fn ($token) => [
+            'tokens' => $collection->apiTokens()->where('collection_id', $collection->id)->latest()->get()->map(fn ($token) => [
                 'id' => $token->id,
                 'name' => $token->name,
                 'last_used_at' => $token->last_used_at?->diffForHumans(),
                 'expires_at' => $token->expires_at?->toDateString(),
                 'created_at' => $token->created_at->diffForHumans(),
             ]),
-            'documents' => $collection->documents()->with('tags')->get(),
-            'skills' => $collection->skills()->with('tags')->get(),
-            'snippets' => $collection->snippets()->with('tags')->get(),
-            'assets' => $collection->assets()->with('tags')->get(),
-            'availableDocuments' => Document::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'title', 'type']),
-            'availableSkills' => Skill::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
-            'availableSnippets' => Snippet::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']),
-            'availableAssets' => Asset::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name', 'mime_type']),
-            'assetFolders' => AssetFolder::withCount('assets')->orderBy('name')->get(['id', 'name']),
-            'memoryEntries' => $collection->collectionMemoryEntries()
+            'mcpEndpoint' => url('/mcp'),
+            'newToken' => session('newToken'),
+
+            // Deferred props — loaded after initial render
+            'documents' => Inertia::defer(fn () => $collection->documents()->with('tags')->get()),
+            'skills' => Inertia::defer(fn () => $collection->skills()->with('tags')->get()),
+            'snippets' => Inertia::defer(fn () => $collection->snippets()->with('tags')->get()),
+            'assets' => Inertia::defer(fn () => $collection->assets()->with('tags')->get()),
+            'availableDocuments' => Inertia::defer(fn () => Document::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'title', 'type']), 'pickers'),
+            'availableSkills' => Inertia::defer(fn () => Skill::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']), 'pickers'),
+            'availableSnippets' => Inertia::defer(fn () => Snippet::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name']), 'pickers'),
+            'availableAssets' => Inertia::defer(fn () => Asset::whereDoesntHave('collections', fn ($q) => $q->where('collections.id', $collection->id))->get(['id', 'name', 'mime_type']), 'pickers'),
+            'assetFolders' => Inertia::defer(fn () => AssetFolder::withCount('assets')->orderBy('name')->get(['id', 'name']), 'pickers'),
+            'memoryEntries' => Inertia::defer(fn () => $collection->collectionMemoryEntries()
                 ->active()
                 ->orderByDesc('is_pinned')
                 ->orderByDesc('created_at')
                 ->limit(10)
-                ->get(),
-            'mcpEndpoint' => url('/mcp'),
-            'documentTemplates' => CollectionDocumentTemplate::orderBy('sort_order')->get(['id', 'name', 'description', 'placeholder']),
-            'newToken' => session('newToken'),
+                ->get()),
+            'documentTemplates' => Inertia::defer(fn () => CollectionDocumentTemplate::orderBy('sort_order')->get(['id', 'name', 'description', 'placeholder']), 'pickers'),
         ]);
     }
 

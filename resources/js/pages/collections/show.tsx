@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from 'react';
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Deferred, Head, Link, useForm, router } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
@@ -43,20 +43,21 @@ interface AvailableItem {
 interface Props {
     collection: CollectionData;
     collectionDocuments: CollectionDocumentData[];
-    documentTemplates: CollectionDocumentTemplateData[];
     tokens: ApiTokenData[];
-    documents: DocumentData[];
-    skills: SkillData[];
-    snippets: SnippetData[];
-    assets: AssetData[];
-    availableDocuments: AvailableItem[];
-    availableSkills: AvailableItem[];
-    availableSnippets: AvailableItem[];
-    availableAssets: AvailableItem[];
-    assetFolders: { id: number; name: string; assets_count: number }[];
-    memoryEntries: MemoryEntryData[];
     mcpEndpoint: string;
     newToken?: string | null;
+    // Deferred props — undefined until loaded
+    documentTemplates?: CollectionDocumentTemplateData[];
+    documents?: DocumentData[];
+    skills?: SkillData[];
+    snippets?: SnippetData[];
+    assets?: AssetData[];
+    availableDocuments?: AvailableItem[];
+    availableSkills?: AvailableItem[];
+    availableSnippets?: AvailableItem[];
+    availableAssets?: AvailableItem[];
+    assetFolders?: { id: number; name: string; assets_count: number }[];
+    memoryEntries?: MemoryEntryData[];
 }
 
 function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc: CollectionDocumentData }) {
@@ -178,7 +179,7 @@ export default function CollectionShow({
             addDocForm.setData({ name: '', content: '' });
             return;
         }
-        const template = documentTemplates.find((t) => String(t.id) === value);
+        const template = (documentTemplates ?? []).find((t) => String(t.id) === value);
         if (template) {
             addDocForm.setData({ name: template.name, content: template.placeholder });
         }
@@ -295,7 +296,7 @@ export default function CollectionShow({
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="blank">Blank Document</SelectItem>
-                                            {documentTemplates.map((t) => (
+                                            {(documentTemplates ?? []).map((t) => (
                                                 <SelectItem key={t.id} value={String(t.id)}>
                                                     {t.name}
                                                     {t.description && <span className="text-muted-foreground"> — {t.description}</span>}
@@ -333,54 +334,62 @@ export default function CollectionShow({
 
                         <Separator />
 
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Database className="h-4 w-4 text-muted-foreground" />
-                                    <span className="text-sm font-medium">Memory</span>
-                                    <Badge variant="secondary" className="text-xs">{memoryEntries.length}</Badge>
+                        <Deferred data="memoryEntries" fallback={<div className="animate-pulse h-16 rounded-md bg-muted" />}>
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Database className="h-4 w-4 text-muted-foreground" />
+                                        <span className="text-sm font-medium">Memory</span>
+                                        <Badge variant="secondary" className="text-xs">{(memoryEntries ?? []).length}</Badge>
+                                    </div>
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={route('collections.memory.index', collection.id)}>
+                                            Manage Memory
+                                        </Link>
+                                    </Button>
                                 </div>
-                                <Button variant="outline" size="sm" asChild>
-                                    <Link href={route('collections.memory.index', collection.id)}>
-                                        Manage Memory
-                                    </Link>
-                                </Button>
-                            </div>
 
-                            {memoryEntries.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">No memory entries yet.</p>
-                            ) : (
-                                <div className="space-y-1.5">
-                                    {memoryEntries.map((entry) => (
-                                        <div key={entry.id} className="flex items-start gap-2 rounded border px-3 py-2 text-sm">
-                                            {entry.is_pinned && <span className="shrink-0">📌</span>}
-                                            <span className="flex-1">{entry.content}</span>
-                                            {entry.category && (
-                                                <Badge variant="secondary" className="shrink-0 text-xs">{entry.category}</Badge>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                                {(memoryEntries ?? []).length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No memory entries yet.</p>
+                                ) : (
+                                    <div className="space-y-1.5">
+                                        {(memoryEntries ?? []).map((entry) => (
+                                            <div key={entry.id} className="flex items-start gap-2 rounded border px-3 py-2 text-sm">
+                                                {entry.is_pinned && <span className="shrink-0">📌</span>}
+                                                <span className="flex-1">{entry.content}</span>
+                                                {entry.category && (
+                                                    <Badge variant="secondary" className="shrink-0 text-xs">{entry.category}</Badge>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </Deferred>
                     </div>
 
                     {/* Right column: Content + MCP + Tokens */}
                     <div className="space-y-6">
                         <div className="space-y-3">
                             <HeadingSmall title="Content" description="Manage what's included in this collection." />
-                            <CollectionItemPicker
-                                collectionId={collection.id}
-                                documents={documents}
-                                skills={skills}
-                                snippets={snippets}
-                                assets={assets}
-                                availableDocuments={availableDocuments}
-                                availableSkills={availableSkills}
-                                availableSnippets={availableSnippets}
-                                availableAssets={availableAssets}
-                                assetFolders={assetFolders}
-                            />
+                            <Deferred data={['documents', 'skills', 'snippets', 'assets']} fallback={
+                                <div className="space-y-2">
+                                    {[1, 2, 3, 4].map((i) => <div key={i} className="animate-pulse h-12 rounded-md bg-muted" />)}
+                                </div>
+                            }>
+                                <CollectionItemPicker
+                                    collectionId={collection.id}
+                                    documents={documents ?? []}
+                                    skills={skills ?? []}
+                                    snippets={snippets ?? []}
+                                    assets={assets ?? []}
+                                    availableDocuments={availableDocuments ?? []}
+                                    availableSkills={availableSkills ?? []}
+                                    availableSnippets={availableSnippets ?? []}
+                                    availableAssets={availableAssets ?? []}
+                                    assetFolders={assetFolders}
+                                />
+                            </Deferred>
                         </div>
 
                         <Card>
