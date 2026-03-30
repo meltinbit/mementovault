@@ -158,9 +158,45 @@ export default function Welcome() {
                         <h1 className="animate-fade-in-up text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl lg:text-7xl">
                             Your AI brain,<br /><span className="gradient-text">centralized.</span>
                         </h1>
-                        <p className="animate-fade-in-up stagger-1 mx-auto mt-8 max-w-2xl text-lg leading-relaxed sm:text-xl" style={{ color: '#8888a0' }}>
-                            Define your identity, instructions, and project context once. Every AI client gets it automatically via MCP.
-                        </p>
+                        {/* Flow diagram inline */}
+                        <div className="animate-fade-in-up stagger-1 mx-auto mt-14 max-w-4xl">
+                            <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center md:gap-6">
+                                <div className="flex gap-3 md:flex-col md:gap-3">
+                                    {['Claude.ai', 'Claude Code', 'Any MCP client'].map((client) => (
+                                        <div key={client} className="glass-card rounded-lg px-4 py-2.5 text-xs font-medium" style={{ color: '#a1a1aa' }}>{client}</div>
+                                    ))}
+                                </div>
+                                <div className="flex items-center">
+                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
+                                    <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
+                                </div>
+                                <div className="relative rounded-xl border border-indigo-500/30 px-8 py-5" style={{ background: 'rgba(99, 102, 241, 0.08)', boxShadow: '0 0 40px rgba(99, 102, 241, 0.1)' }}>
+                                    <div className="text-sm font-bold" style={{ color: '#6366f1' }}>{appName}</div>
+                                    <div className="mt-0.5 text-xs" style={{ color: '#8888a0' }}>MCP Server</div>
+                                </div>
+                                <div className="flex items-center">
+                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
+                                    <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
+                                </div>
+                                <div className="flex gap-4 md:flex-col md:gap-4">
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Workspace</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Identity & Instructions</div>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Memory</div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Content</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Documents & Skills</div>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Snippets & Assets</div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Organization</p>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#a78bfa' }}>Collections</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="animate-fade-in-up stagger-2 mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                             <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold text-white">
                                 Get Started Free <ArrowRight className="size-4" />
@@ -182,72 +218,14 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* The Flow — visual diagram */}
-                <section className="relative py-20 lg:py-28">
+                {/* Problem */}
+                <section className="relative">
                     <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent)' }} />
-
-                    <div className="mx-auto max-w-4xl px-6 text-center">
+                    <div className="mx-auto max-w-3xl px-6 py-20 text-center lg:py-28">
                         <p className="animate-fade-in-up text-xl leading-relaxed sm:text-2xl" style={{ color: '#8888a0', fontWeight: 300 }}>
                             Your AI context is scattered across local files and chat histories.{' '}
                             <span className="font-semibold text-white">Every new conversation starts from zero.</span>
                         </p>
-
-                        {/* Visual flow diagram */}
-                        <div className="animate-fade-in-up stagger-1 mx-auto mt-16 max-w-4xl">
-                            <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center md:gap-6">
-                                {/* AI Clients */}
-                                <div className="flex gap-3 md:flex-col md:gap-3">
-                                    {['Claude.ai', 'Claude Code', 'Any MCP client'].map((client) => (
-                                        <div key={client} className="glass-card rounded-lg px-4 py-2.5 text-xs font-medium" style={{ color: '#a1a1aa' }}>
-                                            {client}
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Arrow */}
-                                <div className="flex items-center">
-                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
-                                    <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
-                                </div>
-
-                                {/* Memento Vault */}
-                                <div className="relative rounded-xl border border-indigo-500/30 px-8 py-5" style={{ background: 'rgba(99, 102, 241, 0.08)', boxShadow: '0 0 40px rgba(99, 102, 241, 0.1)' }}>
-                                    <div className="text-sm font-bold" style={{ color: '#6366f1' }}>{appName}</div>
-                                    <div className="mt-0.5 text-xs" style={{ color: '#8888a0' }}>MCP Server</div>
-                                </div>
-
-                                {/* Arrow */}
-                                <div className="flex items-center">
-                                    <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
-                                    <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.6), rgba(99, 102, 241, 0.3))' }} />
-                                </div>
-
-                                {/* Your Vault — grouped by sidebar structure */}
-                                <div className="flex gap-4 md:flex-col md:gap-4">
-                                    {/* Workspace */}
-                                    <div className="space-y-1.5">
-                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Workspace</p>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Identity & Instructions</div>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Memory</div>
-                                    </div>
-                                    {/* Content */}
-                                    <div className="space-y-1.5">
-                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Content</p>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Documents & Skills</div>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Snippets & Assets</div>
-                                    </div>
-                                    {/* Organization */}
-                                    <div className="space-y-1.5">
-                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Organization</p>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#a78bfa' }}>Collections</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p className="mt-10 text-sm" style={{ color: '#55556a' }}>
-                                One connection. All your context. Always up to date.
-                            </p>
-                        </div>
                     </div>
                 </section>
 
