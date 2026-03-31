@@ -124,14 +124,28 @@ https://yourdomain.com/mcp?token=cv_ws_...
 
 ## Self-Hosting
 
-Memento Vault is designed to be self-hosted. Recommended setup:
+### Docker (Quickest)
+
+```bash
+git clone https://github.com/meltinbit/mementovault.git
+cd mementovault
+docker compose up -d
+```
+
+Open [http://localhost:8000](http://localhost:8000) — login with `demo@mementovault.com` / `password`.
+
+Includes MySQL, MinIO (S3-compatible storage), and a pre-configured demo workspace. Assets upload to MinIO automatically. MinIO console at [http://localhost:9001](http://localhost:9001) (mementovault/mementovault).
+
+### Manual Setup
+
+Recommended for production:
 
 - Any VPS with 1GB+ RAM (Hetzner, DigitalOcean, etc.)
 - MySQL 8
 - Cloudflare R2 for asset storage (free tier: 10GB)
 - Deploy via Coolify, Forge, or manually
 
-### Quick Start
+### Quick Start (Manual)
 
 ```bash
 # Clone
