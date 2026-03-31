@@ -17,12 +17,15 @@ use App\Http\Controllers\SkillMarketplaceController;
 use App\Http\Controllers\SnippetController;
 use App\Http\Controllers\SystemDocumentController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TrialRequestController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+
+Route::post('trial-request', TrialRequestController::class)->name('trial-request.store');
 
 Route::get('docs', function () {
     return Inertia::render('docs/index');

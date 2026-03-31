@@ -88,8 +88,12 @@ class AssetController extends Controller
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request): Response|RedirectResponse
     {
+        if (empty(current_workspace()?->settings['storage']['key'])) {
+            return to_route('assets.index');
+        }
+
         return Inertia::render('assets/create', [
             'tags' => Tag::orderBy('name')->get(),
             'folderId' => $request->input('folder_id'),
@@ -98,8 +102,13 @@ class AssetController extends Controller
 
     public function store(StoreAssetRequest $request): RedirectResponse
     {
-        $file = $request->file('file');
         $workspace = current_workspace();
+
+        if (empty($workspace->settings['storage']['key'])) {
+            return back()->withErrors(['file' => 'Storage is not configured. Please configure S3-compatible storage in Settings.']);
+        }
+
+        $file = $request->file('file');
 
         $uuid = Str::uuid();
         $path = "{$workspace->slug}/assets/{$uuid}/{$file->getClientOriginalName()}";

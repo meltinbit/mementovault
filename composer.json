@@ -7,7 +7,7 @@
         "laravel",
         "framework"
     ],
-    "license": "BSL-1.1",
+    "license": "AGPL-3.0-or-later",
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0",

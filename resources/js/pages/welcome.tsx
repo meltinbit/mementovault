@@ -1,7 +1,7 @@
 import { type SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, BookOpen } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { ArrowRight, BookOpen, CheckCircle, Loader2 } from 'lucide-react';
+import { type FormEventHandler, useEffect, useState } from 'react';
 
 export default function Welcome() {
     const { auth, name: appName, registrationEnabled } = usePage<SharedData>().props;
@@ -15,7 +15,7 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title={`${appName} — Your AI brain, centralized`}>
+            <Head title={`${appName} — AI brain, centralized`}>
                 <style>{`
                     @keyframes gradient-shift {
                         0%, 100% { background-position: 0% 50%; }
@@ -110,30 +110,24 @@ export default function Welcome() {
                                 </div>
                                 {appName}
                             </Link>
-                            <div className="hidden items-center gap-6 text-sm font-medium md:flex" style={{ color: '#8888a0' }}>
-                                <a href="#how-it-works" className="transition-colors duration-200 hover:text-white">How it works</a>
-                                <a href="#product" className="transition-colors duration-200 hover:text-white">Product</a>
-                                <Link href="/docs" className="transition-colors duration-200 hover:text-white">Docs</Link>
-                                <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white" title="GitHub">
-                                    <svg className="size-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
-                                </a>
-                            </div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-6 text-sm font-medium" style={{ color: '#8888a0' }}>
+                            <Link href="/docs" className="transition-colors duration-200 hover:text-white">Docs</Link>
+                            <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white" title="GitHub">
+                                <svg className="size-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
+                            </a>
                             {auth.user ? (
                                 <Link href={route('dashboard')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
                                     Dashboard <ArrowRight className="size-4" />
                                 </Link>
-                            ) : (
+                            ) : registrationEnabled && (
                                 <>
-                                    <Link href={route('login')} className="rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-white" style={{ color: '#8888a0' }}>
+                                    <Link href={route('login')} className="transition-colors duration-200 hover:text-white">
                                         Log in
                                     </Link>
-                                    {registrationEnabled && (
-                                        <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
-                                            Get Started
-                                        </Link>
-                                    )}
+                                    <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
+                                        Get Started
+                                    </Link>
                                 </>
                             )}
                         </div>
@@ -161,13 +155,13 @@ export default function Welcome() {
 
                     <div className="relative mx-auto max-w-4xl px-6 pt-32 pb-24 text-center lg:pt-44 lg:pb-36">
                         <h1 className="animate-fade-in-up text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl lg:text-7xl">
-                            Your AI brain,<br /><span className="gradient-text">centralized.</span>
+                            AI brain,<br /><span className="gradient-text">centralized.</span>
                         </h1>
                         {/* Flow diagram inline */}
                         <div className="animate-fade-in-up stagger-1 mx-auto mt-14 max-w-4xl">
                             <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center md:gap-6">
                                 <div className="flex gap-3 md:flex-col md:gap-3">
-                                    {['Claude.ai', 'Claude Code', 'Any MCP client'].map((client) => (
+                                    {['Claude.ai / Claude Desktop', 'Claude Code', 'Any MCP client'].map((client) => (
                                         <div key={client} className="glass-card rounded-lg px-4 py-2.5 text-xs font-medium" style={{ color: '#a1a1aa' }}>{client}</div>
                                     ))}
                                 </div>
@@ -430,9 +424,10 @@ export default function Welcome() {
                                 </Link>
                             </div>
                         )}
-                        <p className="mt-6 text-sm" style={{ color: '#55556a' }}>
+                        <p className="mt-8 text-lg font-medium tracking-tight sm:text-xl" style={{ color: '#9999b0' }}>
                             Self-hosted. Open source. Your data stays yours.
                         </p>
+                        {!registrationEnabled && <TrialRequestForm />}
                     </div>
                 </section>
 
@@ -448,17 +443,66 @@ export default function Welcome() {
                         <div className="flex items-center gap-6 text-sm" style={{ color: '#55556a' }}>
                             <Link href="/docs" className="transition-colors duration-200 hover:text-white">Docs</Link>
                             <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white">GitHub</a>
-                            <Link href={route('login')} className="transition-colors duration-200 hover:text-white">Login</Link>
-                            {registrationEnabled && <Link href={route('register')} className="transition-colors duration-200 hover:text-white">Register</Link>}
+                            {registrationEnabled && (
+                                <>
+                                    <Link href={route('login')} className="transition-colors duration-200 hover:text-white">Login</Link>
+                                    <Link href={route('register')} className="transition-colors duration-200 hover:text-white">Register</Link>
+                                </>
+                            )}
                         </div>
                         <p className="text-sm" style={{ color: '#55556a' }}>
                             &copy; {new Date().getFullYear()} {appName} — Built by{' '}
                             <a href="https://meltinbit.com" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white">MeltinBit</a>
-                            {' '}| BSL 1.1 Licensed
+                            {' '}| AGPL-3.0 Licensed
                         </p>
                     </div>
                 </footer>
             </div>
         </>
+    );
+}
+
+function TrialRequestForm() {
+    const { data, setData, post, processing, errors, wasSuccessful, reset } = useForm({ email: '' });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('trial-request.store'), { preserveScroll: true, onSuccess: () => reset() });
+    };
+
+    if (wasSuccessful) {
+        return (
+            <div className="animate-fade-in-up mt-8 flex items-center justify-center gap-2 text-sm" style={{ color: '#8b8ba0' }}>
+                <CheckCircle className="size-4 text-green-400" />
+                <span>Request sent! We'll be in touch soon.</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="animate-fade-in-up mt-8">
+            <p className="mb-4 text-sm" style={{ color: '#8b8ba0' }}>
+                Don't want to self-host? Request a free test account.
+            </p>
+            <form onSubmit={submit} className="mx-auto flex max-w-md gap-2">
+                <input
+                    type="email"
+                    value={data.email}
+                    onChange={(e) => setData('email', e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+                />
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+                >
+                    {processing ? <Loader2 className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
+                    Request Access
+                </button>
+            </form>
+            {errors.email && <p className="mt-2 text-center text-xs text-red-400">{errors.email}</p>}
+        </div>
     );
 }

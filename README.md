@@ -16,7 +16,7 @@ Your AI context is fragmented:
 - **Copy-pasted prompts** scattered across conversations
 - **Chat histories** that reset every time you start fresh
 - **No versioning** — one bad edit and your context is gone
-- **No sharing** — can't serve the same context to Claude.ai, Claude Code, and Cowork simultaneously
+- **No sharing** — can't serve the same context to Claude.ai / Claude Desktop, Claude Code, and Cowork simultaneously
 
 Every new AI conversation starts from zero. You waste time re-explaining who you are, how you work, what you're building.
 
@@ -26,7 +26,7 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Claude.ai   │     │  Claude Code │     │  Any MCP     │
+│  Claude.ai / Claude Desktop   │     │  Claude Code │     │  Any MCP     │
 └──────┬───────┘     └──────┬───────┘     └──────┬───────┘
        │                    │                    │
        └────────────────────┼────────────────────┘
@@ -174,7 +174,7 @@ php artisan serve
 
 ### Connecting to Claude
 
-**Claude.ai** — Settings → Connectors → Add custom connector:
+**Claude.ai / Claude Desktop** — Customize → Connectors → Add custom connector:
 ```
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 ```
@@ -196,7 +196,7 @@ Token types:
 
 ## License
 
-[Business Source License 1.1](LICENSE) — Source available, non-competing use allowed. Converts to Apache 2.0 after 4 years.
+[GNU Affero General Public License v3.0](LICENSE)
 
 ---
 

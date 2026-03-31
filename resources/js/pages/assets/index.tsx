@@ -155,6 +155,7 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
             e.preventDefault();
             dragCounter.current = 0;
             setIsDraggingFile(false);
+            if (!storageConfigured) return;
             const files = e.dataTransfer.files;
             if (!files.length) return;
 
@@ -213,7 +214,7 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
     const handleDragEnter = (e: React.DragEvent) => {
         e.preventDefault();
         dragCounter.current++;
-        if (e.dataTransfer.types.includes('Files')) {
+        if (storageConfigured && e.dataTransfer.types.includes('Files')) {
             setIsDraggingFile(true);
         }
     };
@@ -313,14 +314,16 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
                                             <List className="h-4 w-4" />
                                         </button>
                                     </div>
-                                    <Button asChild size="sm" className="gap-1">
-                                        <Link
-                                            href={route('assets.create', currentFolderId ? { folder_id: currentFolderId } : {})}
-                                        >
-                                            <Upload className="h-4 w-4" />
-                                            Upload
-                                        </Link>
-                                    </Button>
+                                    {storageConfigured && (
+                                        <Button asChild size="sm" className="gap-1">
+                                            <Link
+                                                href={route('assets.create', currentFolderId ? { folder_id: currentFolderId } : {})}
+                                            >
+                                                <Upload className="h-4 w-4" />
+                                                Upload
+                                            </Link>
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
 
