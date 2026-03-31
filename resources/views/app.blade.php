@@ -13,9 +13,18 @@
         <link href="https://fonts.bunny.net/css?family=dm-sans:400,500,600,700|jetbrains-mono:400,500" rel="stylesheet" />
 
         <meta name="description" content="Your AI brain, centralized. Organize identity, context, skills, and assets in one place. Serve them to any AI client via MCP." />
-        <meta property="og:title" content="{{ config('app.name', 'Memento Vault') }}" />
+        <meta property="og:title" content="{{ config('app.name', 'Memento Vault') }} — Your AI brain, centralized" />
         <meta property="og:description" content="Organize identity, context, skills, and assets in one place. Serve them to any AI client via MCP." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{ config('app.url') }}" />
+        <meta property="og:image" content="{{ config('app.url') }}/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="{{ config('app.name', 'Memento Vault') }}" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ config('app.name', 'Memento Vault') }} — Your AI brain, centralized" />
+        <meta name="twitter:description" content="Organize identity, context, skills, and assets in one place. Serve them to any AI client via MCP." />
+        <meta name="twitter:image" content="{{ config('app.url') }}/og-image.png" />
 
         @production
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-DKYLTJ7QQK"></script>
