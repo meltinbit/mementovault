@@ -28,6 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'registration_enabled' => (bool) env('REGISTRATION_ENABLED', true),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

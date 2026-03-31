@@ -4,7 +4,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Welcome() {
-    const { auth, name: appName } = usePage<SharedData>().props;
+    const { auth, name: appName, registrationEnabled } = usePage<SharedData>().props;
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -126,12 +126,14 @@ export default function Welcome() {
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href={route('login')} className="hidden rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-white sm:inline-block" style={{ color: '#8888a0' }}>
+                                    <Link href={route('login')} className="rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-white" style={{ color: '#8888a0' }}>
                                         Log in
                                     </Link>
-                                    <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
-                                        Get Started
-                                    </Link>
+                                    {registrationEnabled && (
+                                        <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
+                                            Get Started
+                                        </Link>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -205,9 +207,11 @@ export default function Welcome() {
                         </div>
 
                         <div className="animate-fade-in-up stagger-2 mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                            <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold text-white">
-                                Get Started Free <ArrowRight className="size-4" />
-                            </Link>
+                            {registrationEnabled && (
+                                <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold text-white">
+                                    Get Started Free <ArrowRight className="size-4" />
+                                </Link>
+                            )}
                             <Link href="/docs" className="btn-glass inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold" style={{ color: '#8888a0' }}>
                                 <BookOpen className="size-4" /> View Docs
                             </Link>
@@ -419,11 +423,13 @@ export default function Welcome() {
                             Stop repeating yourself to AI.<br />
                             <span className="gradient-text">Start building your vault.</span>
                         </h2>
-                        <div className="animate-fade-in-up stagger-1 mt-10">
-                            <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-10 py-4 text-base font-semibold text-white">
-                                Get Started Free <ArrowRight className="size-4" />
-                            </Link>
-                        </div>
+                        {registrationEnabled && (
+                            <div className="animate-fade-in-up stagger-1 mt-10">
+                                <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-10 py-4 text-base font-semibold text-white">
+                                    Get Started Free <ArrowRight className="size-4" />
+                                </Link>
+                            </div>
+                        )}
                         <p className="mt-6 text-sm" style={{ color: '#55556a' }}>
                             Self-hosted. Open source. Your data stays yours.
                         </p>
@@ -443,7 +449,7 @@ export default function Welcome() {
                             <Link href="/docs" className="transition-colors duration-200 hover:text-white">Docs</Link>
                             <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white">GitHub</a>
                             <Link href={route('login')} className="transition-colors duration-200 hover:text-white">Login</Link>
-                            <Link href={route('register')} className="transition-colors duration-200 hover:text-white">Register</Link>
+                            {registrationEnabled && <Link href={route('register')} className="transition-colors duration-200 hover:text-white">Register</Link>}
                         </div>
                         <p className="text-sm" style={{ color: '#55556a' }}>
                             &copy; {new Date().getFullYear()} {appName} — Built by{' '}

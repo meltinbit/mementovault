@@ -195,7 +195,7 @@ function SidebarNav({
 }
 
 export default function DocsIndex() {
-    const { auth, name: appName } = usePage<SharedData>().props;
+    const { auth, name: appName, registrationEnabled } = usePage<SharedData>().props;
     const [activeSection, setActiveSection] = useState('getting-started');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -270,12 +270,14 @@ export default function DocsIndex() {
                                     >
                                         Log in
                                     </Link>
-                                    <Link
-                                        href={route('register')}
-                                        className="rounded-md border border-[#6366f1] bg-[#6366f1] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#5558e6]"
-                                    >
-                                        Register
-                                    </Link>
+                                    {registrationEnabled && (
+                                        <Link
+                                            href={route('register')}
+                                            className="rounded-md border border-[#6366f1] bg-[#6366f1] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#5558e6]"
+                                        >
+                                            Register
+                                        </Link>
+                                    )}
                                 </>
                             )}
                             <button

@@ -216,6 +216,7 @@ export interface ActivityLogEntry {
 
 export interface SharedData {
     name: string;
+    registrationEnabled: boolean;
     quote: { message: string; author: string };
     auth: Auth;
     workspace: Workspace | null;
