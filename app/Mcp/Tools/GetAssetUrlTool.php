@@ -33,15 +33,22 @@ class GetAssetUrlTool extends Tool
 
         $workspace = $collection->workspace;
 
+        $proxyUrl = URL::route('assets.download', $asset->id);
+
         // Try to generate a temporary signed URL (works with S3/R2)
-        // Falls back to a direct download route for local storage
         try {
-            $url = $storage->disk($workspace)->temporaryUrl($asset->storage_path, now()->addHour());
+            $directUrl = $storage->disk($workspace)->temporaryUrl($asset->storage_path, now()->addHour());
         } catch (\RuntimeException $e) {
-            $url = URL::route('assets.download', $asset->id);
+            $directUrl = null;
         }
 
-        return Response::text($url);
+        $response = "**Download URL (via server):** {$proxyUrl}";
+        if ($directUrl) {
+            $response .= "\n**Direct URL (S3/R2):** {$directUrl}";
+            $response .= "\n\nUse the server URL if the direct URL is blocked by network restrictions.";
+        }
+
+        return Response::text($response);
     }
 
     /**
