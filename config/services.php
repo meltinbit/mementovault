@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'minio' => [
+        'default_storage' => env('MINIO_ENDPOINT') ? [
+            'driver' => 's3',
+            'key' => env('MINIO_ACCESS_KEY', 'mementovault'),
+            'secret' => env('MINIO_SECRET_KEY', 'mementovault'),
+            'region' => env('MINIO_REGION', 'us-east-1'),
+            'bucket' => env('MINIO_BUCKET', 'mementovault'),
+            'endpoint' => env('MINIO_ENDPOINT'),
+            'url' => env('MINIO_URL'),
+            'use_path_style_endpoint' => true,
+        ] : null,
+    ],
+
 ];

@@ -29,9 +29,9 @@ interface DashboardProps {
 const checklistItems = [
     { key: 'identity', label: 'Set up your Identity', description: 'Tell AI who you are', href: '/workspace/identity', icon: User },
     { key: 'instructions', label: 'Write Instructions', description: 'Define how AI should work with you', href: '/workspace/instructions', icon: BookText },
-    { key: 'hasStorage', label: 'Configure Storage', description: 'Set up S3/R2 to upload assets', href: '/settings/workspace', icon: HardDrive },
+    { key: 'hasStorage', label: 'Configure Storage', description: 'Set up S3/R2 to upload assets', href: '/settings/workspace?tab=storage', icon: HardDrive },
     { key: 'hasCollection', label: 'Create a Collection', description: 'Organize content by project', href: '/collections/create', icon: FolderOpen },
-    { key: 'hasToken', label: 'Connect via MCP', description: 'Generate a token and connect your AI client', href: '/settings/workspace', icon: Key },
+    { key: 'hasToken', label: 'Connect via MCP', description: 'Generate a token and connect your AI client', href: '/settings/workspace?tab=mcp', icon: Key },
 ];
 
 function GettingStarted({ checklist, onHide }: { checklist: OnboardingChecklist; onHide: () => void }) {

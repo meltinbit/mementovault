@@ -17,7 +17,7 @@ class DockerSeeder extends Seeder
         // Create demo user
         $user = User::create([
             'name' => 'Demo User',
-            'email' => 'demo@mementovault.com',
+            'email' => 'mementovault@example.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);

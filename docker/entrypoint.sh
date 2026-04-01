@@ -12,8 +12,18 @@ mkdir -p /app/storage/logs /app/storage/framework/sessions /app/storage/framewor
 chmod -R 775 /app/storage /app/bootstrap/cache
 chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
+# Ensure .env file exists for artisan commands
+if [ ! -f /app/.env ]; then
+    touch /app/.env
+fi
+
 # Generate app key if missing
-php artisan key:generate --no-interaction --force 2>/dev/null || true
+if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "" ]; then
+    NEW_KEY=$(php artisan key:generate --show --no-interaction)
+    echo "APP_KEY=$NEW_KEY" >> /app/.env
+    export APP_KEY="$NEW_KEY"
+    echo "Generated APP_KEY"
+fi
 
 # Run migrations
 php artisan migrate --force --no-interaction
@@ -32,6 +42,9 @@ php artisan optimize
 
 # Storage link
 php artisan storage:link 2>/dev/null || true
+
+# Fix permissions after all artisan commands (they run as root and create files)
+chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 echo "Starting services..."
 exec supervisord -c /app/docker/supervisord.conf

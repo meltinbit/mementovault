@@ -51,7 +51,8 @@ const tabs = [
 type TabId = (typeof tabs)[number]['id'];
 
 export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpoint, newWorkspaceToken, storageSettings, mcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
-    const [activeTab, setActiveTab] = useState<TabId>('general');
+    const initialTab = (new URLSearchParams(window.location.search).get('tab') as TabId) || 'general';
+    const [activeTab, setActiveTab] = useState<TabId>(tabs.some(t => t.id === initialTab) ? initialTab : 'general');
     const [mcpInstructionsUnlocked, setMcpInstructionsUnlocked] = useState(false);
 
     const { data, setData, put, errors, processing, recentlySuccessful } = useForm({

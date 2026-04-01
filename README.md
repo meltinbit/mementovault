@@ -132,7 +132,7 @@ cd mementovault
 docker compose up -d
 ```
 
-Open [http://localhost:8000](http://localhost:8000) — login with `demo@mementovault.com` / `password`.
+Open [http://localhost:8000](http://localhost:8000) — login with `mementovault@example.com` / `password`.
 
 Includes MySQL, MinIO (S3-compatible storage), and a pre-configured demo workspace. Assets upload to MinIO automatically. MinIO console at [http://localhost:9001](http://localhost:9001) (mementovault/mementovault).
 

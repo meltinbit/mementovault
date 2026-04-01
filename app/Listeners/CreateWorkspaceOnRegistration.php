@@ -19,14 +19,20 @@ class CreateWorkspaceOnRegistration
     {
         $user = $event->user;
 
+        $settings = [
+            'mcp_instructions' => Workspace::defaultMcpInstructions(),
+        ];
+
+        if (config('services.minio.default_storage')) {
+            $settings['storage'] = config('services.minio.default_storage');
+        }
+
         $workspace = Workspace::create([
             'user_id' => $user->id,
             'name' => $user->name."'s Workspace",
             'slug' => Str::slug($user->name.' '.Str::random(4)),
             'description' => null,
-            'settings' => [
-                'mcp_instructions' => Workspace::defaultMcpInstructions(),
-            ],
+            'settings' => $settings,
         ]);
 
         $template = $this->templateService->getTemplate('custom');
