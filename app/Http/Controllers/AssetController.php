@@ -194,8 +194,12 @@ class AssetController extends Controller
         return back();
     }
 
-    public function download(Asset $asset): StreamedResponse
+    public function download(Asset $asset): StreamedResponse|RedirectResponse
     {
+        if (! request()->hasValidSignature() && ! auth()->check()) {
+            abort(403);
+        }
+
         if (request()->query('inline')) {
             return new StreamedResponse(function () use ($asset) {
                 $stream = $this->storage->disk()->readStream($asset->storage_path);

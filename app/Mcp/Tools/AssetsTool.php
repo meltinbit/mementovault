@@ -6,6 +6,7 @@ use App\Models\Asset;
 use App\Models\AssetFolder;
 use App\Services\WorkspaceStorageService;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Support\Facades\URL;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Attributes\Description;
@@ -67,7 +68,7 @@ class AssetsTool extends Tool
             return Response::error("Asset '{$name}' not found in this collection.");
         }
 
-        $proxyUrl = route('assets.download', $asset);
+        $proxyUrl = URL::signedRoute('assets.download', ['asset' => $asset->id], now()->addHour());
 
         $storageConfig = app('current_workspace')?->settings['storage'] ?? null;
         $publicUrl = $storageConfig['url'] ?? null;

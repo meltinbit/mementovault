@@ -36,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('onboarding', [OnboardingController::class, 'store'])->name('onboarding.store');
 });
 
+Route::get('assets/{asset}/download', [AssetController::class, 'download'])
+    ->name('assets.download');
+
 Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -66,7 +69,6 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::post('assets/batch-delete', [AssetController::class, 'batchDelete'])->name('assets.batch-delete');
     Route::post('assets/batch-tag', [AssetController::class, 'batchTag'])->name('assets.batch-tag');
     Route::resource('assets', AssetController::class);
-    Route::get('assets/{asset}/download', [AssetController::class, 'download'])->name('assets.download');
     Route::resource('asset-folders', AssetFolderController::class)->except(['show', 'edit', 'create']);
 
     // Workspace memory entries

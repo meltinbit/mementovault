@@ -179,6 +179,8 @@ php artisan serve
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 ```
 
+> **Important:** In Claude Desktop, go to **Admin → Capabilities** and add your Memento Vault domain (e.g. `yourdomain.com`) to the **network allowlist**. Without this, Claude Desktop won't be able to download assets or reach your server from within the sandbox.
+
 **Claude Code** — Add to `.claude/settings.json`:
 ```json
 {

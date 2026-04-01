@@ -33,7 +33,7 @@ class GetAssetUrlTool extends Tool
 
         $workspace = $collection->workspace;
 
-        $proxyUrl = URL::route('assets.download', $asset->id);
+        $proxyUrl = URL::signedRoute('assets.download', ['asset' => $asset->id], now()->addHour());
 
         // Try to generate a temporary signed URL (works with S3/R2)
         try {
