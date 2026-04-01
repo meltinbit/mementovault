@@ -200,9 +200,11 @@ class AssetController extends Controller
             abort(403);
         }
 
+        $disk = $this->storage->disk($asset->workspace);
+
         if (request()->query('inline')) {
-            return new StreamedResponse(function () use ($asset) {
-                $stream = $this->storage->disk()->readStream($asset->storage_path);
+            return new StreamedResponse(function () use ($asset, $disk) {
+                $stream = $disk->readStream($asset->storage_path);
                 fpassthru($stream);
                 fclose($stream);
             }, 200, [
@@ -212,7 +214,7 @@ class AssetController extends Controller
             ]);
         }
 
-        return $this->storage->disk()->download($asset->storage_path, $asset->original_filename);
+        return $disk->download($asset->storage_path, $asset->original_filename);
     }
 
     public function move(MoveAssetsRequest $request): RedirectResponse

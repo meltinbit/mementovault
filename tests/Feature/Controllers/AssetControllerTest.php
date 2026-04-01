@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 function createAssetTestUser(): array
 {
@@ -25,15 +26,23 @@ test('can view assets index', function () {
 });
 
 test('can view asset create form', function () {
-    [$user] = createAssetTestUser();
+    [$user, $workspace] = createAssetTestUser();
+    $workspace->update(['settings' => ['storage' => ['key' => 'test']]]);
 
     $this->actingAs($user)->get('/assets/create')->assertOk()
         ->assertInertia(fn ($page) => $page->component('assets/create'));
 });
 
+test('asset create redirects when storage not configured', function () {
+    [$user] = createAssetTestUser();
+
+    $this->actingAs($user)->get('/assets/create')->assertRedirect('/assets');
+});
+
 test('can upload an asset', function () {
     Storage::fake('assets');
     [$user, $workspace] = createAssetTestUser();
+    $workspace->update(['settings' => ['storage' => ['key' => 'test']]]);
 
     $file = UploadedFile::fake()->create('document.pdf', 1024, 'application/pdf');
 
@@ -83,7 +92,7 @@ test('can delete an asset', function () {
     expect(Asset::withoutGlobalScopes()->find($asset->id))->toBeNull();
 });
 
-test('can download an asset', function () {
+test('can download an asset when authenticated', function () {
     Storage::fake('assets');
     [$user, $workspace] = createAssetTestUser();
 
@@ -96,6 +105,36 @@ test('can download an asset', function () {
     Storage::disk('assets')->put('test/assets/file.pdf', 'file content');
 
     $this->actingAs($user)->get("/assets/{$asset->id}/download")->assertOk();
+});
+
+test('can download an asset with a signed URL', function () {
+    Storage::fake('assets');
+    [, $workspace] = createAssetTestUser();
+
+    $asset = Asset::factory()->create([
+        'workspace_id' => $workspace->id,
+        'storage_path' => 'test/assets/file.pdf',
+        'original_filename' => 'my-file.pdf',
+    ]);
+
+    Storage::disk('assets')->put('test/assets/file.pdf', 'file content');
+
+    $signedUrl = URL::signedRoute('assets.download', ['asset' => $asset->id], now()->addHour());
+
+    $this->get($signedUrl)->assertOk();
+});
+
+test('download returns 403 without auth or valid signature', function () {
+    Storage::fake('assets');
+    [, $workspace] = createAssetTestUser();
+
+    $asset = Asset::factory()->create([
+        'workspace_id' => $workspace->id,
+        'storage_path' => 'test/assets/file.pdf',
+        'original_filename' => 'my-file.pdf',
+    ]);
+
+    $this->get("/assets/{$asset->id}/download")->assertForbidden();
 });
 
 test('validation rejects missing file on upload', function () {
@@ -143,6 +182,7 @@ test('can filter assets by folder_id', function () {
 test('can upload asset into a specific folder', function () {
     Storage::fake('assets');
     [$user, $workspace] = createAssetTestUser();
+    $workspace->update(['settings' => ['storage' => ['key' => 'test']]]);
     $folder = AssetFolder::factory()->create(['workspace_id' => $workspace->id]);
 
     $file = UploadedFile::fake()->create('logo.png', 512, 'image/png');
