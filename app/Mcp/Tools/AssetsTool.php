@@ -67,20 +67,29 @@ class AssetsTool extends Tool
             return Response::error("Asset '{$name}' not found in this collection.");
         }
 
+        $proxyUrl = route('assets.download', $asset);
+
         $storageConfig = app('current_workspace')?->settings['storage'] ?? null;
         $publicUrl = $storageConfig['url'] ?? null;
+        $directUrl = null;
 
         if ($publicUrl && ($storageConfig['driver'] ?? 'local') !== 'local') {
-            $url = rtrim($publicUrl, '/').'/'.$asset->storage_path;
+            $directUrl = rtrim($publicUrl, '/').'/'.$asset->storage_path;
         } else {
             try {
-                $url = $storage->temporaryUrl($asset->storage_path, now()->addMinutes(30));
+                $directUrl = $storage->temporaryUrl($asset->storage_path, now()->addMinutes(30));
             } catch (\Exception) {
-                $url = route('assets.download', $asset);
+                // No direct URL available
             }
         }
 
-        return Response::text($url);
+        $response = "**Download URL (via server):** {$proxyUrl}";
+        if ($directUrl) {
+            $response .= "\n**Direct URL (S3/R2):** {$directUrl}";
+            $response .= "\n\nUse the server URL if the direct URL is blocked by network restrictions.";
+        }
+
+        return Response::text($response);
     }
 
     private function listFolders(): Response
