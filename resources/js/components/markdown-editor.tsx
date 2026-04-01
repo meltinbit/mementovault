@@ -14,7 +14,7 @@ interface MarkdownEditorProps {
 }
 
 export function MarkdownEditor({ value, onChange, placeholder = 'Write your content in markdown...', minRows = 20 }: MarkdownEditorProps) {
-    const [mode, setMode] = useState<'write' | 'preview'>('write');
+    const [mode, setMode] = useState<'write' | 'preview'>('preview');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const insertMarkdown = useCallback((before: string, after: string = '') => {
