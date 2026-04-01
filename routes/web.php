@@ -22,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('welcome', [
+        'trialEnabled' => ! empty(config('services.telegram.bot_token')) && ! empty(config('services.telegram.chat_id')),
+    ]);
 })->name('home');
 
 Route::post('trial-request', TrialRequestController::class)->name('trial-request.store');

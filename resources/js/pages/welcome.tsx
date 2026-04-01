@@ -4,7 +4,7 @@ import { ArrowRight, BookOpen, CheckCircle, Loader2 } from 'lucide-react';
 import { type FormEventHandler, useEffect, useState } from 'react';
 
 export default function Welcome() {
-    const { auth, name: appName, registrationEnabled } = usePage<SharedData>().props;
+    const { auth, name: appName, registrationEnabled, trialEnabled } = usePage<SharedData & { trialEnabled: boolean }>().props;
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -427,7 +427,7 @@ export default function Welcome() {
                         <p className="mt-8 text-lg font-medium tracking-tight sm:text-xl" style={{ color: '#9999b0' }}>
                             Self-hosted. Open source. Your data stays yours.
                         </p>
-                        {!registrationEnabled && <TrialRequestForm />}
+                        {!registrationEnabled && trialEnabled && <TrialRequestForm />}
                     </div>
                 </section>
 
