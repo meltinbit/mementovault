@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('collection_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
-            $table->longText('content')->default('');
+            $table->longText('content')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_required')->default(false);
             $table->unsignedInteger('version')->default(1);
