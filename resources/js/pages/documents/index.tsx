@@ -40,7 +40,7 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
             <Head title="Documents" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Documents" description="Reference materials for AI — specs, guides, processes, brand docs. These are retrieved on-demand when AI needs deeper context." />
+                    <Heading title="Documents" description="Reference materials that AI can retrieve on demand. Documents are listed in the AI context so it knows they exist, and their full content is fetched only when needed. Use them for specs, guides, brand docs, or any long-form reference. Example: an API specification, a company style guide, or a client brief." />
                     <Button asChild size="sm" className="gap-1">
                         <Link href={route('documents.create')}>
                             <Plus className="h-4 w-4" />

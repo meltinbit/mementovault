@@ -47,7 +47,17 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
 
     return (
         <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+                <ToggleGroup type="single" value={mode} onValueChange={(v) => v && setMode(v as 'write' | 'preview')}>
+                    <ToggleGroupItem value="write" aria-label="Write" className="h-8 gap-1 px-2 text-xs">
+                        <Pencil className="h-3 w-3" />
+                        Write
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="preview" aria-label="Preview" className="h-8 gap-1 px-2 text-xs">
+                        <Eye className="h-3 w-3" />
+                        Preview
+                    </ToggleGroupItem>
+                </ToggleGroup>
                 <div className="flex items-center gap-1">
                     {mode === 'write' && toolbarActions.map((item) => (
                         <Button
@@ -63,16 +73,6 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
                         </Button>
                     ))}
                 </div>
-                <ToggleGroup type="single" value={mode} onValueChange={(v) => v && setMode(v as 'write' | 'preview')}>
-                    <ToggleGroupItem value="write" aria-label="Write" className="h-8 gap-1 px-2 text-xs">
-                        <Pencil className="h-3 w-3" />
-                        Write
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="preview" aria-label="Preview" className="h-8 gap-1 px-2 text-xs">
-                        <Eye className="h-3 w-3" />
-                        Preview
-                    </ToggleGroupItem>
-                </ToggleGroup>
             </div>
 
             {mode === 'write' ? (

@@ -42,7 +42,7 @@ export default function TagsIndex({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tags" />
             <div className="space-y-6 p-4">
-                <Heading title="Tags" description="Organize your content with color-coded tags. Apply tags to documents, skills, snippets, and assets for easy filtering." />
+                <Heading title="Tags" description="Color-coded labels to organize your content across the workspace. Apply tags to documents, skills, snippets, and assets, then filter by tag to find what you need. Example: tags like 'frontend', 'urgent', 'client-A', or 'v2'." />
 
                 <form onSubmit={submit} className="flex items-end gap-3">
                     <div className="grid gap-1.5">

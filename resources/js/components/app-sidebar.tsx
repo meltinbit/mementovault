@@ -73,12 +73,12 @@ export function AppSidebar() {
             url: `/workspace/${type}`,
             icon: typeIcons[type] || FileText,
         })),
-        { title: 'Memory', url: '/memory', icon: Database },
         ...extraTypes.map((type: string) => ({
             title: typeLabels[type] || type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
             url: `/workspace/${type}`,
             icon: typeIcons[type] || FileText,
         })),
+        { title: 'Memory', url: '/memory', icon: Database },
     ];
 
     // Available built-in types not yet created

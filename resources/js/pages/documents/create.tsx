@@ -41,7 +41,7 @@ export default function DocumentCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Document" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Document" description="Documents are reference materials that AI retrieves on demand. They're listed in context so AI knows they exist, and fetches the full content when needed." />
+                <Heading title="Create Document" description="Add a new reference document to your workspace. AI will see it listed in context and fetch the full content when relevant. Example: a product roadmap, a technical spec, or a process playbook." />
 
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">

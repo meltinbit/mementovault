@@ -103,7 +103,7 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
             <Head title="Skills" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Skills" description="Operational instructions that AI activates automatically based on triggers. Each skill has a description that tells AI when to use it, and content with the full instructions." />
+                    <Heading title="Skills" description="Operational instructions that AI activates automatically when a specific situation arises. Each skill has a trigger description (tells AI when to activate) and content (the full instructions to follow). Example: a skill named 'Code Review' that triggers when reviewing PRs, with rules like 'check for security vulnerabilities, enforce naming conventions'." />
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
                             <PackageOpen className="h-4 w-4" /> Browse Community Skills

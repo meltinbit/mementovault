@@ -295,7 +295,7 @@ export default function AssetsIndex({ assets, filters, tags, folders, currentFol
                                 <div className="min-w-0">
                                     <Heading
                                         title={currentFolder ? currentFolder.name : currentFolderId === 'root' ? 'Root' : 'All Assets'}
-                                        description={currentFolderId === 'root' ? 'Assets not in any folder.' : 'Files and media stored in your workspace.'}
+                                        description={currentFolderId === 'root' ? 'Assets not in any folder.' : 'Files and media stored in your workspace. AI sees the asset list and can serve download URLs when needed. Add descriptions so AI knows what each file contains. Example: logos, screenshots, PDFs, design mockups.'}
                                     />
                                     {currentFolder && <FolderBreadcrumbs folder={currentFolder} />}
                                 </div>

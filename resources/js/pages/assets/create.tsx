@@ -55,7 +55,7 @@ export default function AssetCreate({ tags, folderId }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload Asset" />
             <div className="space-y-6 p-4">
-                <Heading title="Upload Asset" description="Upload a file to your workspace." />
+                <Heading title="Upload Asset" description="Upload a file to your workspace. AI can't read files directly — add a description so it knows what the file contains and when to reference it." />
                 <form onSubmit={submit} className="space-y-6">
                     <div className="space-y-2">
                         <Label>File</Label>

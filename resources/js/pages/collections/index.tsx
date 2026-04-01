@@ -40,7 +40,7 @@ export default function CollectionsIndex({ collections, filters }: Props) {
             <Head title="Collections" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Collections" description="Project packages that bundle your content. Each collection gets its own MCP endpoint — connect it to Claude and your AI has exactly the context it needs." />
+                    <Heading title="Collections" description="Context packages that bundle documents, skills, snippets, and assets for a specific project or purpose. Each collection gets its own MCP endpoint — connect it to Claude and AI gets exactly the context it needs, nothing more. Example: a 'Website Redesign' collection with its own architecture docs, code style skills, and brand assets." />
                     <Button asChild size="sm" className="gap-1">
                         <Link href={route('collections.create')}>
                             <Plus className="h-4 w-4" />

@@ -25,7 +25,7 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
             <Head title="Snippets" />
             <div className="space-y-6 p-4">
                 <div className="flex items-start justify-between">
-                    <Heading title="Snippets" description="Reusable text blocks — prompt templates, email signatures, disclaimers, boilerplate. Quick copy-paste content AI can use directly." />
+                    <Heading title="Snippets" description="Reusable text blocks that AI can insert exactly as written — no interpretation, no modification. Perfect for content that must stay consistent every time. Example: an email signature, a legal disclaimer, a prompt template, or a standard reply." />
                     <Button asChild size="sm" className="gap-1">
                         <Link href={route('snippets.create')}>
                             <Plus className="h-4 w-4" />

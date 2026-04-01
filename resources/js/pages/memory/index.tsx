@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import InputError from '@/components/input-error';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { type BreadcrumbItem, type CollectionData, type MemoryEntryData, type PaginatedResponse } from '@/types';
-import { Archive, ArchiveRestore, ArrowLeft, Check, Pencil, Pin, PinOff, Plus, Search, Trash2, X } from 'lucide-react';
+import { Archive, ArchiveRestore, ArrowLeft, Bot, Check, Pencil, Pin, PinOff, Plus, Search, Trash2, X } from 'lucide-react';
 
 interface Props {
     entries: PaginatedResponse<MemoryEntryData>;
@@ -168,8 +169,8 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                         <Heading
                             title={isCollection ? `${collection!.name} — Memory` : 'Memory'}
                             description={isCollection
-                                ? 'Project-specific memory. Decisions, patterns, and context that AI should remember for this collection.'
-                                : 'Global memory shared across all collections. Use this for cross-project preferences, personal patterns, and things every AI interaction should know — beyond what Identity and Instructions cover.'
+                                ? 'Short facts and decisions that AI should remember for this project. Unlike documents (long-form reference), memory entries are brief notes always loaded into context. Example: "Client prefers blue over green", "API rate limit is 100 req/min", "Sprint deadline: April 15".'
+                                : 'Short facts and preferences that AI should remember across all projects — things that go beyond Identity and Instructions. Each entry is always loaded into context. Example: "I prefer tabs over spaces", "Never use Lorem Ipsum", "My timezone is CET".'
                             }
                         />
                     </div>
@@ -178,6 +179,13 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                         Add Entry
                     </Button>
                 </div>
+
+                <Alert variant="destructive">
+                    <Bot className="h-4 w-4" />
+                    <AlertDescription>
+                        Memory is typically filled by AI during conversations via MCP — you don't need to add entries manually. As you chat, AI will save decisions, preferences, and context here automatically. You can still add, edit, or remove entries anytime.
+                    </AlertDescription>
+                </Alert>
 
                 {/* Add form */}
                 {showAddForm && (
@@ -201,7 +209,7 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                                     id="new-category"
                                     value={addForm.data.category}
                                     onChange={(e) => addForm.setData('category', e.target.value)}
-                                    placeholder="e.g. preference, decision"
+                                    placeholder="e.g. preference, decision, rule"
                                     className="w-48"
                                 />
                             </div>
@@ -218,6 +226,12 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                 )}
 
                 {/* Filters */}
+                <div className="space-y-0.5 text-xs text-muted-foreground">
+                    <p><strong>Active</strong> — loaded into AI context.</p>
+                    <p><strong>Pinned</strong> — always included, never cut by the entry limit.</p>
+                    <p><strong>Archived</strong> — hidden from AI, kept for reference.</p>
+                    {categories.length > 0 && <p><strong>Categories</strong> — group entries with labels that appear in the AI context.</p>}
+                </div>
                 <div className="flex flex-wrap items-center gap-3">
                     <div className="flex rounded-md border">
                         {statusTabs.map((tab) => (

@@ -41,7 +41,7 @@ export default function SkillCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Skill" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Skill" description="Skills are operational instructions that AI activates automatically. Define when it should trigger and what it should do." />
+                <Heading title="Create Skill" description="Define a new skill with a trigger condition and detailed instructions. AI will activate it automatically when the trigger matches. Example: a 'Bug Report' skill that activates when triaging issues, with a structured template to follow." />
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>

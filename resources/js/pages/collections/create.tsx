@@ -37,7 +37,7 @@ export default function CollectionCreate() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Collection" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Collection" description="Create a new context package with its own MCP endpoint." />
+                <Heading title="Create Collection" description="Start a new context package. Pick a template to pre-populate documents, or start from scratch. The collection gets its own MCP endpoint you can connect to any AI client." />
 
                 {/* Steps indicator */}
                 <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-4">

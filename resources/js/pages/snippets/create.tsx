@@ -39,7 +39,7 @@ export default function SnippetCreate({ tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Snippet" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Snippet" description="Snippets are reusable text blocks that AI inserts as-is — email signatures, disclaimers, prompt templates." />
+                <Heading title="Create Snippet" description="Add a new reusable text block. AI will insert it exactly as written whenever it's referenced. Example: a thank-you email template, a standard project intro, or a meeting agenda format." />
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
