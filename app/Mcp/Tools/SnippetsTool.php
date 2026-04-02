@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Models\Collection;
 use App\Models\Snippet;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
@@ -62,8 +63,20 @@ class SnippetsTool extends Tool
 
     private function create(Request $request): Response
     {
-        $collection = app('mcp_collection');
         $workspace = app('current_workspace');
+        $targetCollection = $request->get('target_collection');
+
+        if ($targetCollection) {
+            $collection = Collection::where('workspace_id', $workspace->id)
+                ->where('slug', $targetCollection)
+                ->first();
+
+            if (! $collection) {
+                return Response::error("Collection '{$targetCollection}' not found.");
+            }
+        } else {
+            $collection = app('mcp_collection');
+        }
 
         $snippet = Snippet::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
@@ -151,6 +164,7 @@ class SnippetsTool extends Tool
             'slug' => $schema->string()->description('Snippet slug. Required for get/update.'),
             'name' => $schema->string()->description('Snippet name. Required for create.'),
             'content' => $schema->string()->description('Text content. Required for create.'),
+            'target_collection' => $schema->string()->description('Create in a different collection by slug (create only). Skips active collection context.'),
         ];
     }
 }

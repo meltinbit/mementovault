@@ -112,7 +112,19 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | `assets` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | `search` | — | Full-text search across all content |
 | `system_documents` | list, get, update, append | Manage workspace-level system documents |
-| `memory` | list, get, create, update, delete | Manage memory entries (workspace or collection scoped) |
+| `memory` | list, get, create, update, delete, move, copy | Manage memory entries (workspace or collection scoped) |
+
+### CRUD Coverage
+
+| Resource | list | get | create | update | append | delete | Other |
+|----------|:----:|:---:|:------:|:------:|:------:|:------:|-------|
+| **Collection Documents** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | reorder, list_templates |
+| **Documents** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
+| **Skills** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
+| **Snippets** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
+| **Assets** | ✅ | ✅ | — | — | — | ✅ | list_folders, create_folder, move |
+| **System Documents** | ✅ | ✅ | — | ✅ | ✅ | — | Fixed types (identity, instructions, etc.) |
+| **Memory** | ✅ | ✅ | ✅ | ✅ | — | ✅ | move, copy (cross-collection) |
 
 ## Tech Stack
 

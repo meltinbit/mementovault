@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Models\Collection;
 use App\Models\CollectionMemoryEntry;
 use App\Models\MemoryEntry;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
@@ -12,7 +13,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('memory')]
-#[Description('Manage memory entries. Actions: list, get, create, update, delete. Scope: "workspace" (default) or "collection" (requires active collection). Memory entries store preferences, decisions, and patterns for future conversations.')]
+#[Description('Manage memory entries. Actions: list, get, create, update, delete, move, copy. Scope: "workspace" (default) or "collection" (requires active collection). Use move/copy with target_collection to transfer entries between collections or workspace.')]
 class MemoryTool extends Tool
 {
     public function handle(Request $request): Response
@@ -29,7 +30,9 @@ class MemoryTool extends Tool
             'create' => $this->create($request),
             'update' => $this->update($request),
             'delete' => $this->delete($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, delete."),
+            'move' => $this->moveOrCopy($request, delete: true),
+            'copy' => $this->moveOrCopy($request, delete: false),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, delete, move, copy."),
         };
     }
 
@@ -84,6 +87,26 @@ class MemoryTool extends Tool
     private function create(Request $request): Response
     {
         $scope = $request->get('scope', 'workspace');
+        $targetCollection = $request->get('target_collection');
+        $workspace = app('current_workspace');
+
+        if ($targetCollection) {
+            $collection = Collection::where('workspace_id', $workspace->id)
+                ->where('slug', $targetCollection)
+                ->first();
+
+            if (! $collection) {
+                return Response::error("Collection '{$targetCollection}' not found.");
+            }
+
+            $entry = CollectionMemoryEntry::create([
+                'collection_id' => $collection->id,
+                'content' => $request->get('content'),
+                'category' => $request->get('category'),
+            ]);
+
+            return Response::text("Memory entry saved to collection \"{$collection->name}\" (id: #{$entry->id}).");
+        }
 
         if ($scope === 'collection') {
             $collection = mcp_collection();
@@ -93,7 +116,6 @@ class MemoryTool extends Tool
                 'category' => $request->get('category'),
             ]);
         } else {
-            $workspace = app('current_workspace');
             $entry = MemoryEntry::create([
                 'workspace_id' => $workspace->id,
                 'content' => $request->get('content'),
@@ -142,6 +164,58 @@ class MemoryTool extends Tool
         return Response::text("Deleted memory entry #{$id}.");
     }
 
+    private function moveOrCopy(Request $request, bool $delete): Response
+    {
+        $entry = $this->findEntry($request);
+
+        if (! $entry) {
+            return Response::error("Memory entry #{$request->get('id')} not found.");
+        }
+
+        $targetScope = $request->get('target_scope', 'collection');
+        $targetCollection = $request->get('target_collection');
+        $workspace = app('current_workspace');
+        $action = $delete ? 'Moved' : 'Copied';
+
+        if ($targetScope === 'workspace') {
+            $new = MemoryEntry::create([
+                'workspace_id' => $workspace->id,
+                'content' => $entry->content,
+                'category' => $entry->category,
+            ]);
+
+            if ($delete) {
+                $entry->update(['is_archived' => true]);
+            }
+
+            return Response::text("{$action} memory entry #{$entry->id} → workspace (new id: #{$new->id}).");
+        }
+
+        if (! $targetCollection) {
+            return Response::error('target_collection (slug) is required when target_scope is "collection".');
+        }
+
+        $collection = Collection::where('workspace_id', $workspace->id)
+            ->where('slug', $targetCollection)
+            ->first();
+
+        if (! $collection) {
+            return Response::error("Collection '{$targetCollection}' not found.");
+        }
+
+        $new = CollectionMemoryEntry::create([
+            'collection_id' => $collection->id,
+            'content' => $entry->content,
+            'category' => $entry->category,
+        ]);
+
+        if ($delete) {
+            $entry->update(['is_archived' => true]);
+        }
+
+        return Response::text("{$action} memory entry #{$entry->id} → collection \"{$collection->name}\" (new id: #{$new->id}).");
+    }
+
     private function findEntry(Request $request): MemoryEntry|CollectionMemoryEntry|null
     {
         $id = $request->get('id');
@@ -165,12 +239,14 @@ class MemoryTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'delete'])->description('The action to perform.')->required(),
-            'id' => $schema->integer()->description('Memory entry ID. Required for get/update/delete.'),
+            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'delete', 'move', 'copy'])->description('The action to perform.')->required(),
+            'id' => $schema->integer()->description('Memory entry ID. Required for get/update/delete/move/copy.'),
             'content' => $schema->string()->description('The memory content. Required for create, optional for update. Keep concise — 1-2 sentences.'),
             'category' => $schema->string()->description('Optional category label (e.g. preference, decision, workflow, technical).'),
             'is_pinned' => $schema->boolean()->description('Pin/unpin a memory entry (update only).'),
-            'scope' => $schema->string()->description('Scope: "workspace" (default) or "collection" (requires active collection).'),
+            'scope' => $schema->string()->description('Source scope: "workspace" (default) or "collection" (requires active collection).'),
+            'target_scope' => $schema->string()->description('Target scope for move/copy: "workspace" or "collection" (default).'),
+            'target_collection' => $schema->string()->description('Target collection slug for move/copy when target_scope is "collection".'),
         ];
     }
 }

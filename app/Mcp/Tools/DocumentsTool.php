@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Models\Collection;
 use App\Models\Document;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
@@ -62,8 +63,20 @@ class DocumentsTool extends Tool
 
     private function create(Request $request): Response
     {
-        $collection = app('mcp_collection');
         $workspace = app('current_workspace');
+        $targetCollection = $request->get('target_collection');
+
+        if ($targetCollection) {
+            $collection = Collection::where('workspace_id', $workspace->id)
+                ->where('slug', $targetCollection)
+                ->first();
+
+            if (! $collection) {
+                return Response::error("Collection '{$targetCollection}' not found.");
+            }
+        } else {
+            $collection = app('mcp_collection');
+        }
 
         $document = Document::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
@@ -153,6 +166,7 @@ class DocumentsTool extends Tool
             'title' => $schema->string()->description('Document title. Required for create.'),
             'content' => $schema->string()->description('Markdown content. Required for create, optional for update.'),
             'type' => $schema->string()->enum(['general', 'technical', 'copy', 'brand', 'process'])->description('Document type. For create only, defaults to general.'),
+            'target_collection' => $schema->string()->description('Create in a different collection by slug (create only). Skips active collection context.'),
         ];
     }
 }

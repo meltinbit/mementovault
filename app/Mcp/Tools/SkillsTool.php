@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Models\Collection;
 use App\Models\Skill;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
@@ -62,8 +63,20 @@ class SkillsTool extends Tool
 
     private function create(Request $request): Response
     {
-        $collection = app('mcp_collection');
         $workspace = app('current_workspace');
+        $targetCollection = $request->get('target_collection');
+
+        if ($targetCollection) {
+            $collection = Collection::where('workspace_id', $workspace->id)
+                ->where('slug', $targetCollection)
+                ->first();
+
+            if (! $collection) {
+                return Response::error("Collection '{$targetCollection}' not found.");
+            }
+        } else {
+            $collection = app('mcp_collection');
+        }
 
         $skill = Skill::withoutGlobalScopes()->create([
             'workspace_id' => $workspace->id,
@@ -156,6 +169,7 @@ class SkillsTool extends Tool
             'name' => $schema->string()->description('Skill name. Required for create.'),
             'description' => $schema->string()->description('Trigger description — when should AI activate this skill? Required for create.'),
             'content' => $schema->string()->description('Full skill instructions in markdown. Required for create.'),
+            'target_collection' => $schema->string()->description('Create in a different collection by slug (create only). Skips active collection context.'),
         ];
     }
 }
