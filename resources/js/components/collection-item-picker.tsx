@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -127,7 +127,12 @@ function ContentSection({
                                         key={item.id}
                                         className="group flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors hover:bg-muted"
                                     >
-                                        <span className="truncate">{(item as any)[labelKey] || item.title || item.name}</span>
+                                        <Link
+                                            href={route(`${type}s.show`, item.id)}
+                                            className="truncate hover:underline"
+                                        >
+                                            {(item as any)[labelKey] || item.title || item.name}
+                                        </Link>
                                         <button
                                             type="button"
                                             onClick={() => detach(item.id)}
