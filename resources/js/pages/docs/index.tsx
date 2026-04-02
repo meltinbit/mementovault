@@ -526,19 +526,15 @@ Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a
                             <section id="claude-code" className="mb-12">
                                 <Markdown>{`## Claude Code
 
-Add ${appName} to your \`.claude/settings.json\` file:
+Run from your terminal:
 
-\`\`\`json
-{
-  "mcpServers": {
-    "memento-vault": {
-      "url": "https://yourdomain.com/mcp?token=YOUR_TOKEN"
-    }
-  }
-}
+\`\`\`bash
+claude mcp add --transport http memento-vault https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Claude Code will automatically connect and have access to your context and content.`}</Markdown>
+Claude Code will automatically connect and have access to your context and content.
+
+> For local Docker setup, use \`http://localhost:4242/mcp?token=YOUR_TOKEN\`. Claude Desktop requires HTTPS — use a tunnel (e.g. \`ngrok http 4242\`) for local testing with Claude Desktop.`}</Markdown>
                             </section>
 
                             <section id="cowork" className="mb-12">

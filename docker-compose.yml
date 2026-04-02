@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8000:80"
+      - "4242:80"
     env_file: .env.docker
     depends_on:
       mysql:

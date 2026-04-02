@@ -1,17 +1,23 @@
 import { type SharedData } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowRight, BookOpen, CheckCircle, Loader2 } from 'lucide-react';
-import { type FormEventHandler, useEffect, useState } from 'react';
+import { ArrowRight, BookOpen, Check, CheckCircle, Copy, Loader2 } from 'lucide-react';
+import { type FormEventHandler, useState } from 'react';
+
+function CopyButton({ text }: { text: string }) {
+    const [copied, setCopied] = useState(false);
+    return (
+        <button
+            onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+            className="flex-shrink-0 cursor-pointer rounded p-1 transition-colors hover:bg-white/10"
+            title="Copy"
+        >
+            {copied ? <Check className="size-3.5" style={{ color: '#28c840' }} /> : <Copy className="size-3.5" style={{ color: '#55556a' }} />}
+        </button>
+    );
+}
 
 export default function Welcome() {
     const { auth, name: appName, registrationEnabled, trialEnabled } = usePage<SharedData & { trialEnabled: boolean }>().props;
-    const [scrolled, setScrolled] = useState(false);
-
-    useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     return (
         <>
@@ -47,6 +53,14 @@ export default function Welcome() {
                     .animate-mesh-reverse { animation: mesh-rotate 25s ease-in-out infinite reverse; }
                     .animate-mesh-slow { animation: mesh-rotate 30s ease-in-out infinite; }
                     .flow-dot { animation: flow-dot 4s ease-in-out infinite; }
+                    .gradient-text-galaxy {
+                        background: linear-gradient(135deg, #a855f7, #7c3aed, #0d9488, #166534);
+                        background-size: 200% auto;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        animation: gradient-shift 6s ease infinite;
+                    }
                     .gradient-text {
                         background: linear-gradient(135deg, #6366f1, #8b5cf6, #6366f1);
                         background-size: 200% auto;
@@ -92,50 +106,8 @@ export default function Welcome() {
             </Head>
 
             <div className="scroll-smooth" style={{ background: '#0a0a0f', color: '#f0f0f5', fontFamily: "'DM Sans', sans-serif" }}>
-                {/* Navigation */}
-                <nav
-                    className="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
-                    style={{
-                        background: scrolled ? 'rgba(10, 10, 15, 0.85)' : 'rgba(10, 10, 15, 0.5)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        borderBottom: `1px solid ${scrolled ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.03)'}`,
-                    }}
-                >
-                    <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-                        <div className="flex items-center gap-8">
-                            <Link href="/" className="flex items-center gap-2.5 text-lg font-bold tracking-tight">
-                                <div className="flex size-8 items-center justify-center overflow-hidden rounded-md">
-                                    <img src="/logo.jpg" alt="Logo" className="size-8 object-cover" />
-                                </div>
-                                {appName}
-                            </Link>
-                        </div>
-                        <div className="flex items-center gap-6 text-sm font-medium" style={{ color: '#8888a0' }}>
-                            <Link href="/docs" className="transition-colors duration-200 hover:text-white">Docs</Link>
-                            <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-white" title="GitHub">
-                                <svg className="size-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
-                            </a>
-                            {auth.user && registrationEnabled ? (
-                                <Link href={route('dashboard')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
-                                    Dashboard <ArrowRight className="size-4" />
-                                </Link>
-                            ) : registrationEnabled && (
-                                <>
-                                    <Link href={route('login')} className="transition-colors duration-200 hover:text-white">
-                                        Log in
-                                    </Link>
-                                    <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold text-white">
-                                        Get Started
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </nav>
-
                 {/* Hero */}
-                <section className="relative overflow-hidden pt-20">
+                <section className="relative overflow-hidden">
                     <div className="pointer-events-none absolute inset-0">
                         <div className="animate-mesh absolute top-[-20%] left-[-10%] h-[600px] w-[600px] rounded-full opacity-30" style={{ background: 'radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%)', filter: 'blur(80px)' }} />
                         <div className="animate-mesh-reverse absolute top-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full opacity-25" style={{ background: 'radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%)', filter: 'blur(80px)' }} />
@@ -153,10 +125,16 @@ export default function Welcome() {
                         <div className="absolute size-3 rounded-full" style={{ background: '#6366f1', boxShadow: '0 0 20px rgba(99, 102, 241, 0.5)', animation: 'pulse-glow 3s ease-in-out infinite' }} />
                     </div>
 
-                    <div className="relative mx-auto max-w-4xl px-6 pt-32 pb-24 text-center lg:pt-44 lg:pb-36">
-                        <h1 className="animate-fade-in-up text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl lg:text-7xl">
-                            AI brain,<br /><span className="gradient-text">centralized.</span>
-                        </h1>
+                    <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-24 text-center lg:pt-36 lg:pb-36">
+                        <div className="animate-fade-in-up flex flex-col items-center">
+                            <div className="flex size-20 items-center justify-center lg:size-24">
+                                <img src="/logo.png" alt="Logo" className="size-20 object-contain lg:size-24" />
+                            </div>
+                            <h1 className="gradient-text-galaxy mt-6 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">{appName}</h1>
+                            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.25em] sm:text-base" style={{ color: '#8888a0' }}>
+                                AI brain, centralized.
+                            </p>
+                        </div>
                         {/* Flow diagram inline */}
                         <div className="animate-fade-in-up stagger-1 mx-auto mt-14 max-w-4xl">
                             <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center md:gap-6">
@@ -169,7 +147,8 @@ export default function Welcome() {
                                     <div className="hidden h-px w-10 md:block" style={{ background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
                                     <div className="h-8 w-px md:hidden" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.6))' }} />
                                 </div>
-                                <div className="relative rounded-xl border border-indigo-500/30 px-8 py-5" style={{ background: 'rgba(99, 102, 241, 0.08)', boxShadow: '0 0 40px rgba(99, 102, 241, 0.1)' }}>
+                                <div className="relative flex flex-col items-center rounded-xl border border-indigo-500/30 px-8 py-5" style={{ background: 'rgba(99, 102, 241, 0.08)', boxShadow: '0 0 40px rgba(99, 102, 241, 0.1)' }}>
+                                    <img src="/brain.png" alt="Brain" className="mb-2 size-10" />
                                     <div className="text-sm font-bold" style={{ color: '#6366f1' }}>{appName}</div>
                                     <div className="mt-0.5 text-xs" style={{ color: '#8888a0' }}>MCP Server</div>
                                 </div>
@@ -200,15 +179,95 @@ export default function Welcome() {
                             </p>
                         </div>
 
-                        <div className="animate-fade-in-up stagger-2 mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                        {/* Quick Start */}
+                        <div className="animate-fade-in-up stagger-2 mx-auto mt-14 max-w-xl">
+                            <p className="mb-4 flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: '#a855f7' }}>
+                                <ArrowRight className="size-4" /> Quick Start
+                            </p>
+                            <div className="overflow-hidden rounded-xl" style={{ background: 'rgba(17, 17, 24, 0.9)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                    <div className="size-3 rounded-full" style={{ background: '#ff5f57' }} />
+                                    <div className="size-3 rounded-full" style={{ background: '#febc2e' }} />
+                                    <div className="size-3 rounded-full" style={{ background: '#28c840' }} />
+                                </div>
+                                <div className="space-y-3 px-5 py-4 text-left text-sm" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                                    <div>
+                                        <span style={{ color: '#55556a' }}># Clone & start</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <span style={{ color: '#28c840' }}>$</span>{' '}
+                                            <span style={{ color: '#e2e2e8' }}>git clone https://github.com/meltinbit/mementovault.git</span>
+                                        </div>
+                                        <CopyButton text="git clone https://github.com/meltinbit/mementovault.git" />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <span style={{ color: '#28c840' }}>$</span>{' '}
+                                            <span style={{ color: '#e2e2e8' }}>cd mementovault && docker compose up -d</span>
+                                        </div>
+                                        <CopyButton text="cd mementovault && docker compose up -d" />
+                                    </div>
+                                    <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                        <span style={{ color: '#55556a' }}># Open http://localhost:4242</span>
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#55556a' }}>Login:</span>{' '}
+                                        <span style={{ color: '#a855f7' }}>mementovault@example.com</span>{' '}
+                                        <span style={{ color: '#55556a' }}>/</span>{' '}
+                                        <span style={{ color: '#a855f7' }}>password</span>
+                                    </div>
+                                    <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                        <span style={{ color: '#55556a' }}># Create a workspace API key in Settings → API Keys</span>
+                                    </div>
+                                    <div className="mt-3">
+                                        <span style={{ color: '#55556a' }}># Connect with Claude Code:</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <span style={{ color: '#28c840' }}>$</span>{' '}
+                                            <span style={{ color: '#e2e2e8' }}>claude mcp add --transport http memento-vault \</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <span style={{ color: '#e2e2e8' }}>{'  '}http://localhost:4242/mcp?token=YOUR_TOKEN</span>
+                                        </div>
+                                        <CopyButton text="claude mcp add --transport http memento-vault http://localhost:4242/mcp?token=YOUR_TOKEN" />
+                                    </div>
+                                    <div className="mt-3">
+                                        <span style={{ color: '#55556a' }}># For Claude Desktop use a tunnel (e.g. ngrok):</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <span style={{ color: '#28c840' }}>$</span>{' '}
+                                            <span style={{ color: '#e2e2e8' }}>ngrok http 4242</span>
+                                        </div>
+                                        <CopyButton text="ngrok http 4242" />
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#55556a' }}># Then add https://your-tunnel.ngrok.io/mcp?token=YOUR_TOKEN</span>
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#55556a' }}># in Customize → Connectors → Add custom connector</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                             {registrationEnabled && (
                                 <Link href={route('register')} className="btn-primary-glow inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold text-white">
                                     Get Started Free <ArrowRight className="size-4" />
                                 </Link>
                             )}
-                            <Link href="/docs" className="btn-glass inline-flex items-center gap-2.5 rounded-xl px-8 py-3.5 text-base font-semibold" style={{ color: '#8888a0' }}>
-                                <BookOpen className="size-4" /> View Docs
+                            <Link href="/docs" className="btn-glass inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium" style={{ color: '#8888a0' }}>
+                                <BookOpen className="size-3.5" /> Docs
                             </Link>
+                            <a href="https://github.com/meltinbit/mementovault" target="_blank" rel="noopener noreferrer" className="btn-glass inline-flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium" style={{ color: '#8888a0' }}>
+                                <svg className="size-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
+                                GitHub
+                            </a>
                         </div>
                         <div className="animate-fade-in-up stagger-3 mt-16">
                             <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em]" style={{ color: '#55556a' }}>Works with</p>
@@ -436,7 +495,7 @@ export default function Welcome() {
                     <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 sm:flex-row">
                         <div className="flex items-center gap-2.5 text-sm font-semibold">
                             <div className="flex size-6 items-center justify-center overflow-hidden rounded">
-                                <img src="/logo.jpg" alt="Logo" className="size-6 object-cover" />
+                                <img src="/logo2.png" alt="Logo" className="size-6 object-cover" />
                             </div>
                             {appName}
                         </div>

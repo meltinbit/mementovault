@@ -25,9 +25,10 @@ Every new AI conversation starts from zero. You waste time re-explaining who you
 Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model Context Protocol)** to any compatible client.
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Claude.ai / Claude Desktop   │     │  Claude Code │     │  Any MCP     │
-└──────┬───────┘     └──────┬───────┘     └──────┬───────┘
+┌────────────────┐   ┌──────────────┐   ┌──────────────┐
+│ Claude.ai /    │   │  Claude Code │   │  Any MCP     │
+│ Claude Desktop │   │              │   │   Client     │
+└───────┬────────┘   └──────┬───────┘   └──────┬───────┘
        │                    │                    │
        └────────────────────┼────────────────────┘
                             │
@@ -132,7 +133,7 @@ cd mementovault
 docker compose up -d
 ```
 
-Open [http://localhost:8000](http://localhost:8000) — login with `mementovault@example.com` / `password`.
+Open [http://localhost:4242](http://localhost:4242) — login with `mementovault@example.com` / `password`.
 
 Includes MySQL, MinIO (S3-compatible storage), and a pre-configured demo workspace. Assets upload to MinIO automatically. MinIO console at [http://localhost:9001](http://localhost:9001) (mementovault/mementovault).
 
@@ -181,16 +182,12 @@ https://yourdomain.com/mcp?token=YOUR_TOKEN
 
 > **Important:** In Claude Desktop, go to **Admin → Capabilities** and add your Memento Vault domain (e.g. `yourdomain.com`) to the **network allowlist**. Without this, Claude Desktop won't be able to download assets or reach your server from within the sandbox.
 
-**Claude Code** — Add to `.claude/settings.json`:
-```json
-{
-  "mcpServers": {
-    "memento-vault": {
-      "url": "https://yourdomain.com/mcp?token=YOUR_TOKEN"
-    }
-  }
-}
+**Claude Code** — Run from your terminal:
+```bash
+claude mcp add --transport http memento-vault https://yourdomain.com/mcp?token=YOUR_TOKEN
 ```
+
+> For local Docker setup, use `http://localhost:4242/mcp?token=YOUR_TOKEN`. Claude Desktop requires HTTPS — use a tunnel (e.g. `ngrok http 4242`) for local testing with Claude Desktop.
 
 Token types:
 - `cv_ws_*` — Workspace token (access all collections, switch dynamically)
