@@ -201,22 +201,27 @@ export default function CollectionShow({
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={collection.name} />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <span className="h-4 w-4 rounded-full" style={{ backgroundColor: collection.color }} />
-                        <Heading title={collection.name} description={collection.description || undefined} />
+                <div className="mb-8 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: collection.color }} />
+                            <h2 className="text-xl font-semibold tracking-tight">{collection.name}</h2>
+                            <Badge variant="outline" className="capitalize">
+                                {collection.type.replace(/_/g, ' ')}
+                            </Badge>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
+                                {showDetails ? 'Hide Details' : 'Edit Details'}
+                            </Button>
+                            <Button variant="destructive" size="sm" onClick={() => setShowDelete(true)} className="gap-1">
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="capitalize">
-                            {collection.type.replace(/_/g, ' ')}
-                        </Badge>
-                        <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
-                            {showDetails ? 'Hide Details' : 'Edit Details'}
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => setShowDelete(true)} className="gap-1">
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </div>
+                    {collection.description && (
+                        <div className="text-muted-foreground max-w-2xl text-sm leading-relaxed">{collection.description}</div>
+                    )}
                 </div>
 
                 {showDetails && (

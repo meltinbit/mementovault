@@ -2,15 +2,15 @@
 
 namespace App\Mcp\Servers;
 
-use App\Mcp\Tools\AppendMemoryTool;
 use App\Mcp\Tools\AssetsTool;
 use App\Mcp\Tools\CollectionDocumentsTool;
 use App\Mcp\Tools\DocumentsTool;
 use App\Mcp\Tools\GetContextTool;
+use App\Mcp\Tools\MemoryTool;
 use App\Mcp\Tools\SearchTool;
 use App\Mcp\Tools\SkillsTool;
 use App\Mcp\Tools\SnippetsTool;
-use App\Mcp\Tools\UpdateSystemDocumentTool;
+use App\Mcp\Tools\SystemDocumentsTool;
 use App\Models\Workspace;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Description;
@@ -32,8 +32,8 @@ class ContextVaultServer extends Server
         SnippetsTool::class,
         AssetsTool::class,
         SearchTool::class,
-        UpdateSystemDocumentTool::class,
-        AppendMemoryTool::class,
+        SystemDocumentsTool::class,
+        MemoryTool::class,
     ];
 
     protected function boot(): void

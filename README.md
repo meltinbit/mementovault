@@ -106,13 +106,13 @@ https://yourdomain.com/mcp?token=cv_ws_...
 |------|---------|-------------|
 | `get_context` | — | Load context, list/switch collections (workspace tokens) |
 | `collection_documents` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents |
-| `documents` | list, get, create, update, append | Manage workspace documents |
-| `skills` | list, get, create, update, append | Manage skills |
-| `snippets` | list, get, create, update, append | Manage snippets |
-| `assets` | list, get_url, list_folders, create_folder, move | Manage assets and folders |
+| `documents` | list, get, create, update, append, delete | Manage workspace documents |
+| `skills` | list, get, create, update, append, delete | Manage skills |
+| `snippets` | list, get, create, update, append, delete | Manage snippets |
+| `assets` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | `search` | — | Full-text search across all content |
-| `update_system_document` | — | Update workspace-level documents |
-| `append_memory` | — | Save memory entries |
+| `system_documents` | list, get, update, append | Manage workspace-level system documents |
+| `memory` | list, get, create, update, delete | Manage memory entries (workspace or collection scoped) |
 
 ## Tech Stack
 

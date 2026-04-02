@@ -11,7 +11,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('documents')]
-#[Description('Manage workspace documents in this collection. Actions: list, get, create, update, append. Use append to add content in chunks.')]
+#[Description('Manage workspace documents in this collection. Actions: list, get, create, update, append, delete. Use append to add content in chunks.')]
 class DocumentsTool extends Tool
 {
     public function handle(Request $request): Response
@@ -26,7 +26,8 @@ class DocumentsTool extends Tool
             'create' => $this->create($request),
             'update' => $this->update($request),
             'append' => $this->append($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append."),
+            'delete' => $this->delete($request),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append, delete."),
         };
     }
 
@@ -125,10 +126,29 @@ class DocumentsTool extends Tool
         return Response::text("Appended to \"{$document->title}\" (now v{$document->version}, {$length} chars total).");
     }
 
+    private function delete(Request $request): Response
+    {
+        $collection = app('mcp_collection');
+        $slug = $request->get('slug');
+
+        $document = $collection->documents()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $document) {
+            return Response::error("Document with slug '{$slug}' not found in this collection.");
+        }
+
+        $document->update(['is_active' => false]);
+
+        return Response::text("Deleted document \"{$document->title}\".");
+    }
+
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append'])->description('The action to perform. Use append to add content in chunks.')->required(),
+            'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append', 'delete'])->description('The action to perform. Use append to add content in chunks.')->required(),
             'slug' => $schema->string()->description('Document slug. Required for get/update.'),
             'title' => $schema->string()->description('Document title. Required for create.'),
             'content' => $schema->string()->description('Markdown content. Required for create, optional for update.'),

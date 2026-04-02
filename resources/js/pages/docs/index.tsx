@@ -719,13 +719,13 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 |------|---------|-------------|
 | \`get_context\` | — | Load context. Pass a collection slug to switch collections (workspace tokens). |
 | \`collection_documents\` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents (Instructions, Architecture, etc.) |
-| \`documents\` | list, get, create, update, append | Manage workspace documents assigned to the collection |
-| \`skills\` | list, get, create, update, append | Manage skills |
-| \`snippets\` | list, get, create, update, append | Manage snippets |
-| \`assets\` | list, get_url, list_folders, create_folder, move | Manage assets and folders |
+| \`documents\` | list, get, create, update, append, delete | Manage workspace documents assigned to the collection |
+| \`skills\` | list, get, create, update, append, delete | Manage skills |
+| \`snippets\` | list, get, create, update, append, delete | Manage snippets |
+| \`assets\` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | \`search\` | — | Full-text search across documents, skills, and snippets |
-| \`update_system_document\` | — | Update workspace-level documents (Identity, Instructions, etc.) |
-| \`append_memory\` | — | Save short memory entries (workspace or collection scoped) |`}</Markdown>
+| \`system_documents\` | list, get, update, append | Manage workspace-level system documents (Identity, Instructions, etc.) |
+| \`memory\` | list, get, create, update, delete | Manage memory entries (workspace or collection scoped) |`}</Markdown>
                             </section>
 
                             <section id="authentication" className="mb-12">

@@ -14,7 +14,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('assets')]
-#[Description('Manage assets and folders. Actions: list (list assets), get_url (name), list_folders, create_folder (name+parent_slug), move (asset_names+folder_slug).')]
+#[Description('Manage assets and folders. Actions: list (list assets), get_url (name), list_folders, create_folder (name+parent_slug), move (asset_names+folder_slug), delete (name).')]
 class AssetsTool extends Tool
 {
     public function handle(Request $request, WorkspaceStorageService $storage): Response
@@ -29,7 +29,8 @@ class AssetsTool extends Tool
             'list_folders' => $this->listFolders(),
             'create_folder' => $this->createFolder($request),
             'move' => $this->move($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get_url, list_folders, create_folder, move."),
+            'delete' => $this->deleteAsset($request),
+            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get_url, list_folders, create_folder, move, delete."),
         };
     }
 
@@ -180,10 +181,29 @@ class AssetsTool extends Tool
         return Response::text("Moved {$assets->count()} asset(s) to {$destination}.");
     }
 
+    private function deleteAsset(Request $request): Response
+    {
+        $collection = app('mcp_collection');
+        $name = $request->get('name');
+
+        $asset = $collection->assets()
+            ->where('name', $name)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $asset) {
+            return Response::error("Asset '{$name}' not found in this collection.");
+        }
+
+        $asset->update(['is_active' => false]);
+
+        return Response::text("Deleted asset \"{$asset->name}\".");
+    }
+
     public function schema(JsonSchema $schema): array
     {
         return [
-            'action' => $schema->string()->enum(['list', 'get_url', 'list_folders', 'create_folder', 'move'])->description('The action to perform.')->required(),
+            'action' => $schema->string()->enum(['list', 'get_url', 'list_folders', 'create_folder', 'move', 'delete'])->description('The action to perform.')->required(),
             'name' => $schema->string()->description('Asset name (for get_url) or folder name (for create_folder).'),
             'slug' => $schema->string()->description('Asset or folder slug.'),
             'parent_slug' => $schema->string()->description('Parent folder slug for nesting (create_folder only).'),
