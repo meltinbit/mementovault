@@ -1,6 +1,7 @@
 import { type SharedData } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowRight, BookOpen, Check, CheckCircle, Copy, Loader2 } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, CheckCircle, Copy, Loader2, MessageSquare } from 'lucide-react';
+import { getHomepagePrompts } from '@/data/vault-prompts';
 import { type FormEventHandler, useState } from 'react';
 
 function CopyButton({ text }: { text: string }) {
@@ -418,6 +419,31 @@ export default function Welcome() {
                                 <img src="/screenshots/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full max-w-full" />
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* What you can ask */}
+                <section className="relative mx-auto max-w-5xl px-6 py-20 lg:py-28">
+                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
+
+                    <div className="mb-14 text-center">
+                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">What you can ask your vault</h2>
+                        <p className="animate-fade-in-up stagger-1 mt-5 text-base lg:text-lg" style={{ color: '#8888a0' }}>
+                            Just talk to your AI naturally. Here are some things you can say.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {getHomepagePrompts().map((p) => (
+                            <div key={p.prompt} className="glass-card group relative rounded-xl p-5">
+                                <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#6366f1' }}>{p.category}</p>
+                                <p className="mt-2 text-sm font-medium leading-relaxed text-white">"{p.prompt}"</p>
+                                <p className="mt-1.5 text-xs" style={{ color: '#55556a' }}>{p.description}</p>
+                                <div className="absolute top-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
+                                    <CopyButton text={p.prompt} />
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </section>
 

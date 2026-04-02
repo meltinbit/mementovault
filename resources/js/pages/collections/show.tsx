@@ -30,7 +30,8 @@ import {
     type SnippetData,
     type AssetData,
 } from '@/types';
-import { ChevronDown, ChevronRight, Copy, Check, Database, Lock, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Copy, Check, Database, Lock, MessageSquare, Plus, Trash2 } from 'lucide-react';
+import { type VaultPrompt, getCollectionPrompts } from '@/data/vault-prompts';
 
 interface AvailableItem {
     id: number;
@@ -58,6 +59,21 @@ interface Props {
     availableAssets?: AvailableItem[];
     assetFolders?: { id: number; name: string; assets_count: number }[];
     memoryEntries?: MemoryEntryData[];
+}
+
+function PromptRow({ prompt }: { prompt: string }) {
+    const [copied, setCopied] = useState(false);
+    return (
+        <div className="flex items-center justify-between gap-2 rounded bg-muted px-2.5 py-1.5">
+            <p className="truncate text-xs">{prompt}</p>
+            <button
+                onClick={() => { navigator.clipboard.writeText(prompt); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                className="flex-shrink-0 cursor-pointer rounded p-0.5 transition-colors hover:bg-accent"
+            >
+                {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3 text-muted-foreground" />}
+            </button>
+        </div>
+    );
 }
 
 function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc: CollectionDocumentData }) {
@@ -418,6 +434,32 @@ export default function CollectionShow({
                             </CardHeader>
                             <CardContent className="p-4 pt-0">
                                 <TokenManager tokens={tokens} collectionId={collection.id} mcpEndpoint={mcpEndpoint} newToken={newToken} />
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="p-4 pb-2">
+                                <CardTitle className="flex items-center gap-2 text-sm">
+                                    <MessageSquare className="h-4 w-4" /> What you can ask your AI
+                                </CardTitle>
+                                <p className="text-xs text-muted-foreground">Copy and paste into your connected AI client</p>
+                            </CardHeader>
+                            <CardContent className="space-y-3 p-4 pt-0">
+                                {Object.entries(
+                                    getCollectionPrompts().reduce(
+                                        (acc, p) => { (acc[p.category] ??= []).push(p); return acc; },
+                                        {} as Record<string, VaultPrompt[]>,
+                                    ),
+                                ).map(([category, prompts]) => (
+                                    <div key={category}>
+                                        <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{category}</p>
+                                        <div className="space-y-1">
+                                            {prompts.map((p) => (
+                                                <PromptRow key={p.prompt} prompt={p.prompt} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
                             </CardContent>
                         </Card>
                     </div>

@@ -71,6 +71,7 @@ const sections: Section[] = [
         title: 'API / MCP Reference',
         children: [
             { id: 'available-tools', title: 'Available Tools' },
+            { id: 'example-prompts', title: 'Example Prompts' },
             { id: 'authentication', title: 'Authentication' },
             { id: 'collection-switching', title: 'Collection Switching' },
             { id: 'writing-long-content', title: 'Writing Long Content' },
@@ -726,6 +727,42 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 | \`search\` | — | Full-text search across documents, skills, and snippets |
 | \`system_documents\` | list, get, update, append | Manage workspace-level system documents (Identity, Instructions, etc.) |
 | \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (workspace or collection scoped) |`}</Markdown>
+                            </section>
+
+                            <section id="example-prompts" className="mb-12">
+                                <Markdown>{`## Example Prompts
+
+You don't need to know MCP commands. Just talk to your AI naturally — it will use the right tools automatically.
+
+### Memory
+- **"Remember that I prefer TypeScript for new projects"** — Saves a preference to memory
+- **"What do you remember about my preferences?"** — Lists saved memory entries
+- **"Move the note about API design to the Backend collection"** — Moves a memory entry between collections
+- **"Delete the memory about the old deployment process"** — Removes an outdated entry
+
+### Documents
+- **"Search my docs for the brand guidelines"** — Finds relevant documents by content
+- **"Create a document with today's meeting notes"** — Creates a new document
+- **"Update the architecture doc with the new API endpoints"** — Updates existing content
+- **"What documents do I have in this collection?"** — Lists available documents
+
+### Skills & Snippets
+- **"List all my skills"** — Shows available operational skills
+- **"Create a skill for code review with my conventions"** — Creates a reusable skill
+- **"Show me the email signature snippet"** — Retrieves a reusable text block
+
+### Assets
+- **"What assets do I have in this collection?"** — Lists files, images, and media
+- **"Get the URL for the logo file"** — Gets a download link for an asset
+
+### Search
+- **"Search everything for authentication"** — Full-text search across all content
+
+### Collections & Identity
+- **"What collections do I have?"** — Lists all available collections
+- **"Switch to the Marketing collection"** — Changes active collection context
+- **"Show me my identity document"** — Reads your workspace identity
+- **"Update my instructions with the new coding standards"** — Updates workspace-level documents`}</Markdown>
                             </section>
 
                             <section id="authentication" className="mb-12">

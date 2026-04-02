@@ -205,6 +205,22 @@ Token types:
 - `cv_ws_*` — Workspace token (access all collections, switch dynamically)
 - `cv_live_*` — Collection token (scoped to one collection)
 
+## What You Can Ask
+
+Once connected, just talk to your AI naturally:
+
+**Memory** — "Remember that I prefer TypeScript for new projects" · "What do you remember about my preferences?"
+
+**Documents** — "Search my docs for the brand guidelines" · "Create a document with today's meeting notes"
+
+**Skills** — "List all my skills" · "Create a skill for code review with my conventions"
+
+**Assets** — "What assets do I have?" · "Get the URL for the logo file"
+
+**Search** — "Search everything for authentication"
+
+**Collections** — "What collections do I have?" · "Switch to the Marketing collection"
+
 ## License
 
 [GNU Affero General Public License v3.0](LICENSE)
