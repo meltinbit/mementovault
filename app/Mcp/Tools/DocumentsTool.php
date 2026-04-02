@@ -67,6 +67,12 @@ class DocumentsTool extends Tool
         $targetCollection = $request->get('target_collection');
 
         if ($targetCollection) {
+            $token = app()->bound('mcp_token') ? app('mcp_token') : null;
+
+            if (! $token || ! $token->isWorkspaceToken()) {
+                return Response::error('Cross-collection operations require a workspace token.');
+            }
+
             $collection = Collection::where('workspace_id', $workspace->id)
                 ->where('slug', $targetCollection)
                 ->first();

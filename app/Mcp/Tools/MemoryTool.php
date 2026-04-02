@@ -91,6 +91,12 @@ class MemoryTool extends Tool
         $workspace = app('current_workspace');
 
         if ($targetCollection) {
+            $token = app()->bound('mcp_token') ? app('mcp_token') : null;
+
+            if (! $token || ! $token->isWorkspaceToken()) {
+                return Response::error('Cross-collection operations require a workspace token.');
+            }
+
             $collection = Collection::where('workspace_id', $workspace->id)
                 ->where('slug', $targetCollection)
                 ->first();
@@ -166,6 +172,12 @@ class MemoryTool extends Tool
 
     private function moveOrCopy(Request $request, bool $delete): Response
     {
+        $token = app()->bound('mcp_token') ? app('mcp_token') : null;
+
+        if (! $token || ! $token->isWorkspaceToken()) {
+            return Response::error('Cross-collection operations require a workspace token.');
+        }
+
         $entry = $this->findEntry($request);
 
         if (! $entry) {
