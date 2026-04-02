@@ -209,17 +209,17 @@ Token types:
 
 Once connected, just talk to your AI naturally:
 
-**Memory** — "Remember that I prefer TypeScript for new projects" · "What do you remember about my preferences?"
+**Memory** — "Remember that I prefer [preference] for [context]" · "What do you remember about my preferences?"
 
-**Documents** — "Search my docs for the brand guidelines" · "Create a document with today's meeting notes"
+**Documents** — "Search my docs for [topic]" · "Create a document with [description]"
 
-**Skills** — "List all my skills" · "Create a skill for code review with my conventions"
+**Skills** — "List all my skills" · "Create a skill for [task] with my conventions"
 
-**Assets** — "What assets do I have?" · "Get the URL for the logo file"
+**Assets** — "What assets do I have?" · "Get the URL for the [filename]"
 
-**Search** — "Search everything for authentication"
+**Search** — "Search everything for [keyword]"
 
-**Collections** — "What collections do I have?" · "Switch to the Marketing collection"
+**Collections** — "What collections do I have?" · "Switch to the [name] collection"
 
 ## License
 
