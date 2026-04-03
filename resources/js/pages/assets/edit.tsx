@@ -44,7 +44,7 @@ export default function AssetEdit({ asset, tags, folders }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('assets.update', asset.id));
+        put(route('assets.update', asset.id), { preserveScroll: true });
     };
 
     const handleMoveToFolder = (folderId: number | null) => {
@@ -92,7 +92,7 @@ export default function AssetEdit({ asset, tags, folders }: Props) {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
                     <div className="grid gap-2">

@@ -113,11 +113,15 @@ class AssetController extends Controller
         $uuid = Str::uuid();
         $path = "{$workspace->slug}/assets/{$uuid}/{$file->getClientOriginalName()}";
 
-        $this->storage->disk()->putFileAs(
-            dirname($path),
-            $file,
-            basename($path),
-        );
+        try {
+            $this->storage->disk()->putFileAs(
+                dirname($path),
+                $file,
+                basename($path),
+            );
+        } catch (\Exception $e) {
+            return back()->withErrors(['file' => 'Failed to upload file to storage: '.$e->getMessage()]);
+        }
 
         $asset = Asset::create([
             'folder_id' => $request->validated('folder_id'),

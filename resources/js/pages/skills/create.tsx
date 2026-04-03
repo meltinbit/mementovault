@@ -32,7 +32,7 @@ export default function SkillCreate({ tags }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('skills.store'));
+        post(route('skills.store'), { preserveScroll: true });
     };
 
     const selectedTags = tags.filter((t) => data.tag_ids.includes(t.id));
@@ -45,7 +45,7 @@ export default function SkillCreate({ tags }: Props) {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
                     <div className="grid gap-2">
@@ -58,7 +58,6 @@ export default function SkillCreate({ tags }: Props) {
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             rows={3}
-                            required
                             placeholder='e.g. "Apply when writing React components or discussing frontend architecture."'
                         />
                         <InputError message={errors.description} />

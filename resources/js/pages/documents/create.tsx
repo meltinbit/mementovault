@@ -32,7 +32,7 @@ export default function DocumentCreate({ tags }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('documents.store'));
+        post(route('documents.store'), { preserveScroll: true });
     };
 
     const selectedTags = tags.filter((t) => data.tag_ids.includes(t.id));
@@ -47,7 +47,7 @@ export default function DocumentCreate({ tags }: Props) {
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="grid gap-2">
                             <Label htmlFor="title">Title</Label>
-                            <Input id="title" value={data.title} onChange={(e) => setData('title', e.target.value)} required />
+                            <Input id="title" value={data.title} onChange={(e) => setData('title', e.target.value)} />
                             <InputError message={errors.title} />
                         </div>
                         <div className="grid gap-2">

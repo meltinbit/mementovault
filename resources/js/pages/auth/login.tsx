@@ -48,7 +48,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <Input
                             id="email"
                             type="email"
-                            required
+
                             autoFocus
                             tabIndex={1}
                             autoComplete="email"
@@ -71,7 +71,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         <Input
                             id="password"
                             type="password"
-                            required
+
                             tabIndex={2}
                             autoComplete="current-password"
                             value={data.password}

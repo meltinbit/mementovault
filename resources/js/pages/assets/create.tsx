@@ -1,5 +1,6 @@
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
+import { AlertCircle } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
 import { AssetUploader } from '@/components/asset-uploader';
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default function AssetCreate({ tags, folderId }: Props) {
+    const [uploadError, setUploadError] = useState<string | null>(null);
     const { data, setData, post, processing, errors } = useForm<{
         file: File | null;
         name: string;
@@ -38,7 +40,11 @@ export default function AssetCreate({ tags, folderId }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('assets.store'), { forceFormData: true });
+        setUploadError(null);
+        post(route('assets.store'), {
+            forceFormData: true,
+            onError: () => setUploadError('Upload failed. Check the file size and try again.'),
+        });
     };
 
     const handleFileChange = (file: File | null) => {
@@ -57,14 +63,20 @@ export default function AssetCreate({ tags, folderId }: Props) {
             <div className="space-y-6 p-4">
                 <Heading title="Upload Asset" description="Upload a file to your workspace. AI can't read files directly — add a description so it knows what the file contains and when to reference it." />
                 <form onSubmit={submit} className="space-y-6">
+                    {uploadError && (
+                        <div className="flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                            <AlertCircle className="h-4 w-4 shrink-0" />
+                            {uploadError}
+                        </div>
+                    )}
                     <div className="space-y-2">
                         <Label>File</Label>
-                        <AssetUploader onChange={handleFileChange} />
+                        <AssetUploader onChange={handleFileChange} onError={setUploadError} />
                         <InputError message={errors.file} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
                     <div className="grid gap-2">

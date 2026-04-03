@@ -247,7 +247,7 @@ export default function CollectionShow({
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="grid gap-2">
                                         <Label htmlFor="name">Name</Label>
-                                        <Input id="name" value={detailsForm.data.name} onChange={(e) => detailsForm.setData('name', e.target.value)} required />
+                                        <Input id="name" value={detailsForm.data.name} onChange={(e) => detailsForm.setData('name', e.target.value)} />
                                         <InputError message={detailsForm.errors.name} />
                                     </div>
                                     <div className="grid gap-2">

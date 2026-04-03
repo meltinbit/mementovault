@@ -73,7 +73,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('workspace.settings.update'));
+        put(route('workspace.settings.update'), { preserveScroll: true });
     };
 
     return (
@@ -107,7 +107,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
-                                <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                                <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                                 <InputError message={errors.name} />
                             </div>
 
@@ -177,7 +177,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="storage_url">Public URL <span className="text-destructive">*</span></Label>
-                                    <Input id="storage_url" value={data.storage_url} onChange={(e) => setData('storage_url', e.target.value)} placeholder="https://pub-xxxx.r2.dev" required />
+                                    <Input id="storage_url" value={data.storage_url} onChange={(e) => setData('storage_url', e.target.value)} placeholder="https://pub-xxxx.r2.dev" />
                                     <p className="text-xs text-muted-foreground">Required. Used by MCP to return direct asset URLs. For R2: found in bucket settings under "Public access".</p>
                                     <InputError message={errors.storage_url} />
                                 </div>

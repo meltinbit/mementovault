@@ -41,7 +41,7 @@ export default function SkillEdit({ skill, revisions, tags }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('skills.update', skill.id));
+        put(route('skills.update', skill.id), { preserveScroll: true });
     };
 
     const selectedTags = tags.filter((t) => data.tag_ids.includes(t.id));
@@ -64,7 +64,7 @@ export default function SkillEdit({ skill, revisions, tags }: Props) {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
                     <div className="grid gap-2">
@@ -75,7 +75,6 @@ export default function SkillEdit({ skill, revisions, tags }: Props) {
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             rows={3}
-                            required
                         />
                         <InputError message={errors.description} />
                     </div>

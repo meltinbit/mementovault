@@ -30,7 +30,7 @@ export default function CollectionCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('collections.store'));
+        post(route('collections.store'), { preserveScroll: true });
     };
 
     return (
@@ -69,7 +69,7 @@ export default function CollectionCreate() {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
 

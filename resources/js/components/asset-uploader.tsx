@@ -2,19 +2,32 @@ import { useCallback, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, X, File as FileIcon, Image as ImageIcon } from 'lucide-react';
 
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB — must match StoreAssetRequest validation
+
 interface AssetUploaderProps {
     onChange: (file: File | null) => void;
     accept?: string;
+    onError?: (message: string) => void;
 }
 
-export function AssetUploader({ onChange, accept }: AssetUploaderProps) {
+export function AssetUploader({ onChange, accept, onError }: AssetUploaderProps) {
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
+    const [sizeError, setSizeError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleFile = useCallback(
         (f: File) => {
+            if (f.size > MAX_FILE_SIZE) {
+                const maxMb = Math.round(MAX_FILE_SIZE / (1024 * 1024));
+                const fileMb = (f.size / (1024 * 1024)).toFixed(1);
+                const msg = `File is too large (${fileMb} MB). Maximum allowed size is ${maxMb} MB.`;
+                setSizeError(msg);
+                onError?.(msg);
+                return;
+            }
+            setSizeError(null);
             setFile(f);
             onChange(f);
             if (f.type.startsWith('image/')) {
@@ -24,7 +37,7 @@ export function AssetUploader({ onChange, accept }: AssetUploaderProps) {
                 setPreview(null);
             }
         },
-        [onChange],
+        [onChange, onError],
     );
 
     const handleDrop = useCallback(
@@ -91,6 +104,8 @@ export function AssetUploader({ onChange, accept }: AssetUploaderProps) {
             <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
                 Browse files
             </Button>
+            <p className="text-xs text-muted-foreground">Max {Math.round(MAX_FILE_SIZE / (1024 * 1024))} MB</p>
+            {sizeError && <p className="text-sm font-medium text-destructive">{sizeError}</p>}
             <input
                 ref={inputRef}
                 type="file"

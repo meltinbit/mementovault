@@ -30,7 +30,7 @@ export default function SnippetCreate({ tags }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('snippets.store'));
+        post(route('snippets.store'), { preserveScroll: true });
     };
 
     const selectedTags = tags.filter((t) => data.tag_ids.includes(t.id));
@@ -43,13 +43,13 @@ export default function SnippetCreate({ tags }: Props) {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
                         <InputError message={errors.name} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="content">Content</Label>
                         <p className="text-xs text-muted-foreground">Snippets are raw text — not markdown. Great for: email signatures, prompt templates, disclaimers, code snippets, boilerplate text.</p>
-                        <Textarea id="content" value={data.content} onChange={(e) => setData('content', e.target.value)} rows={8} required />
+                        <Textarea id="content" value={data.content} onChange={(e) => setData('content', e.target.value)} rows={8} />
                         <InputError message={errors.content} />
                     </div>
                     <div className="space-y-2">
