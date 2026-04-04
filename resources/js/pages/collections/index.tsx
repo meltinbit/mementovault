@@ -38,10 +38,10 @@ export default function CollectionsIndex({ collections, filters }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Neurons" />
-            <div className="space-y-6 p-4">
+            <div className="space-y-6 overflow-hidden p-4">
                 <div>
-                    <div className="flex items-center justify-between gap-4">
-                        <h2 className="text-xl font-semibold tracking-tight">Neurons</h2>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="min-w-0 text-xl font-semibold tracking-tight">Neurons</h2>
                         <Button asChild size="sm" className="shrink-0 gap-1">
                             <Link href={route('collections.create')}>
                                 <Plus className="h-4 w-4" />

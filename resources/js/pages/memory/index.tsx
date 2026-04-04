@@ -156,9 +156,9 @@ export default function MemoryIndex({ entries, filters, categories, collection }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={isCollection ? `${collection!.name} Memory` : 'Memory'} />
-            <div className="space-y-6 p-4">
+            <div className="space-y-6 overflow-hidden p-4">
                 <div>
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-3">
                             {isCollection && (
                                 <Button variant="outline" size="sm" asChild className="h-8 w-8 shrink-0 p-0">

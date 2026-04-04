@@ -101,10 +101,10 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Skills" />
-            <div className="space-y-6 p-4">
+            <div className="space-y-6 overflow-hidden p-4">
                 <div>
-                    <div className="flex items-center justify-between gap-4">
-                        <h2 className="text-xl font-semibold tracking-tight">Skills</h2>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="min-w-0 text-xl font-semibold tracking-tight">Skills</h2>
                         <div className="flex shrink-0 items-center gap-2">
                             <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
                                 <PackageOpen className="h-4 w-4" /> <span className="hidden sm:inline">Community</span>

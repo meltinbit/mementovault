@@ -23,10 +23,10 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Snippets" />
-            <div className="space-y-6 p-4">
+            <div className="space-y-6 overflow-hidden p-4">
                 <div>
-                    <div className="flex items-center justify-between gap-4">
-                        <h2 className="text-xl font-semibold tracking-tight">Snippets</h2>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="min-w-0 text-xl font-semibold tracking-tight">Snippets</h2>
                         <Button asChild size="sm" className="shrink-0 gap-1">
                             <Link href={route('snippets.create')}>
                                 <Plus className="h-4 w-4" />
