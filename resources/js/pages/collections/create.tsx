@@ -40,30 +40,22 @@ export default function CollectionCreate() {
                 <Heading title="Create Neuron" description="Start a new specialized AI role. Pick a template to pre-populate documents, or start from scratch. The neuron gets its own MCP endpoint you can connect to any AI client." />
 
                 {/* Steps indicator */}
-                <div className="hidden items-center gap-3 rounded-lg border bg-muted/30 p-4 sm:flex">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        <FolderOpen className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-sm font-medium">Step 1 — Define your neuron</p>
-                        <p className="text-xs text-muted-foreground">Name, type, and description</p>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border bg-background text-muted-foreground">
-                        <FileText className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-sm text-muted-foreground">Step 2 — Add content</p>
-                        <p className="text-xs text-muted-foreground">Documents, skills, snippets</p>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border bg-background text-muted-foreground">
-                        <Key className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-sm text-muted-foreground">Step 3 — Connect via MCP</p>
-                        <p className="text-xs text-muted-foreground">Generate token and connect</p>
-                    </div>
+                <div className="grid grid-cols-3 gap-2 rounded-lg border bg-muted/30 p-3 sm:p-4">
+                    {[
+                        { icon: FolderOpen, label: 'Define your neuron', sub: 'Name, type, description', active: true },
+                        { icon: FileText, label: 'Add content', sub: 'Documents, skills, snippets', active: false },
+                        { icon: Key, label: 'Connect via MCP', sub: 'Generate token', active: false },
+                    ].map((step, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1.5 text-center sm:flex-row sm:gap-3 sm:text-left">
+                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 ${step.active ? 'bg-primary text-primary-foreground' : 'border bg-background text-muted-foreground'}`}>
+                                <step.icon className="h-3.5 w-3.5" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className={`text-xs font-medium sm:text-sm ${step.active ? '' : 'text-muted-foreground'}`}>{step.label}</p>
+                                <p className="hidden text-xs text-muted-foreground sm:block">{step.sub}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
                 <form onSubmit={submit} className="space-y-6">
