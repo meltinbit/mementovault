@@ -71,6 +71,7 @@ const sections: Section[] = [
         title: 'API / MCP Reference',
         children: [
             { id: 'available-tools', title: 'Available Tools' },
+            { id: 'built-in-instructions', title: 'Built-in AI Instructions' },
             { id: 'example-prompts', title: 'Example Prompts' },
             { id: 'authentication', title: 'Authentication' },
             { id: 'collection-switching', title: 'Neuron Switching' },
@@ -727,6 +728,41 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 | \`search\` | — | Full-text search across documents, skills, and snippets |
 | \`system_documents\` | list, get, update, append | Manage nucleus-level system documents (Identity, Instructions, etc.) |
 | \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or neuron scoped) |`}</Markdown>
+                            </section>
+
+                            <section id="built-in-instructions" className="mb-12">
+                                <Markdown>{`## Built-in AI Instructions
+
+When an AI client connects to ${appName} via MCP, it automatically receives a **built-in instruction guide** as part of the MCP handshake. This guide teaches the AI how to work with your vault efficiently — without you having to explain it every time.
+
+### What the instructions cover
+
+The built-in guide teaches AI clients:
+
+1. **What context is auto-loaded** — Identity, Instructions, and neuron inventory (document slugs, content counts) are already in the conversation. No need to call tools to discover what's available.
+
+2. **How to find content efficiently** — Use \`search\` first (it searches documents, skills, snippets, assets, and neuron documents in a single call) instead of listing then getting items one by one.
+
+3. **Tool reference** — Which tool to use for each task, with all available actions listed.
+
+4. **Cross-neuron operations** — How to create content in a different neuron by passing \`target_collection\` on \`create\`, avoiding the switch-create-switch pattern that wastes 3 tool calls.
+
+5. **Content chunking** — How to write long content using \`create\` then \`append\` (max ~1500 chars per call).
+
+6. **Key distinctions** — The difference between neuron documents (always in context), workspace documents (on-demand), and system documents (identity, shared across neurons).
+
+### Custom MCP prompt
+
+You can extend the built-in instructions with your own rules in **Settings → AI Behavior → Custom MCP Prompt**. Your custom text is appended after the built-in guide.
+
+Use this to add:
+- Project-specific rules ("Always respond in Italian", "Use formal tone")
+- Workflow preferences ("Check memory before starting any task")
+- Domain knowledge ("Our API uses v2 endpoints")
+
+### Where it lives
+
+The instructions are defined in \`app/Mcp/Servers/ContextVaultServer.php\` in the \`buildInstructions()\` method. They are designed to minimize token waste by teaching AI to work smart from the first interaction.`}</Markdown>
                             </section>
 
                             <section id="example-prompts" className="mb-12">

@@ -126,6 +126,20 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | **System Documents** | ✅ | ✅ | — | ✅ | ✅ | — | Fixed types (identity, instructions, etc.) |
 | **Memory** | ✅ | ✅ | ✅ | ✅ | — | ✅ | move, copy (cross-neuron) |
 
+### How AI Clients Learn Your Vault
+
+When an AI client connects via MCP, it receives **built-in instructions** that teach it how to work with your vault efficiently. These instructions are sent automatically during the MCP handshake and cover:
+
+- **What context is auto-loaded** — identity, instructions, and neuron inventory are already available, no need to fetch them again
+- **Efficient workflows** — use `search` instead of listing then getting items one by one
+- **Tool reference** — which tool to use for what, with all available actions
+- **Cross-neuron operations** — how to create content in other neurons without switching
+- **Content chunking** — how to write long documents using create + append
+
+You can **extend these instructions** with your own custom prompt in **Settings → AI Behavior → Custom MCP Prompt**. Your custom text is appended to the built-in guide, so you can add project-specific rules, tone preferences, or workflow instructions.
+
+The built-in instructions are defined in `app/Mcp/Servers/ContextVaultServer.php` and are designed to minimize token waste by teaching AI to work smart from the first interaction.
+
 ## Tech Stack
 
 - **Backend:** Laravel 12 (PHP 8.2+)
