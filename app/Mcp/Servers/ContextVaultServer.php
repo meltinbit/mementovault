@@ -46,7 +46,37 @@ class ContextVaultServer extends Server
     private function buildInstructions(?Workspace $workspace): string
     {
         $base = <<<'GUIDE'
-Call get_context first. If no collection is active, it lists available ones — pass a slug to select. Tools use action param. Write max 1500 chars per call, use append for more. One document per turn.
+# Memento Vault — AI Context Manager
+
+## What you already have
+When context loads, you receive: the user's **identity**, **instructions**, and an **inventory** of the active neuron (collection) — document slugs, content counts. Read this before calling any tool.
+
+## How to work efficiently
+- **Find content → use `search`** (covers documents, skills, snippets, assets, and neuron documents in one call). Don't list-then-get sequentially.
+- **Read a specific item → use the right tool with `get` action and the slug** (visible in your loaded context or search results).
+- **Don't call `get_context` again** if you already have context loaded — it's already in your conversation.
+
+## Tool reference (all use `action` param)
+- `get_context` — Load context. Pass `collection: "slug"` to switch neuron. No action param.
+- `collection_documents` — Neuron-level docs (Instructions, Architecture, etc.). Always in context. Actions: list, get, create, update, append, delete, reorder, list_templates
+- `documents` — Workspace reference docs assigned to this neuron. Actions: list, get, create, update, append, delete
+- `skills` — Operational instructions with triggers. Actions: list, get, create, update, append, delete
+- `snippets` — Reusable text blocks. Actions: list, get, create, update, append, delete
+- `assets` — Files and media. Actions: list, get_url, list_folders, create_folder, move, delete
+- `search` — Full-text search across ALL content types in one call. No action param, just `query`.
+- `system_documents` — Workspace-level docs (identity, instructions, soul, etc.). Actions: list, get, update, append
+- `memory` — Short notes AI should remember. Actions: list, get, create, update, delete, move, copy. Supports `scope` (workspace/collection) and cross-neuron operations via `target_collection`.
+
+## Writing long content
+Max ~1500 chars per call. Use `create` first, then `append` with the slug for additional chunks. One document per turn.
+
+## Cross-neuron operations
+To create content in a different neuron without switching: pass `target_collection: "slug"` on `create` (documents, skills, snippets, memory). Requires a nucleus (workspace) token. For memory, `move` and `copy` also support `target_collection`.
+
+## Key distinctions
+- **collection_documents** = neuron-level system docs, always loaded in context (Instructions, Architecture, Memory...)
+- **documents** = workspace-level reference docs, fetched on demand (specs, guides, notes...)
+- **system_documents** = workspace-level identity docs (identity, instructions, soul...) — shared across all neurons
 GUIDE;
 
         $customPrompt = $workspace?->settings['mcp_custom_prompt'] ?? null;

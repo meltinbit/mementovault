@@ -59,5 +59,5 @@ test('server instructions without custom prompt are minimal', function () {
 
     $instructions = getServerInstructions();
 
-    expect(mb_strlen($instructions))->toBeLessThan(200);
+    expect(mb_strlen($instructions))->toBeLessThan(3000);
 });
