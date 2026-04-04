@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/heading';
+
 import { ResourceFilters } from '@/components/resource-filters';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
@@ -102,21 +102,22 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Skills" />
             <div className="space-y-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                        <Heading title="Skills" description="Operational instructions that AI activates automatically when a specific situation arises. Each skill has a trigger description (tells AI when to activate) and content (the full instructions to follow). Example: a skill named 'Code Review' that triggers when reviewing PRs, with rules like 'check for security vulnerabilities, enforce naming conventions'." />
+                <div>
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="text-xl font-semibold tracking-tight">Skills</h2>
+                        <div className="flex shrink-0 items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
+                                <PackageOpen className="h-4 w-4" /> <span className="hidden sm:inline">Community</span>
+                            </Button>
+                            <Button asChild size="sm" className="gap-1">
+                                <Link href={route('skills.create')}>
+                                    <Plus className="h-4 w-4" />
+                                    <span className="hidden sm:inline">New Skill</span>
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex shrink-0 items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
-                            <PackageOpen className="h-4 w-4" /> <span className="hidden sm:inline">Browse Community Skills</span><span className="sm:hidden">Community</span>
-                        </Button>
-                        <Button asChild size="sm" className="gap-1">
-                            <Link href={route('skills.create')}>
-                                <Plus className="h-4 w-4" />
-                                <span className="hidden sm:inline">New Skill</span><span className="sm:hidden">New</span>
-                            </Link>
-                        </Button>
-                    </div>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Operational instructions that AI activates automatically. Each skill has a trigger and content.</p>
                 </div>
 
                 <ResourceFilters route="/skills" filters={filters} tagOptions={tags} />

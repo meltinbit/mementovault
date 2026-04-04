@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/heading';
+
 import { ResourceFilters } from '@/components/resource-filters';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
@@ -39,16 +39,17 @@ export default function CollectionsIndex({ collections, filters }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Collections" />
             <div className="space-y-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                        <Heading title="Collections" description="Context packages that bundle documents, skills, snippets, and assets for a specific project or purpose. You can connect AI in two ways: with a Workspace token (cross-collection — AI can switch between all collections dynamically) or with a Collection token (scoped — AI only sees that specific collection). Each collection can also have its own documents, memory, and MCP endpoint. Example: a 'Website Redesign' collection with its own architecture docs, code style skills, and brand assets." />
+                <div>
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="text-xl font-semibold tracking-tight">Collections</h2>
+                        <Button asChild size="sm" className="shrink-0 gap-1">
+                            <Link href={route('collections.create')}>
+                                <Plus className="h-4 w-4" />
+                                New Collection
+                            </Link>
+                        </Button>
                     </div>
-                    <Button asChild size="sm" className="shrink-0 gap-1">
-                        <Link href={route('collections.create')}>
-                            <Plus className="h-4 w-4" />
-                            New Collection
-                        </Link>
-                    </Button>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Context packages that bundle documents, skills, snippets, and assets for a specific project or purpose. Each collection gets its own MCP endpoint.</p>
                 </div>
 
                 <ResourceFilters route="/collections" filters={filters} typeOptions={typeOptions} typePlaceholder="All types" />

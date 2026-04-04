@@ -1,7 +1,7 @@
 import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/heading';
+
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import InputError from '@/components/input-error';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -157,27 +157,29 @@ export default function MemoryIndex({ entries, filters, categories, collection }
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={isCollection ? `${collection!.name} Memory` : 'Memory'} />
             <div className="space-y-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
-                        {isCollection && (
-                            <Button variant="outline" size="sm" asChild className="h-8 w-8 shrink-0 p-0">
-                                <Link href={`/collections/${collection!.id}`}>
-                                    <ArrowLeft className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                        )}
-                        <Heading
-                            title={isCollection ? `${collection!.name} — Memory` : 'Memory'}
-                            description={isCollection
-                                ? 'Short facts and decisions that AI should remember for this project. Unlike documents (long-form reference), memory entries are brief notes always loaded into context. Example: "Client prefers blue over green", "API rate limit is 100 req/min", "Sprint deadline: April 15".'
-                                : 'Short facts and preferences that AI should remember across all projects — things that go beyond Identity and Instructions. Each entry is always loaded into context. Example: "I prefer tabs over spaces", "Never use Lorem Ipsum", "My timezone is CET".'
-                            }
-                        />
+                <div>
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            {isCollection && (
+                                <Button variant="outline" size="sm" asChild className="h-8 w-8 shrink-0 p-0">
+                                    <Link href={`/collections/${collection!.id}`}>
+                                        <ArrowLeft className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            )}
+                            <h2 className="text-xl font-semibold tracking-tight">{isCollection ? `${collection!.name} — Memory` : 'Memory'}</h2>
+                        </div>
+                        <Button size="sm" className="shrink-0 gap-1" onClick={() => setShowAddForm(!showAddForm)}>
+                            <Plus className="h-4 w-4" />
+                            Add Entry
+                        </Button>
                     </div>
-                    <Button size="sm" className="shrink-0 gap-1" onClick={() => setShowAddForm(!showAddForm)}>
-                        <Plus className="h-4 w-4" />
-                        Add Entry
-                    </Button>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+                        {isCollection
+                            ? 'Short facts and decisions AI should remember for this project. Brief notes always loaded into context.'
+                            : 'Short facts and preferences AI should remember across all projects. Each entry is always loaded into context.'
+                        }
+                    </p>
                 </div>
 
                 <Alert variant="destructive">

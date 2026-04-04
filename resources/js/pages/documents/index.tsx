@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/heading';
+
 import { ResourceFilters } from '@/components/resource-filters';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
@@ -39,16 +39,17 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Documents" />
             <div className="space-y-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                        <Heading title="Documents" description="Reference materials that AI can retrieve on demand. Documents are listed in the AI context so it knows they exist, and their full content is fetched only when needed. Use them for specs, guides, brand docs, or any long-form reference. Example: an API specification, a company style guide, or a client brief." />
+                <div>
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="text-xl font-semibold tracking-tight">Documents</h2>
+                        <Button asChild size="sm" className="shrink-0 gap-1">
+                            <Link href={route('documents.create')}>
+                                <Plus className="h-4 w-4" />
+                                New Document
+                            </Link>
+                        </Button>
                     </div>
-                    <Button asChild size="sm" className="shrink-0 gap-1">
-                        <Link href={route('documents.create')}>
-                            <Plus className="h-4 w-4" />
-                            New Document
-                        </Link>
-                    </Button>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Reference materials that AI retrieves on demand. Use them for specs, guides, brand docs, or any long-form reference.</p>
                 </div>
 
                 <ResourceFilters route="/documents" filters={filters} typeOptions={typeOptions} typePlaceholder="All types" tagOptions={tags} />

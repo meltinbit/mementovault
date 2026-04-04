@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import Heading from '@/components/heading';
+
 import { ResourceFilters } from '@/components/resource-filters';
 import { DeleteConfirmation } from '@/components/delete-confirmation';
 import { Badge } from '@/components/ui/badge';
@@ -24,16 +24,17 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Snippets" />
             <div className="space-y-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                        <Heading title="Snippets" description="Reusable text blocks that AI can insert exactly as written — no interpretation, no modification. Perfect for content that must stay consistent every time. Example: an email signature, a legal disclaimer, a prompt template, or a standard reply." />
+                <div>
+                    <div className="flex items-center justify-between gap-4">
+                        <h2 className="text-xl font-semibold tracking-tight">Snippets</h2>
+                        <Button asChild size="sm" className="shrink-0 gap-1">
+                            <Link href={route('snippets.create')}>
+                                <Plus className="h-4 w-4" />
+                                New Snippet
+                            </Link>
+                        </Button>
                     </div>
-                    <Button asChild size="sm" className="shrink-0 gap-1">
-                        <Link href={route('snippets.create')}>
-                            <Plus className="h-4 w-4" />
-                            New Snippet
-                        </Link>
-                    </Button>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Reusable text blocks that AI inserts exactly as written. Perfect for email signatures, disclaimers, prompt templates.</p>
                 </div>
 
                 <ResourceFilters route="/snippets" filters={filters} tagOptions={tags} />
