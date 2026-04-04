@@ -47,7 +47,7 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
 
     return (
         <div className="space-y-2">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-2">
                 <ToggleGroup type="single" value={mode} onValueChange={(v) => v && setMode(v as 'write' | 'preview')}>
                     <ToggleGroupItem value="write" aria-label="Write" className="h-8 gap-1 px-2 text-xs">
                         <Pencil className="h-3 w-3" />
@@ -58,7 +58,7 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
                         Preview
                     </ToggleGroupItem>
                 </ToggleGroup>
-                <div className="flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1">
                     {mode === 'write' && toolbarActions.map((item) => (
                         <Button
                             key={item.label}
@@ -85,7 +85,7 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
                     className="font-mono text-sm"
                 />
             ) : (
-                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none rounded-md border border-input bg-background p-4">
+                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none overflow-x-auto rounded-md border border-input bg-background p-4">
                     {value ? (
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
                     ) : (
