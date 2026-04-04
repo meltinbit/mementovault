@@ -100,7 +100,8 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex shrink-0 items-center gap-1">
+                                    <span className="mr-1 hidden text-xs text-muted-foreground sm:inline">{new Date(doc.created_at).toLocaleDateString()}</span>
                                     <span className="mr-2 text-xs text-muted-foreground">v{doc.version}</span>
                                     <Button variant="ghost" size="sm" asChild className="h-8 w-8 p-0">
                                         <Link href={route('documents.edit', doc.id)}>

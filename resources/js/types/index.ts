@@ -70,6 +70,7 @@ export interface DocumentData {
     type: string;
     is_active: boolean;
     version: number;
+    created_at: string;
     updated_at: string;
     tags: TagData[];
 }
@@ -82,6 +83,7 @@ export interface SkillData {
     content: string;
     is_active: boolean;
     version: number;
+    created_at: string;
     updated_at: string;
     tags: TagData[];
 }
@@ -92,6 +94,7 @@ export interface SnippetData {
     slug: string;
     content: string;
     is_active: boolean;
+    created_at: string;
     updated_at: string;
     tags: TagData[];
 }
@@ -155,6 +158,7 @@ export interface CollectionData {
     type: string;
     color: string;
     is_active: boolean;
+    created_at: string;
     updated_at: string;
     documents_count?: number;
     skills_count?: number;

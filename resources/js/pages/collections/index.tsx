@@ -94,7 +94,9 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                         {col.type.replace('_', ' ')}
                                     </Badge>
                                     {col.description && <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{col.description}</p>}
-                                    <div className="mt-3 flex gap-3 text-xs text-muted-foreground">
+                                    <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                                        <span>{new Date(col.created_at).toLocaleDateString()}</span>
+                                        <span>·</span>
                                         <span className="flex items-center gap-1">
                                             <FileText className="h-3 w-3" /> {col.documents_count ?? 0}
                                         </span>
