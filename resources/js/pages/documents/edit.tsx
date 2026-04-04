@@ -58,9 +58,11 @@ export default function DocumentEdit({ document, revisions, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit: ${document.title}`} />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <Heading title="Edit Document" description={document.title} />
-                    <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <Heading title="Edit Document" description={document.title} />
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
                         <Badge variant="secondary">v{document.version}</Badge>
                         <RevisionHistory revisions={revisions} currentVersion={document.version} onRestore={handleRestore} />
                     </div>

@@ -61,9 +61,11 @@ export default function AssetEdit({ asset, tags, folders }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit: ${asset.name}`} />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <Heading title="Edit Asset" description={asset.name} />
-                    <Button variant="outline" size="sm" asChild className="gap-1">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <Heading title="Edit Asset" description={asset.name} />
+                    </div>
+                    <Button variant="outline" size="sm" asChild className="shrink-0 gap-1">
                         <a href={route('assets.download', asset.id)}>
                             <Download className="h-4 w-4" /> Download
                         </a>

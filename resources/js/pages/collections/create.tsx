@@ -40,7 +40,7 @@ export default function CollectionCreate() {
                 <Heading title="Create Neuron" description="Start a new specialized AI role. Pick a template to pre-populate documents, or start from scratch. The neuron gets its own MCP endpoint you can connect to any AI client." />
 
                 {/* Steps indicator */}
-                <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-4">
+                <div className="hidden items-center gap-3 rounded-lg border bg-muted/30 p-4 sm:flex">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
                         <FolderOpen className="h-4 w-4" />
                     </div>
