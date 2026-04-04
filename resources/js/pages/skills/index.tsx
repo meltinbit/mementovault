@@ -102,16 +102,18 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Skills" />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <Heading title="Skills" description="Operational instructions that AI activates automatically when a specific situation arises. Each skill has a trigger description (tells AI when to activate) and content (the full instructions to follow). Example: a skill named 'Code Review' that triggers when reviewing PRs, with rules like 'check for security vulnerabilities, enforce naming conventions'." />
-                    <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <Heading title="Skills" description="Operational instructions that AI activates automatically when a specific situation arises. Each skill has a trigger description (tells AI when to activate) and content (the full instructions to follow). Example: a skill named 'Code Review' that triggers when reviewing PRs, with rules like 'check for security vulnerabilities, enforce naming conventions'." />
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
                         <Button variant="outline" size="sm" onClick={() => { setShowMarketplace(true); fetchMarketplace(); }} className="gap-1">
-                            <PackageOpen className="h-4 w-4" /> Browse Community Skills
+                            <PackageOpen className="h-4 w-4" /> <span className="hidden sm:inline">Browse Community Skills</span><span className="sm:hidden">Community</span>
                         </Button>
                         <Button asChild size="sm" className="gap-1">
                             <Link href={route('skills.create')}>
                                 <Plus className="h-4 w-4" />
-                                New Skill
+                                <span className="hidden sm:inline">New Skill</span><span className="sm:hidden">New</span>
                             </Link>
                         </Button>
                     </div>
@@ -140,7 +142,7 @@ export default function SkillsIndex({ skills, filters, tags }: Props) {
                 ) : (
                     <div className="space-y-2">
                         {skills.data.map((skill) => (
-                            <div key={skill.id} className="flex items-center justify-between rounded-md border p-3">
+                            <div key={skill.id} className="flex items-center justify-between gap-2 overflow-hidden rounded-md border p-3">
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2">
                                         <Link href={route('skills.edit', skill.id)} className="truncate font-medium hover:underline">

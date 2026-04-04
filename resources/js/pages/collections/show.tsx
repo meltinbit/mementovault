@@ -218,15 +218,15 @@ export default function CollectionShow({
             <Head title={collection.name} />
             <div className="space-y-6 p-4">
                 <div className="mb-8 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
                             <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: collection.color }} />
-                            <h2 className="text-xl font-semibold tracking-tight">{collection.name}</h2>
-                            <Badge variant="outline" className="capitalize">
+                            <h2 className="truncate text-xl font-semibold tracking-tight">{collection.name}</h2>
+                            <Badge variant="outline" className="shrink-0 capitalize">
                                 {collection.type.replace(/_/g, ' ')}
                             </Badge>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex shrink-0 items-center gap-2">
                             <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
                                 {showDetails ? 'Hide Details' : 'Edit Details'}
                             </Button>

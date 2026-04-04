@@ -24,9 +24,11 @@ export default function SnippetsIndex({ snippets, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Snippets" />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <Heading title="Snippets" description="Reusable text blocks that AI can insert exactly as written — no interpretation, no modification. Perfect for content that must stay consistent every time. Example: an email signature, a legal disclaimer, a prompt template, or a standard reply." />
-                    <Button asChild size="sm" className="gap-1">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <Heading title="Snippets" description="Reusable text blocks that AI can insert exactly as written — no interpretation, no modification. Perfect for content that must stay consistent every time. Example: an email signature, a legal disclaimer, a prompt template, or a standard reply." />
+                    </div>
+                    <Button asChild size="sm" className="shrink-0 gap-1">
                         <Link href={route('snippets.create')}>
                             <Plus className="h-4 w-4" />
                             New Snippet

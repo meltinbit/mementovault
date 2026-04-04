@@ -157,10 +157,10 @@ export default function MemoryIndex({ entries, filters, categories, collection }
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={isCollection ? `${collection!.name} Memory` : 'Memory'} />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                         {isCollection && (
-                            <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0">
+                            <Button variant="outline" size="sm" asChild className="h-8 w-8 shrink-0 p-0">
                                 <Link href={`/collections/${collection!.id}`}>
                                     <ArrowLeft className="h-4 w-4" />
                                 </Link>
@@ -174,7 +174,7 @@ export default function MemoryIndex({ entries, filters, categories, collection }
                             }
                         />
                     </div>
-                    <Button size="sm" className="gap-1" onClick={() => setShowAddForm(!showAddForm)}>
+                    <Button size="sm" className="shrink-0 gap-1" onClick={() => setShowAddForm(!showAddForm)}>
                         <Plus className="h-4 w-4" />
                         Add Entry
                     </Button>

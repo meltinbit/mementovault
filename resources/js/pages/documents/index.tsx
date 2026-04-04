@@ -39,9 +39,11 @@ export default function DocumentsIndex({ documents, filters, tags }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Documents" />
             <div className="space-y-6 p-4">
-                <div className="flex items-start justify-between">
-                    <Heading title="Documents" description="Reference materials that AI can retrieve on demand. Documents are listed in the AI context so it knows they exist, and their full content is fetched only when needed. Use them for specs, guides, brand docs, or any long-form reference. Example: an API specification, a company style guide, or a client brief." />
-                    <Button asChild size="sm" className="gap-1">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                        <Heading title="Documents" description="Reference materials that AI can retrieve on demand. Documents are listed in the AI context so it knows they exist, and their full content is fetched only when needed. Use them for specs, guides, brand docs, or any long-form reference. Example: an API specification, a company style guide, or a client brief." />
+                    </div>
+                    <Button asChild size="sm" className="shrink-0 gap-1">
                         <Link href={route('documents.create')}>
                             <Plus className="h-4 w-4" />
                             New Document
