@@ -11,7 +11,7 @@ use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 
 #[Name('search')]
-#[Description('Full-text search across all documents, skills, and snippets in this collection. Returns matching items with content excerpts.')]
+#[Description('Full-text search across all content in this collection: documents, skills, snippets, assets, and neuron documents. Returns matching items with content excerpts.')]
 #[IsReadOnly]
 class SearchTool extends Tool
 {
@@ -65,6 +65,35 @@ class SearchTool extends Tool
         foreach ($snippets as $snippet) {
             $excerpt = $this->excerpt($snippet->content, $query);
             $results[] = "**Snippet: {$snippet->name}** (slug: `{$snippet->slug}`)\n> {$excerpt}";
+        }
+
+        // Search assets
+        $assets = $collection->assets()
+            ->where('is_active', true)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%")
+                    ->orWhere('original_filename', 'like', "%{$query}%");
+            })
+            ->get(['name', 'mime_type', 'description', 'size_bytes']);
+
+        foreach ($assets as $asset) {
+            $size = number_format($asset->size_bytes / 1024, 1).' KB';
+            $desc = $asset->description ? " — {$asset->description}" : '';
+            $results[] = "**Asset: {$asset->name}** ({$asset->mime_type}, {$size}){$desc}";
+        }
+
+        // Search collection documents
+        $collectionDocs = $collection->collectionDocuments()
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('content', 'like', "%{$query}%");
+            })
+            ->get(['name', 'slug', 'content']);
+
+        foreach ($collectionDocs as $doc) {
+            $excerpt = $this->excerpt($doc->content, $query);
+            $results[] = "**Neuron Document: {$doc->name}** (slug: `{$doc->slug}`)\n> {$excerpt}";
         }
 
         if (empty($results)) {
