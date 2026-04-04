@@ -36,6 +36,7 @@ interface Props {
     newWorkspaceToken?: string | null;
     storageSettings: StorageSettings | null;
     mcpInstructions: string;
+    defaultMcpInstructions: string;
     mcpCustomPrompt: string;
     memoryMaxEntries: number;
     collectionMemoryMaxEntries: number;
@@ -50,7 +51,7 @@ const tabs = [
 
 type TabId = (typeof tabs)[number]['id'];
 
-export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpoint, newWorkspaceToken, storageSettings, mcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
+export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpoint, newWorkspaceToken, storageSettings, mcpInstructions, defaultMcpInstructions, mcpCustomPrompt, memoryMaxEntries, collectionMemoryMaxEntries }: Props) {
     const initialTab = (new URLSearchParams(window.location.search).get('tab') as TabId) || 'general';
     const [activeTab, setActiveTab] = useState<TabId>(tabs.some(t => t.id === initialTab) ? initialTab : 'general');
     const [mcpInstructionsUnlocked, setMcpInstructionsUnlocked] = useState(false);
@@ -227,14 +228,14 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                             <p className="text-xs text-muted-foreground">Max memory entries included in AI context. Pinned entries are always included.</p>
 
                             {/* Advanced: MCP Instructions */}
-                            <div className="rounded-md border p-4">
+                            <div className="rounded-md border border-destructive/50 bg-destructive/5 p-4">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium">MCP System Instructions</p>
-                                        <p className="text-xs text-muted-foreground">Core instructions that control how AI loads context. Don't edit unless you know what you're doing.</p>
+                                        <p className="text-sm font-medium text-destructive">MCP Core Instructions</p>
+                                        <p className="text-xs text-muted-foreground">These instructions are sent to every AI client on connect. They teach AI how to use your vault efficiently. Editing incorrectly can cause AI to waste tokens or malfunction.</p>
                                     </div>
                                     {!mcpInstructionsUnlocked && (
-                                        <Button type="button" variant="outline" size="sm" onClick={() => setMcpInstructionsUnlocked(true)}>
+                                        <Button type="button" variant="destructive" size="sm" onClick={() => setMcpInstructionsUnlocked(true)}>
                                             Unlock
                                         </Button>
                                     )}
@@ -246,11 +247,14 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                                             id="mcp_instructions"
                                             value={data.mcp_instructions}
                                             onChange={(e) => setData('mcp_instructions', e.target.value)}
-                                            rows={8}
+                                            rows={12}
                                             maxLength={5000}
-                                            className="font-mono text-sm"
+                                            className="font-mono text-xs"
                                         />
-                                        <div className="flex justify-end">
+                                        <div className="flex items-center justify-between">
+                                            <Button type="button" variant="outline" size="sm" onClick={() => setData('mcp_instructions', defaultMcpInstructions)}>
+                                                Reset to Default
+                                            </Button>
                                             <p className="text-xs text-muted-foreground">{data.mcp_instructions.length}/5000</p>
                                         </div>
                                         <InputError message={errors.mcp_instructions} />

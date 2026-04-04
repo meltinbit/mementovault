@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateWorkspaceRequest;
+use App\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,7 +24,8 @@ class WorkspaceSettingsController extends Controller
                 'slug' => $workspace->slug,
                 'description' => $workspace->description,
             ],
-            'mcpInstructions' => $workspace->settings['mcp_instructions'] ?? '',
+            'mcpInstructions' => $workspace->settings['mcp_instructions'] ?? Workspace::defaultMcpInstructions(),
+            'defaultMcpInstructions' => Workspace::defaultMcpInstructions(),
             'mcpCustomPrompt' => $workspace->settings['mcp_custom_prompt'] ?? '',
             'memoryMaxEntries' => $workspace->settings['memory_max_entries'] ?? 50,
             'collectionMemoryMaxEntries' => $workspace->settings['collection_memory_max_entries'] ?? 20,
