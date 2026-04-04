@@ -85,7 +85,7 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
                     className="font-mono text-sm"
                 />
             ) : (
-                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none overflow-x-auto rounded-md border border-input bg-background p-4">
+                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none overflow-hidden break-words rounded-md border border-input bg-background p-4">
                     {value ? (
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
                     ) : (
