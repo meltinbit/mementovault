@@ -128,7 +128,7 @@ function ContentSection({
                                         className="group flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors hover:bg-muted"
                                     >
                                         <Link
-                                            href={route(`${type}s.show`, item.id)}
+                                            href={route(`${type}s.edit`, item.id)}
                                             className="truncate hover:underline"
                                         >
                                             {(item as any)[labelKey] || item.title || item.name}
