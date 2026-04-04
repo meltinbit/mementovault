@@ -29,6 +29,7 @@ class DockerSeeder extends Seeder
             'slug' => 'demo',
             'onboarded_at' => now(),
             'settings' => [
+                'mcp_instructions' => Workspace::defaultMcpInstructions(),
                 'storage' => [
                     'driver' => 's3',
                     'key' => 'mementovault',
