@@ -4,7 +4,7 @@ import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import { MarkdownEditor } from '@/components/markdown-editor';
 import { RevisionHistory } from '@/components/revision-history';
-import Heading from '@/components/heading';
+
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -39,18 +39,19 @@ export function SystemDocumentEditor({ document, revisions, title, description, 
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={title} />
             <div className="space-y-6 overflow-hidden p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                        <Heading title={title} description={description} />
+                <div>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+                        <div className="flex shrink-0 items-center gap-2">
+                            <Badge variant="secondary">v{document.version}</Badge>
+                            <RevisionHistory
+                                revisions={revisions}
+                                currentVersion={document.version}
+                                onRestore={handleRestore}
+                            />
+                        </div>
                     </div>
-                    <div className="flex shrink-0 items-center gap-2">
-                        <Badge variant="secondary">v{document.version}</Badge>
-                        <RevisionHistory
-                            revisions={revisions}
-                            currentVersion={document.version}
-                            onRestore={handleRestore}
-                        />
-                    </div>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{description}</p>
                 </div>
 
                 {guidance && showGuidance && (
