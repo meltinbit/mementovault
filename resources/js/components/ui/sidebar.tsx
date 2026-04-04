@@ -173,7 +173,7 @@ const Sidebar = React.forwardRef<
                     side={side}
                 >
                     <SheetTitle className="sr-only">Sidebar Navigation</SheetTitle>
-                    <div className="flex h-full w-full flex-col">{children}</div>
+                    <div className="flex max-h-dvh w-full flex-col overflow-hidden">{children}</div>
                 </SheetContent>
             </Sheet>
         );
@@ -309,7 +309,7 @@ const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div
 SidebarHeader.displayName = 'SidebarHeader';
 
 const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(({ className, ...props }, ref) => {
-    return <div ref={ref} data-sidebar="footer" className={cn('flex flex-col gap-2 p-2', className)} {...props} />;
+    return <div ref={ref} data-sidebar="footer" className={cn('flex shrink-0 flex-col gap-2 p-2', className)} {...props} />;
 });
 SidebarFooter.displayName = 'SidebarFooter';
 
