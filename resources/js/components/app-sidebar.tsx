@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage, router } from '@inertiajs/react';
-import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Settings, Tag, Target, Trash2, User, Zap } from 'lucide-react';
+import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Tag, Target, Trash2, User, Zap } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from './app-logo';
 
@@ -31,7 +31,6 @@ const organizationNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     { title: 'Docs', url: '/docs', icon: BookOpen },
-    { title: 'Settings', url: '/settings', icon: Settings },
 ];
 
 // Type icon/label registry for known types
