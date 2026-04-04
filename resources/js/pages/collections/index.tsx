@@ -70,8 +70,8 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                 ) : (
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {collections.data.map((col) => (
-                            <Card key={col.id} className="relative">
-                                <CardContent className="p-4">
+                            <Card key={col.id} className="relative flex flex-col">
+                                <CardContent className="flex-1 p-4 pb-0">
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className="h-3 w-3 rounded-full" style={{ backgroundColor: col.color }} />
@@ -94,7 +94,9 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                         {col.type.replace('_', ' ')}
                                     </Badge>
                                     {col.description && <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{col.description}</p>}
-                                    <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                                </CardContent>
+                                <div className="mt-auto border-t px-4 py-2.5">
+                                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                         <span>{new Date(col.created_at).toLocaleDateString()}</span>
                                         <span>·</span>
                                         <span className="flex items-center gap-1">
@@ -110,7 +112,7 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                             <Image className="h-3 w-3" /> {col.assets_count ?? 0}
                                         </span>
                                     </div>
-                                </CardContent>
+                                </div>
                             </Card>
                         ))}
                     </div>
