@@ -216,7 +216,7 @@ export default function CollectionShow({
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={collection.name} />
-            <div className="space-y-6 p-4">
+            <div className="space-y-6 overflow-hidden p-4">
                 <div className="mb-8 space-y-1.5">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex min-w-0 items-center gap-3">
@@ -296,9 +296,9 @@ export default function CollectionShow({
                     </Card>
                 )}
 
-                <div className="grid gap-6 lg:grid-cols-[6fr_4fr]">
+                <div className="grid min-w-0 gap-6 lg:grid-cols-[6fr_4fr]">
                     {/* Left column: Collection Documents */}
-                    <div className="space-y-6">
+                    <div className="min-w-0 space-y-6">
                         <div className="flex items-center justify-between">
                             <HeadingSmall title="Neuron Documents" description="These documents define how AI operates in this neuron. They are always included in MCP context." />
                             <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowAddDoc(!showAddDoc)}>
@@ -390,7 +390,7 @@ export default function CollectionShow({
                     </div>
 
                     {/* Right column: Content + MCP + Tokens */}
-                    <div className="space-y-6">
+                    <div className="min-w-0 space-y-6">
                         <div className="space-y-3">
                             <HeadingSmall title="Content" description="Manage what's included in this neuron." />
                             <Deferred data={['documents', 'skills', 'snippets', 'assets']} fallback={
