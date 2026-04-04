@@ -13,7 +13,7 @@ import { type BreadcrumbItem } from '@/types';
 import { ArrowRight, FolderOpen, FileText, Key } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Collections', href: '/collections' },
+    { title: 'Neurons', href: '/collections' },
     { title: 'Create', href: '/collections/create' },
 ];
 
@@ -35,9 +35,9 @@ export default function CollectionCreate() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Collection" />
+            <Head title="Create Neuron" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Collection" description="Start a new context package. Pick a template to pre-populate documents, or start from scratch. The collection gets its own MCP endpoint you can connect to any AI client." />
+                <Heading title="Create Neuron" description="Start a new specialized AI role. Pick a template to pre-populate documents, or start from scratch. The neuron gets its own MCP endpoint you can connect to any AI client." />
 
                 {/* Steps indicator */}
                 <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-4">
@@ -45,7 +45,7 @@ export default function CollectionCreate() {
                         <FolderOpen className="h-4 w-4" />
                     </div>
                     <div className="flex-1">
-                        <p className="text-sm font-medium">Step 1 — Define your collection</p>
+                        <p className="text-sm font-medium">Step 1 — Define your neuron</p>
                         <p className="text-xs text-muted-foreground">Name, type, and description</p>
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground" />
@@ -124,7 +124,7 @@ export default function CollectionCreate() {
                     </div>
 
                     <Button disabled={processing} className="gap-2">
-                        Create Collection <ArrowRight className="h-4 w-4" />
+                        Create Neuron <ArrowRight className="h-4 w-4" />
                     </Button>
                 </form>
             </div>

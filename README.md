@@ -39,11 +39,11 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
                             │
          ┌──────────────────┼──────────────────┐
          │                  │                  │
-    WORKSPACE          CONTENT          ORGANIZATION
+     NUCLEUS           CONTENT          ORGANIZATION
   ┌──────────┐    ┌──────────────┐    ┌────────────┐
-  │ Identity │    │  Documents   │    │Collections │
-  │ Instruct.│    │   Skills     │    │  (project  │
-  │  Memory  │    │  Snippets    │    │  packages) │
+  │ Identity │    │  Documents   │    │  Neurons   │
+  │ Instruct.│    │   Skills     │    │(specialized│
+  │  Memory  │    │  Snippets    │    │ AI roles)  │
   │          │    │   Assets     │    │            │
   └──────────┘    └──────────────┘    └────────────┘
 ```
@@ -51,13 +51,13 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
 ## How It Works
 
 ### 1. Define Your AI Identity
-Set up workspace documents — Identity, Instructions, and optional documents like Soul, Services, Products, ICP. These follow you across every project and AI client.
+Set up nucleus documents — Identity, Instructions, and optional documents like Soul, Services, Products, ICP. These follow you across every project and AI client.
 
-### 2. Organize by Project
-Create **Collections** with their own named documents (Instructions, Architecture, Brand Voice, Roadmap, etc.). Assign workspace content (documents, skills, snippets, assets) to collections.
+### 2. Create Your Neurons
+Create **Neurons** with their own named documents (Instructions, Architecture, Brand Voice, Roadmap, etc.). Assign nucleus content (documents, skills, snippets, assets) to neurons.
 
 ### 3. Connect via MCP
-Use a **workspace token** for access to all collections with dynamic switching, or a **collection token** for a dedicated single-project connection.
+Use a **nucleus token** for access to all neurons with dynamic switching, or a **neuron token** for a dedicated single-project connection.
 
 ```
 https://yourdomain.com/mcp?token=cv_ws_...
@@ -67,24 +67,24 @@ https://yourdomain.com/mcp?token=cv_ws_...
 
 | Concept | What it is | Example |
 |---------|-----------|---------|
-| **Workspace** | Your account container | "MeltinBit" |
-| **Workspace Documents** | Global AI persona docs (Identity, Instructions + optional) | Brand voice, stack, values |
-| **Collection** | Project package with own documents + MCP endpoint | "Noisy Mind", "Client X" |
-| **Collection Documents** | Project-specific docs (Instructions, Architecture, etc.) | Architecture, Roadmap, Brand Voice |
+| **Nucleus** | Your identity base | "MeltinBit" |
+| **Nucleus Documents** | Global AI persona docs (Identity, Instructions + optional) | Brand voice, stack, values |
+| **Neuron** | Specialized AI role with own documents + MCP endpoint | "Sales Agent", "Dev Mode" |
+| **Neuron Documents** | Project-specific docs (Instructions, Architecture, etc.) | Architecture, Roadmap, Brand Voice |
 | **Document** | Reference material AI retrieves on demand | API specs, guidelines |
 | **Skill** | Operational instruction with trigger description | Code reviewer, content writer |
 | **Snippet** | Reusable text block inserted as-is | Email signature, disclaimer |
 | **Asset** | Binary file with AI description, organized in folders | Logo, mockup, video |
-| **Memory** | Structured entries (workspace or collection scoped) | Past decisions, preferences |
+| **Memory** | Structured entries (nucleus or neuron scoped) | Past decisions, preferences |
 
 ## Features
 
 - **Centralized context** — one source of truth for all your AI interactions
 - **MCP-native** — 9 consolidated tools with action-based API
 - **Lazy context loading** — minimal initial context, everything fetched on demand
-- **Workspace tokens** — single token for all collections with dynamic switching
-- **Collection tokens** — dedicated per-project access
-- **Collection documents** — flexible named documents per project (template-based)
+- **Nucleus tokens** — single token for all neurons with dynamic switching
+- **Neuron tokens** — dedicated per-project access
+- **Neuron documents** — flexible named documents per project (template-based)
 - **Document templates** — 20+ built-in templates (Architecture, Brand Voice, FAQ, etc.)
 - **Version history** — every change tracked with revision history
 - **Asset management** — folders, drag & drop, move, copy, batch operations, video playback
@@ -104,27 +104,27 @@ https://yourdomain.com/mcp?token=cv_ws_...
 
 | Tool | Actions | Description |
 |------|---------|-------------|
-| `get_context` | — | Load context, list/switch collections (workspace tokens) |
-| `collection_documents` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents |
-| `documents` | list, get, create, update, append, delete | Manage workspace documents |
+| `get_context` | — | Load context, list/switch neurons (nucleus tokens) |
+| `collection_documents` | list, get, create, update, append, delete, reorder, list_templates | Manage neuron documents |
+| `documents` | list, get, create, update, append, delete | Manage nucleus documents |
 | `skills` | list, get, create, update, append, delete | Manage skills |
 | `snippets` | list, get, create, update, append, delete | Manage snippets |
 | `assets` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | `search` | — | Full-text search across all content |
-| `system_documents` | list, get, update, append | Manage workspace-level system documents |
-| `memory` | list, get, create, update, delete, move, copy | Manage memory entries (workspace or collection scoped) |
+| `system_documents` | list, get, update, append | Manage nucleus-level system documents |
+| `memory` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or neuron scoped) |
 
 ### CRUD Coverage
 
 | Resource | list | get | create | update | append | delete | Other |
 |----------|:----:|:---:|:------:|:------:|:------:|:------:|-------|
-| **Collection Documents** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | reorder, list_templates |
+| **Neuron Documents** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | reorder, list_templates |
 | **Documents** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
 | **Skills** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
 | **Snippets** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
 | **Assets** | ✅ | ✅ | — | — | — | ✅ | list_folders, create_folder, move |
 | **System Documents** | ✅ | ✅ | — | ✅ | ✅ | — | Fixed types (identity, instructions, etc.) |
-| **Memory** | ✅ | ✅ | ✅ | ✅ | — | ✅ | move, copy (cross-collection) |
+| **Memory** | ✅ | ✅ | ✅ | ✅ | — | ✅ | move, copy (cross-neuron) |
 
 ## Tech Stack
 
@@ -147,7 +147,7 @@ docker compose up -d
 
 Open [http://localhost:4242](http://localhost:4242) — login with `mementovault@example.com` / `password`.
 
-Includes MySQL, MinIO (S3-compatible storage), and a pre-configured demo workspace. Assets upload to MinIO automatically. MinIO console at [http://localhost:9001](http://localhost:9001) (mementovault/mementovault).
+Includes MySQL, MinIO (S3-compatible storage), and a pre-configured demo nucleus. Assets upload to MinIO automatically. MinIO console at [http://localhost:9001](http://localhost:9001) (mementovault/mementovault).
 
 ### Manual Setup
 
@@ -202,8 +202,8 @@ claude mcp add --transport http memento-vault https://yourdomain.com/mcp?token=Y
 > For local Docker setup, use `http://localhost:4242/mcp?token=YOUR_TOKEN`. Claude Desktop requires HTTPS — use a tunnel (e.g. `ngrok http 4242`) for local testing with Claude Desktop.
 
 Token types:
-- `cv_ws_*` — Workspace token (access all collections, switch dynamically)
-- `cv_live_*` — Collection token (scoped to one collection)
+- `cv_ws_*` — Nucleus token (access all neurons, switch dynamically)
+- `cv_live_*` — Neuron token (scoped to one neuron)
 
 ## What You Can Ask
 
@@ -219,7 +219,7 @@ Once connected, just talk to your AI naturally:
 
 **Search** — "Search everything for [keyword]"
 
-**Collections** — "What collections do I have?" · "Switch to the [name] collection"
+**Neurons** — "What neurons do I have?" · "Switch to the [name] neuron"
 
 ## License
 

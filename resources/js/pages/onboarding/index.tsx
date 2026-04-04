@@ -160,24 +160,24 @@ export default function Onboarding({ workspace }: Props) {
                             <div>
                                 <h1 className="text-2xl font-bold">You're all set!</h1>
                                 <p className="mt-2 text-muted-foreground">
-                                    Your workspace &quot;{workspace.name}&quot; is ready. Here's what to do next:
+                                    Your nucleus &quot;{workspace.name}&quot; is ready. Here's what to do next:
                                 </p>
                             </div>
                             <div className="mx-auto max-w-sm space-y-3 text-left">
                                 <div className="rounded-md border p-3 text-sm">
                                     <span className="font-medium">1.</span> Complete your Instructions in the
-                                    Workspace section
+                                    Nucleus section
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
                                     <span className="font-medium">2.</span> Configure S3/R2 storage in Settings to
                                     upload assets
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">3.</span> Create your first Collection to organize
+                                    <span className="font-medium">3.</span> Create your first Neuron to organize
                                     content by project
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">4.</span> Generate a workspace token in Settings and
+                                    <span className="font-medium">4.</span> Generate a nucleus token in Settings and
                                     connect via MCP
                                 </div>
                             </div>

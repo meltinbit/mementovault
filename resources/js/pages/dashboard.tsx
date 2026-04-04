@@ -30,7 +30,7 @@ const checklistItems = [
     { key: 'identity', label: 'Set up your Identity', description: 'Tell AI who you are', href: '/workspace/identity', icon: User },
     { key: 'instructions', label: 'Write Instructions', description: 'Define how AI should work with you', href: '/workspace/instructions', icon: BookText },
     { key: 'hasStorage', label: 'Configure Storage', description: 'Set up S3/R2 to upload assets', href: '/settings/workspace?tab=storage', icon: HardDrive },
-    { key: 'hasCollection', label: 'Create a Collection', description: 'Organize content by project', href: '/collections/create', icon: FolderOpen },
+    { key: 'hasCollection', label: 'Create a Neuron', description: 'Organize content by project', href: '/collections/create', icon: FolderOpen },
     { key: 'hasToken', label: 'Connect via MCP', description: 'Generate a token and connect your AI client', href: '/settings/workspace?tab=mcp', icon: Key },
 ];
 
@@ -93,7 +93,7 @@ function StatsGrid({ stats }: { stats: DashboardStats }) {
         { label: 'Skills', count: stats.skills, icon: Zap },
         { label: 'Snippets', count: stats.snippets, icon: Code },
         { label: 'Assets', count: stats.assets, icon: Image },
-        { label: 'Collections', count: stats.collections, icon: FolderOpen },
+        { label: 'Neurons', count: stats.collections, icon: FolderOpen },
     ];
 
     return (
@@ -137,7 +137,7 @@ function ActivityFeed({ activity }: { activity: ActivityLogEntry[] }) {
     if (activity.length === 0) {
         return (
             <p className="py-8 text-center text-sm text-muted-foreground">
-                No activity yet. Start by editing your workspace documents.
+                No activity yet. Start by editing your nucleus documents.
             </p>
         );
     }

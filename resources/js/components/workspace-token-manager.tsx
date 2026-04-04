@@ -59,7 +59,7 @@ export function WorkspaceTokenManager({ tokens, mcpEndpoint, newToken: initialNe
             </div>
 
             {tokens.length === 0 && !newToken ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">No workspace tokens yet. Generate one to access all collections via a single MCP endpoint.</p>
+                <p className="py-4 text-center text-sm text-muted-foreground">No nucleus tokens yet. Generate one to access all neurons via a single MCP endpoint.</p>
             ) : (
                 <div className="space-y-2">
                     {tokens.map((token) => (
@@ -85,8 +85,8 @@ export function WorkspaceTokenManager({ tokens, mcpEndpoint, newToken: initialNe
             <Dialog open={!!newToken} onOpenChange={(open) => !open && setNewToken(null)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Workspace Token Generated</DialogTitle>
-                        <DialogDescription>Copy this token now. It won't be shown again. This token gives access to all collections.</DialogDescription>
+                        <DialogTitle>Nucleus Token Generated</DialogTitle>
+                        <DialogDescription>Copy this token now. It won't be shown again. This token gives access to all neurons.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-3">
                         <div className="space-y-1">
@@ -126,7 +126,7 @@ export function WorkspaceTokenManager({ tokens, mcpEndpoint, newToken: initialNe
                 onClose={() => setDeleteToken(null)}
                 onConfirm={revokeToken}
                 title={`Revoke "${deleteToken?.name}"?`}
-                description="Any clients using this token will lose access to all collections."
+                description="Any clients using this token will lose access to all neurons."
             />
         </div>
     );

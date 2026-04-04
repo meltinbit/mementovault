@@ -15,7 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Workspace settings', href: '/settings/workspace' },
+    { title: 'Nucleus settings', href: '/settings/workspace' },
 ];
 
 interface StorageSettings {
@@ -78,7 +78,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Workspace settings" />
+            <Head title="Nucleus settings" />
 
             <SettingsLayout>
                 <form onSubmit={submit} className="space-y-6">
@@ -103,7 +103,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                     {/* ── General ── */}
                     {activeTab === 'general' && (
                         <div className="space-y-4">
-                            <HeadingSmall title="General" description="Your workspace name and description." />
+                            <HeadingSmall title="General" description="Your nucleus name and description." />
 
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
@@ -113,7 +113,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
                             <div className="grid gap-2">
                                 <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" value={data.description} onChange={(e) => setData('description', e.target.value)} rows={2} placeholder="A brief description of your workspace" />
+                                <Textarea id="description" value={data.description} onChange={(e) => setData('description', e.target.value)} rows={2} placeholder="A brief description of your nucleus" />
                                 <InputError message={errors.description} />
                             </div>
                         </div>
@@ -122,7 +122,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                     {/* ── MCP Connection ── */}
                     {activeTab === 'mcp' && (
                         <div className="space-y-4">
-                            <HeadingSmall title="MCP Connection" description="Generate a workspace token to connect any AI client. One token gives access to all your collections." />
+                            <HeadingSmall title="MCP Connection" description="Generate a nucleus token to connect any AI client. One token gives access to all your neurons." />
 
                             <WorkspaceTokenManager
                                 tokens={workspaceTokens}
@@ -193,7 +193,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                     {/* ── AI Behavior ── */}
                     {activeTab === 'ai' && (
                         <div className="space-y-4">
-                            <HeadingSmall title="AI Behavior" description="Fine-tune how AI agents interact with your workspace." />
+                            <HeadingSmall title="AI Behavior" description="Fine-tune how AI agents interact with your nucleus." />
 
                             <div className="grid gap-2">
                                 <Label htmlFor="mcp_custom_prompt">Custom Prompt</Label>
@@ -214,12 +214,12 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="memory_max_entries">Workspace memory limit</Label>
+                                    <Label htmlFor="memory_max_entries">Nucleus memory limit</Label>
                                     <Input id="memory_max_entries" type="number" min={1} max={500} value={data.memory_max_entries} onChange={(e) => setData('memory_max_entries', parseInt(e.target.value) || 50)} className="w-24" />
                                     <InputError message={errors.memory_max_entries} />
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="collection_memory_max_entries">Collection memory limit</Label>
+                                    <Label htmlFor="collection_memory_max_entries">Neuron memory limit</Label>
                                     <Input id="collection_memory_max_entries" type="number" min={1} max={200} value={data.collection_memory_max_entries} onChange={(e) => setData('collection_memory_max_entries', parseInt(e.target.value) || 20)} className="w-24" />
                                     <InputError message={errors.collection_memory_max_entries} />
                                 </div>

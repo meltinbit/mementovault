@@ -17,19 +17,19 @@ const sections: Section[] = [
         title: 'Getting Started',
         children: [
             { id: 'what-is-it', title: 'What is it' },
-            { id: 'create-your-workspace', title: 'Create Your Workspace' },
+            { id: 'create-your-workspace', title: 'Create Your Nucleus' },
             { id: 'set-up-identity-instructions', title: 'Set Up Identity & Instructions' },
-            { id: 'create-your-first-collection', title: 'Create Your First Collection' },
+            { id: 'create-your-first-collection', title: 'Create Your First Neuron' },
         ],
     },
     {
         id: 'core-concepts',
         title: 'Core Concepts',
         children: [
-            { id: 'workspace', title: 'Workspace' },
-            { id: 'workspace-documents', title: 'Workspace Documents' },
-            { id: 'collections', title: 'Collections' },
-            { id: 'collection-documents', title: 'Collection Documents' },
+            { id: 'workspace', title: 'Nucleus' },
+            { id: 'workspace-documents', title: 'Nucleus Documents' },
+            { id: 'collections', title: 'Neurons' },
+            { id: 'collection-documents', title: 'Neuron Documents' },
             { id: 'content-types', title: 'Documents, Skills, Snippets, Assets' },
             { id: 'context-merging', title: 'How Context Loading Works' },
         ],
@@ -38,7 +38,7 @@ const sections: Section[] = [
         id: 'connecting-to-clients',
         title: 'Connecting to Clients',
         children: [
-            { id: 'workspace-vs-collection-tokens', title: 'Workspace vs Collection Tokens' },
+            { id: 'workspace-vs-collection-tokens', title: 'Nucleus vs Neuron Tokens' },
             { id: 'claude-desktop', title: 'Claude Desktop' },
             { id: 'claude-code', title: 'Claude Code' },
             { id: 'cowork', title: 'Cowork' },
@@ -61,8 +61,8 @@ const sections: Section[] = [
         id: 'templates',
         title: 'Templates',
         children: [
-            { id: 'workspace-templates', title: 'Workspace Templates' },
-            { id: 'collection-templates', title: 'Collection Templates' },
+            { id: 'workspace-templates', title: 'Nucleus Templates' },
+            { id: 'collection-templates', title: 'Neuron Templates' },
             { id: 'document-templates', title: 'Document Templates' },
         ],
     },
@@ -73,7 +73,7 @@ const sections: Section[] = [
             { id: 'available-tools', title: 'Available Tools' },
             { id: 'example-prompts', title: 'Example Prompts' },
             { id: 'authentication', title: 'Authentication' },
-            { id: 'collection-switching', title: 'Collection Switching' },
+            { id: 'collection-switching', title: 'Neuron Switching' },
             { id: 'writing-long-content', title: 'Writing Long Content' },
         ],
     },
@@ -328,19 +328,19 @@ Instead of repeating yourself in every conversation, you define your identity, i
 
 Your vault is organized into three areas — matching the app sidebar:
 
-- **Workspace** — Identity, Instructions, Memory. Your global AI persona, shared across all projects.
+- **Nucleus** — Identity, Instructions, Memory. Your global AI persona, shared across all projects.
 - **Content** — Documents, Skills, Snippets, Assets. Reference materials and tools AI can use.
-- **Organization** — Collections. Project packages that bundle workspace content with their own documents and MCP endpoints.
+- **Organization** — Neurons. Project packages that bundle nucleus content with their own documents and MCP endpoints.
 
 AI clients connect via MCP and get lazy-loaded context: a minimal index first, then specific content on demand.`}</Markdown>
                             </section>
 
                             <section id="create-your-workspace" className="mb-12">
-                                <Markdown>{`## Create Your Workspace
+                                <Markdown>{`## Create Your Nucleus
 
-After registration, a workspace is automatically created for you with core system documents (Identity and Instructions).
+After registration, a nucleus is automatically created for you with core system documents (Identity and Instructions).
 
-During setup, you'll choose a **template** that pre-populates your workspace with relevant starting content:
+During setup, you'll choose a **template** that pre-populates your nucleus with relevant starting content:
 
 - **Developer** — Stack preferences, code style, development workflow
 - **Marketer** — Brand voice, campaign frameworks, audience definitions
@@ -354,7 +354,7 @@ Templates are just starting points — you can modify everything freely after cr
                             <section id="set-up-identity-instructions" className="mb-12">
                                 <Markdown>{`## Set Up Your Identity & Instructions
 
-Navigate to the **Workspace** section in the sidebar and find **Identity** and **Instructions**:
+Navigate to the **Nucleus** section in the sidebar and find **Identity** and **Instructions**:
 
 **Identity** — Who you are. This tells AI about your background, role, and expertise:
 
@@ -368,18 +368,18 @@ These are always included when AI loads context via MCP.`}</Markdown>
                             </section>
 
                             <section id="create-your-first-collection" className="mb-12">
-                                <Markdown>{`## Create Your First Collection
+                                <Markdown>{`## Create Your First Neuron
 
-Collections are **project packages**. Each collection has its own set of documents and MCP endpoint.
+Neurons are **project packages**. Each neuron has its own set of documents and MCP endpoint.
 
-1. Navigate to the **Collections** page
-2. Click **New Collection**
+1. Navigate to the **Neurons** page
+2. Click **New Neuron**
 3. Choose a name and type (the type selects a template)
-4. The template pre-populates collection documents (Instructions, Architecture, etc.)
+4. The template pre-populates neuron documents (Instructions, Architecture, etc.)
 
 Once created, you can:
-- Edit collection documents that define how AI operates in this project
-- Add workspace content (documents, skills, snippets, assets) to the collection
+- Edit neuron documents that define how AI operates in this project
+- Add nucleus content (documents, skills, snippets, assets) to the neuron
 - Generate API tokens for MCP connections
 - Manage project-specific memory entries`}</Markdown>
                             </section>
@@ -390,24 +390,24 @@ Once created, you can:
                             <h1 className="mb-8 text-3xl font-bold text-white">Core Concepts</h1>
 
                             <section id="workspace" className="mb-12">
-                                <Markdown>{`## Workspace
+                                <Markdown>{`## Nucleus
 
-Your workspace is your **account container**. One user equals one workspace. It holds all your content — workspace documents, collections, documents, skills, snippets, assets, tags, and memory entries.
+Your nucleus is your **account container**. One user equals one nucleus. It holds all your content — nucleus documents, neurons, documents, skills, snippets, assets, tags, and memory entries.
 
-Workspace-level settings (Identity and Instructions) apply globally to all MCP connections.`}</Markdown>
+Nucleus-level settings (Identity and Instructions) apply globally to all MCP connections.`}</Markdown>
                             </section>
 
                             <section id="workspace-documents" className="mb-12">
-                                <Markdown>{`## Workspace Documents
+                                <Markdown>{`## Nucleus Documents
 
-Workspace documents are global documents that define your AI persona across all collections:
+Nucleus documents are global documents that define your AI persona across all neurons:
 
 | Document | Purpose |
 |----------|---------|
 | **Identity** | Who you are — background, role, expertise, personality |
 | **Instructions** | How AI should work — coding style, response format, behavior rules |
 
-These two are **core** and always present. You can also add **optional** workspace documents:
+These two are **core** and always present. You can also add **optional** nucleus documents:
 
 | Optional | Purpose |
 |----------|---------|
@@ -417,30 +417,30 @@ These two are **core** and always present. You can also add **optional** workspa
 | **Products** | Products, features, pricing, positioning |
 | **ICP** | Ideal Customer Profile, pain points, buying behavior |
 
-You can also create **custom** workspace documents with any name. Optional and custom documents can be deleted; core documents (Identity, Instructions) cannot.
+You can also create **custom** nucleus documents with any name. Optional and custom documents can be deleted; core documents (Identity, Instructions) cannot.
 
-All workspace documents support markdown and version history.`}</Markdown>
+All nucleus documents support markdown and version history.`}</Markdown>
                             </section>
 
                             <section id="collections" className="mb-12">
-                                <Markdown>{`## Collections
+                                <Markdown>{`## Neurons
 
-Collections are **project packages** with their own documents and MCP endpoints. They scope AI context to specific projects.
+Neurons are **project packages** with their own documents and MCP endpoints. They scope AI context to specific projects.
 
 Key features:
-- **Own MCP endpoint** — Each collection has a unique URL for AI client connections
-- **Collection documents** — Each collection has its own set of named documents (Instructions, Architecture, Brand Voice, etc.)
-- **Content assignment** — Workspace documents, skills, snippets, and assets can be assigned to multiple collections
-- **Memory** — Each collection can have its own memory entries
-- **Templates** — Collection type selects a template that pre-populates initial documents`}</Markdown>
+- **Own MCP endpoint** — Each neuron has a unique URL for AI client connections
+- **Neuron documents** — Each neuron has its own set of named documents (Instructions, Architecture, Brand Voice, etc.)
+- **Content assignment** — Nucleus documents, skills, snippets, and assets can be assigned to multiple neurons
+- **Memory** — Each neuron can have its own memory entries
+- **Templates** — Neuron type selects a template that pre-populates initial documents`}</Markdown>
                             </section>
 
                             <section id="collection-documents" className="mb-12">
-                                <Markdown>{`## Collection Documents
+                                <Markdown>{`## Neuron Documents
 
-Collection documents are **system-level documents that belong to a collection**. They define how AI operates within that specific project and are always available in the MCP context.
+Neuron documents are **system-level documents that belong to a neuron**. They define how AI operates within that specific project and are always available in the MCP context.
 
-Unlike workspace content (documents, skills, snippets) which is shared across collections, collection documents are **exclusive** to one collection.
+Unlike nucleus content (documents, skills, snippets) which is shared across neurons, neuron documents are **exclusive** to one neuron.
 
 Examples:
 - **Instructions** — Operating rules for this specific project
@@ -449,7 +449,7 @@ Examples:
 - **Memory** — Structured memory for this project
 - **Roadmap** — Project status, priorities, backlog
 
-Collection documents are created from **templates** when you create a collection, but you can add, rename, or remove them freely. Required documents (like Instructions) are protected from deletion.
+Neuron documents are created from **templates** when you create a neuron, but you can add, rename, or remove them freely. Required documents (like Instructions) are protected from deletion.
 
 When adding a new document, you can choose from 20+ built-in templates (Architecture, Brand Voice, FAQ, Competitor Analysis, etc.) or start blank.`}</Markdown>
                             </section>
@@ -457,7 +457,7 @@ When adding a new document, you can choose from 20+ built-in templates (Architec
                             <section id="content-types" className="mb-12">
                                 <Markdown>{`## Documents, Skills, Snippets, Assets
 
-${appName} supports four workspace-level content types that can be assigned to collections:
+${appName} supports four nucleus-level content types that can be assigned to neurons:
 
 **Documents** — Markdown reference materials. API docs, specs, technical guides. AI retrieves them on demand — they're listed in context so AI knows they exist, and fetches full content when needed.
 
@@ -473,10 +473,10 @@ ${appName} supports four workspace-level content types that can be assigned to c
 
 When AI connects via MCP, it calls \`get_context\` which returns a **minimal, lazy context**:
 
-1. **Workspace Identity** — Your identity content
-2. **Workspace Instructions** — Your global instructions
-3. **Collection name** and description
-4. **Collection document slugs** — Just the names, no content
+1. **Nucleus Identity** — Your identity content
+2. **Nucleus Instructions** — Your global instructions
+3. **Neuron name** and description
+4. **Neuron document slugs** — Just the names, no content
 5. **Content counts** — How many skills, documents, snippets, assets are available
 
 This keeps the initial context small (under 2KB). AI then fetches specific content on demand using tools like \`collection_documents\`, \`documents\`, \`skills\`, etc.
@@ -490,22 +490,22 @@ This lazy approach is intentional — it prevents context overflow and lets AI d
                             <h1 className="mb-8 text-3xl font-bold text-white">Connecting to Clients</h1>
 
                             <section id="workspace-vs-collection-tokens" className="mb-12">
-                                <Markdown>{`## Workspace vs Collection Tokens
+                                <Markdown>{`## Nucleus vs Neuron Tokens
 
 ${appName} supports two types of API tokens:
 
-**Workspace tokens** (\`cv_ws_\` prefix) — A single token that gives access to **all collections** in your workspace. AI can list available collections and switch between them dynamically. Great when you want one MCP connection for everything.
+**Nucleus tokens** (\`cv_ws_\` prefix) — A single token that gives access to **all neurons** in your nucleus. AI can list available neurons and switch between them dynamically. Great when you want one MCP connection for everything.
 
-**Collection tokens** (\`cv_live_\` prefix) — Scoped to a single collection. AI only sees that collection's content. Use when you want a dedicated, focused connection.
+**Neuron tokens** (\`cv_live_\` prefix) — Scoped to a single neuron. AI only sees that neuron's content. Use when you want a dedicated, focused connection.
 
-| Feature | Workspace Token | Collection Token |
+| Feature | Nucleus Token | Neuron Token |
 |---------|----------------|-----------------|
 | Prefix | \`cv_ws_\` | \`cv_live_\` |
-| Scope | All collections | One collection |
-| Collection switching | Yes, via \`get_context\` | No |
-| Create from | Settings → Workspace | Collection page |
+| Scope | All neurons | One neuron |
+| Neuron switching | Yes, via \`get_context\` | No |
+| Create from | Settings → Nucleus | Neuron page |
 
-With a workspace token, AI calls \`get_context\` to see available collections, then \`get_context(collection: "slug")\` to select one. After selection, all tools work as if using a collection token.`}</Markdown>
+With a nucleus token, AI calls \`get_context\` to see available neurons, then \`get_context(collection: "slug")\` to select one. After selection, all tools work as if using a neuron token.`}</Markdown>
                             </section>
 
                             <section id="claude-desktop" className="mb-12">
@@ -521,7 +521,7 @@ To connect Claude Desktop to ${appName}:
 https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
-Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a workspace or collection token.`}</Markdown>
+Replace \`yourdomain.com\` with your ${appName} domain and \`YOUR_TOKEN\` with a nucleus or neuron token.`}</Markdown>
                             </section>
 
                             <section id="claude-code" className="mb-12">
@@ -555,14 +555,14 @@ Refer to Cowork's documentation for the exact location of MCP server settings.`}
 
 Key details about API tokens:
 
-- **Workspace tokens**: generated from **Settings → Workspace**
-- **Collection tokens**: generated from the **collection detail page**
+- **Nucleus tokens**: generated from **Settings → Nucleus**
+- **Neuron tokens**: generated from the **neuron detail page**
 - **Security**: tokens are SHA-256 hashed — the plain token is shown only once at creation
 - **Expiration**: optional expiration date per token
 - **Last used**: automatically tracked for each token
 - **Revocation**: tokens can be revoked independently at any time
 
-You can create multiple tokens per collection or workspace (e.g., one for Claude Desktop, one for Claude Code).`}</Markdown>
+You can create multiple tokens per neuron or nucleus (e.g., one for Claude Desktop, one for Claude Code).`}</Markdown>
                             </section>
                         </section>
 
@@ -587,7 +587,7 @@ You can create multiple tokens per collection or workspace (e.g., one for Claude
 1. Go to **Documents** → **New Document**
 2. Set a title, choose a type, and write content in markdown
 3. Add tags for organization
-4. Assign to one or more collections`}</Markdown>
+4. Assign to one or more neurons`}</Markdown>
                             </section>
 
                             <section id="writing-effective-skills" className="mb-12">
@@ -644,7 +644,7 @@ Organize assets into **folders** with nested hierarchy:
 - Batch operations: move, copy, or delete multiple assets at once
 - Folder tree navigation in the sidebar
 
-Folders are workspace-level — the same folder structure is visible regardless of which collection you're in.`}</Markdown>
+Folders are nucleus-level — the same folder structure is visible regardless of which neuron you're in.`}</Markdown>
                             </section>
 
                             <section id="tagging" className="mb-12">
@@ -656,7 +656,7 @@ Tags help organize your content across all types:
 - **Apply tags** to documents, skills, snippets, and assets
 - **Filter lists** by tag to quickly find related content
 
-Tags are workspace-level — the same tag can be applied to any content type.`}</Markdown>
+Tags are nucleus-level — the same tag can be applied to any content type.`}</Markdown>
                             </section>
                         </section>
 
@@ -665,9 +665,9 @@ Tags are workspace-level — the same tag can be applied to any content type.`}<
                             <h1 className="mb-8 text-3xl font-bold text-white">Templates</h1>
 
                             <section id="workspace-templates" className="mb-12">
-                                <Markdown>{`## Workspace Templates
+                                <Markdown>{`## Nucleus Templates
 
-Workspace templates pre-populate your workspace documents during setup:
+Nucleus templates pre-populate your nucleus documents during setup:
 
 | Template | Focus |
 |----------|-------|
@@ -679,9 +679,9 @@ Workspace templates pre-populate your workspace documents during setup:
                             </section>
 
                             <section id="collection-templates" className="mb-12">
-                                <Markdown>{`## Collection Templates
+                                <Markdown>{`## Neuron Templates
 
-When creating a collection, the **type** you choose determines which collection documents are pre-created:
+When creating a neuron, the **type** you choose determines which neuron documents are pre-created:
 
 | Type | Documents Created |
 |------|------------------|
@@ -699,7 +699,7 @@ Each template pre-fills documents with placeholder content to guide you.`}</Mark
                             <section id="document-templates" className="mb-12">
                                 <Markdown>{`## Document Templates
 
-When adding a new collection document, you can choose from **20+ built-in templates**:
+When adding a new neuron document, you can choose from **20+ built-in templates**:
 
 Architecture, Roadmap, Brand Voice, Products & Services, Target Market, Sales Playbook, Content Strategy, Channels & Formats, Client Brief, Deliverables, Ideas Pipeline, Market Context, Validation Framework, Brand & Positioning, Campaigns, Content Bank, FAQ, Competitor Analysis, Guidelines, and more.
 
@@ -718,15 +718,15 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 
 | Tool | Actions | Description |
 |------|---------|-------------|
-| \`get_context\` | — | Load context. Pass a collection slug to switch collections (workspace tokens). |
-| \`collection_documents\` | list, get, create, update, append, delete, reorder, list_templates | Manage collection documents (Instructions, Architecture, etc.) |
-| \`documents\` | list, get, create, update, append, delete | Manage workspace documents assigned to the collection |
+| \`get_context\` | — | Load context. Pass a neuron slug to switch neurons (nucleus tokens). |
+| \`collection_documents\` | list, get, create, update, append, delete, reorder, list_templates | Manage neuron documents (Instructions, Architecture, etc.) |
+| \`documents\` | list, get, create, update, append, delete | Manage nucleus documents assigned to the neuron |
 | \`skills\` | list, get, create, update, append, delete | Manage skills |
 | \`snippets\` | list, get, create, update, append, delete | Manage snippets |
 | \`assets\` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | \`search\` | — | Full-text search across documents, skills, and snippets |
-| \`system_documents\` | list, get, update, append | Manage workspace-level system documents (Identity, Instructions, etc.) |
-| \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (workspace or collection scoped) |`}</Markdown>
+| \`system_documents\` | list, get, update, append | Manage nucleus-level system documents (Identity, Instructions, etc.) |
+| \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or neuron scoped) |`}</Markdown>
                             </section>
 
                             <section id="example-prompts" className="mb-12">
@@ -737,14 +737,14 @@ You don't need to know MCP commands. Just talk to your AI naturally — it will 
 ### Memory
 - **"Remember that I prefer [your preference] for [context]"** — Saves a preference to memory
 - **"What do you remember about my preferences?"** — Lists saved memory entries
-- **"Move the note about [topic] to the [name] collection"** — Moves a memory entry between collections
+- **"Move the note about [topic] to the [name] neuron"** — Moves a memory entry between neurons
 - **"Delete the memory about [topic]"** — Removes an outdated entry
 
 ### Documents
 - **"Search my docs for [topic]"** — Finds relevant documents by content
 - **"Create a document with [description]"** — Creates a new document
 - **"Update the [name] doc with [changes]"** — Updates existing content
-- **"What documents do I have in this collection?"** — Lists available documents
+- **"What documents do I have in this neuron?"** — Lists available documents
 
 ### Skills & Snippets
 - **"List all my skills"** — Shows available operational skills
@@ -752,17 +752,17 @@ You don't need to know MCP commands. Just talk to your AI naturally — it will 
 - **"Show me the [name] snippet"** — Retrieves a reusable text block
 
 ### Assets
-- **"What assets do I have in this collection?"** — Lists files, images, and media
+- **"What assets do I have in this neuron?"** — Lists files, images, and media
 - **"Get the URL for the [filename]"** — Gets a download link for an asset
 
 ### Search
 - **"Search everything for [keyword]"** — Full-text search across all content
 
-### Collections & Identity
-- **"What collections do I have?"** — Lists all available collections
-- **"Switch to the [name] collection"** — Changes active collection context
-- **"Show me my identity document"** — Reads your workspace identity
-- **"Update my instructions with [changes]"** — Updates workspace-level documents`}</Markdown>
+### Neurons & Identity
+- **"What neurons do I have?"** — Lists all available neurons
+- **"Switch to the [name] neuron"** — Changes active neuron context
+- **"Show me my identity document"** — Reads your nucleus identity
+- **"Update my instructions with [changes]"** — Updates nucleus-level documents`}</Markdown>
                             </section>
 
                             <section id="authentication" className="mb-12">
@@ -781,25 +781,25 @@ https://yourdomain.com/mcp?token=YOUR_TOKEN
 \`\`\`
 
 Token types:
-- \`cv_ws_\` — **Workspace token**: access to all collections, supports switching
-- \`cv_live_\` — **Collection token**: scoped to one collection
+- \`cv_ws_\` — **Nucleus token**: access to all neurons, supports switching
+- \`cv_live_\` — **Neuron token**: scoped to one neuron
 
 Tokens are SHA-256 hashed server-side. The plain token is shown only once at creation.`}</Markdown>
                             </section>
 
                             <section id="collection-switching" className="mb-12">
-                                <Markdown>{`## Collection Switching
+                                <Markdown>{`## Neuron Switching
 
-With a **workspace token**, you can switch between collections dynamically:
+With a **nucleus token**, you can switch between neurons dynamically:
 
-1. Call \`get_context\` with no parameters — returns list of available collections
-2. Call \`get_context(collection: "project-slug")\` — switches to that collection
-3. All subsequent tool calls are scoped to the selected collection
-4. Call \`get_context(collection: "other-slug")\` — switches to a different collection
+1. Call \`get_context\` with no parameters — returns list of available neurons
+2. Call \`get_context(collection: "project-slug")\` — switches to that neuron
+3. All subsequent tool calls are scoped to the selected neuron
+4. Call \`get_context(collection: "other-slug")\` — switches to a different neuron
 
-The active collection is **persisted on the token**, so it survives across conversations using the same MCP endpoint.
+The active neuron is **persisted on the token**, so it survives across conversations using the same MCP endpoint.
 
-With a **collection token**, the collection is fixed — no switching is needed or possible.`}</Markdown>
+With a **neuron token**, the neuron is fixed — no switching is needed or possible.`}</Markdown>
                             </section>
 
                             <section id="writing-long-content" className="mb-12">

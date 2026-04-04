@@ -205,7 +205,7 @@ function ContentSection({
                     ) : attached.length === 0 ? (
                         <div className="px-4 py-6 text-center">
                             <p className="text-xs text-muted-foreground">
-                                No {label.toLowerCase()} in your workspace yet.
+                                No {label.toLowerCase()} in your nucleus yet.
                             </p>
                         </div>
                     ) : null}
@@ -229,7 +229,7 @@ export function CollectionItemPicker(props: CollectionItemPickerProps) {
         <div className="space-y-2">
             <div className="flex items-center justify-between">
                 <p className="text-xs text-muted-foreground">
-                    {totalAttached} item{totalAttached !== 1 ? 's' : ''} in this collection
+                    {totalAttached} item{totalAttached !== 1 ? 's' : ''} in this neuron
                 </p>
             </div>
             {contentTypes.map((ct) => (

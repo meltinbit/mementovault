@@ -26,7 +26,7 @@ const contentNavItems: NavItem[] = [
 ];
 
 const organizationNavItems: NavItem[] = [
-    { title: 'Collections', url: '/collections', icon: FolderOpen },
+    { title: 'Neurons', url: '/collections', icon: FolderOpen },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -118,7 +118,7 @@ export function AppSidebar() {
                 </div>
                 <NavMain items={mainNavItems} />
                 <SidebarGroup className="px-2 py-0">
-                    <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+                    <SidebarGroupLabel>Nucleus</SidebarGroupLabel>
                     <SidebarMenu>
                         {workspaceNavItems.map((item) => {
                             const isActive = page.url === item.url || page.url.startsWith(item.url + '/');
@@ -154,7 +154,7 @@ export function AppSidebar() {
                                 </DialogTrigger>
                                 <DialogContent className="max-w-sm">
                                     <DialogHeader>
-                                        <DialogTitle>Add Workspace Document</DialogTitle>
+                                        <DialogTitle>Add Nucleus Document</DialogTitle>
                                     </DialogHeader>
                                     <div className="space-y-1">
                                         {availableBuiltins.map((type) => {
@@ -204,7 +204,7 @@ export function AppSidebar() {
                         }
                     }}
                     title={`Delete "${deleteType ? (typeLabels[deleteType] || deleteType.charAt(0).toUpperCase() + deleteType.slice(1).replace(/[-_]/g, ' ')) : ''}"?`}
-                    description="This will permanently delete this workspace document and all its revision history."
+                    description="This will permanently delete this nucleus document and all its revision history."
                 />
 
                 <NavMain items={contentNavItems} label="Content" />

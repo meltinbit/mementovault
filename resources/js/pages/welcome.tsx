@@ -159,7 +159,7 @@ export default function Welcome() {
                                 </div>
                                 <div className="flex gap-4 md:flex-col md:gap-4">
                                     <div className="space-y-1.5">
-                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Workspace</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Nucleus</p>
                                         <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Identity & Instructions</div>
                                         <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Memory</div>
                                     </div>
@@ -170,7 +170,7 @@ export default function Welcome() {
                                     </div>
                                     <div className="space-y-1.5">
                                         <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Organization</p>
-                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#a78bfa' }}>Collections</div>
+                                        <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#a78bfa' }}>Neurons</div>
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +219,7 @@ export default function Welcome() {
                                         <span style={{ color: '#a855f7' }}>password</span>
                                     </div>
                                     <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                                        <span style={{ color: '#55556a' }}># Create a workspace API key in Settings → API Keys</span>
+                                        <span style={{ color: '#55556a' }}># Create a nucleus API key in Settings → API Keys</span>
                                     </div>
                                     <div className="mt-3">
                                         <span style={{ color: '#55556a' }}># Connect with Claude Code:</span>
@@ -295,7 +295,7 @@ export default function Welcome() {
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Workspace */}
                         <div className="glass-card rounded-2xl p-8">
-                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#6366f1' }}>Workspace</p>
+                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#6366f1' }}>Nucleus</p>
                             <p className="text-base" style={{ color: '#55556a' }}>Your global AI persona — always included</p>
                             <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
                                 <li><span className="text-white font-medium">Identity</span> — who you are</li>
@@ -307,7 +307,7 @@ export default function Welcome() {
                         {/* Content */}
                         <div className="glass-card rounded-2xl p-8">
                             <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Content</p>
-                            <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base — assign to collections</p>
+                            <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base — assign to neurons</p>
                             <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
                                 <li><span className="text-white font-medium">Documents</span> — specs, guides, notes</li>
                                 <li><span className="text-white font-medium">Skills</span> — operational instructions</li>
@@ -321,7 +321,7 @@ export default function Welcome() {
                     <div className="grid gap-6 md:grid-cols-2">
                         <div className="flex flex-col items-center py-4">
                             <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.15))' }} />
-                            <p className="text-xs" style={{ color: '#6366f1' }}>always inherited <span style={{ color: '#55556a' }}>(Workspace)</span></p>
+                            <p className="text-xs" style={{ color: '#6366f1' }}>always inherited <span style={{ color: '#55556a' }}>(Nucleus)</span></p>
                         </div>
                         <div className="flex flex-col items-center py-4">
                             <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.15))' }} />
@@ -332,9 +332,9 @@ export default function Welcome() {
                     {/* Bottom: Organization */}
                     <div className="glass-card mx-auto max-w-2xl rounded-2xl border-indigo-500/20 p-8" style={{ background: 'rgba(99, 102, 241, 0.04)' }}>
                         <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#a78bfa' }}>Organization</p>
-                        <p className="text-base" style={{ color: '#55556a' }}>Create collections to organize context by project. Connect via a single workspace token or per-collection tokens.</p>
+                        <p className="text-base" style={{ color: '#55556a' }}>Create neurons to organize context by project. Connect via a single nucleus token or per-neuron tokens.</p>
                         <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
-                            <li><span style={{ color: '#6366f1' }}>+</span> Workspace identity & instructions <span className="text-sm" style={{ color: '#55556a' }}>(automatic)</span></li>
+                            <li><span style={{ color: '#6366f1' }}>+</span> Nucleus identity & instructions <span className="text-sm" style={{ color: '#55556a' }}>(automatic)</span></li>
                             <li><span style={{ color: '#8b5cf6' }}>+</span> Content you assign <span className="text-sm" style={{ color: '#55556a' }}>(you pick which docs, skills, assets)</span></li>
                             <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own documents</span> — project-specific instructions, architecture, etc.</li>
                             <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own memory</span> — project-specific memory</li>
@@ -380,7 +380,7 @@ export default function Welcome() {
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/identity.png" alt="Workspace identity editor with markdown preview" className="w-full max-w-full" />
+                                <img src="/screenshots/identity.png" alt="Nucleus identity editor with markdown preview" className="w-full max-w-full" />
                             </div>
                         </div>
 
@@ -392,11 +392,11 @@ export default function Welcome() {
                                     <h3 className="text-xl font-semibold lg:text-2xl">Organize by project</h3>
                                 </div>
                                 <p className="text-base leading-relaxed" style={{ color: '#9999b0' }}>
-                                    Create collections for each project or client. Add documents, skills, snippets, and assets. Each collection gets its own set of instructions and its own MCP endpoint.
+                                    Create neurons for each project or client. Add documents, skills, snippets, and assets. Each neuron gets its own set of instructions and its own MCP endpoint.
                                 </p>
                             </div>
                             <div className="overflow-hidden rounded-xl lg:order-1" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full max-w-full" />
+                                <img src="/screenshots/collection.png" alt="Neuron detail showing documents, content items, and MCP endpoint" className="w-full max-w-full" />
                             </div>
                         </div>
 

@@ -61,7 +61,7 @@ export default function AssetCreate({ tags, folderId }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Upload Asset" />
             <div className="space-y-6 p-4">
-                <Heading title="Upload Asset" description="Upload a file to your workspace. AI can't read files directly — add a description so it knows what the file contains and when to reference it." />
+                <Heading title="Upload Asset" description="Upload a file to your nucleus. AI can't read files directly — add a description so it knows what the file contains and when to reference it." />
                 <form onSubmit={submit} className="space-y-6">
                     {uploadError && (
                         <div className="flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
