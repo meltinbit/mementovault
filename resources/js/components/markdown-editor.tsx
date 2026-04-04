@@ -46,7 +46,7 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
     ];
 
     return (
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2 overflow-hidden">
             <div className="flex flex-wrap items-center gap-2">
                 <ToggleGroup type="single" value={mode} onValueChange={(v) => v && setMode(v as 'write' | 'preview')}>
                     <ToggleGroupItem value="write" aria-label="Write" className="h-8 gap-1 px-2 text-xs">
