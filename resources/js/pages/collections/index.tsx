@@ -71,7 +71,7 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         {collections.data.map((col) => (
                             <Card key={col.id} className="relative flex flex-col">
-                                <CardContent className="flex-1 p-4 pb-0">
+                                <CardContent className="flex-1 p-4 pb-3">
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className="h-3 w-3 rounded-full" style={{ backgroundColor: col.color }} />
