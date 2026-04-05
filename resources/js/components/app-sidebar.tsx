@@ -26,7 +26,7 @@ const contentNavItems: NavItem[] = [
 ];
 
 const organizationNavItems: NavItem[] = [
-    { title: 'Neurons', url: '/collections', icon: FolderOpen },
+    { title: 'Collections', url: '/collections', icon: FolderOpen },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -208,7 +208,7 @@ export function AppSidebar() {
                 />
 
                 <NavMain items={contentNavItems} label="Content" />
-                <NavMain items={organizationNavItems} label="Organization" />
+                <NavMain items={organizationNavItems} label="Neurons" />
             </SidebarContent>
 
             <SidebarFooter>
