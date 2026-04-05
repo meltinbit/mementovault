@@ -173,7 +173,7 @@ export default function Onboarding({ workspace }: Props) {
                                     upload assets
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">3.</span> Create your first Neuron to organize
+                                    <span className="font-medium">3.</span> Create your first Collection to organize
                                     content by project
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">

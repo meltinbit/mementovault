@@ -166,7 +166,7 @@ export default function CollectionShow({
     const addDocForm = useForm({ name: '', content: '' });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Neurons', href: '/collections' },
+        { title: 'Collections', href: '/collections' },
         { title: collection.name, href: `/collections/${collection.id}` },
     ];
 
@@ -300,7 +300,7 @@ export default function CollectionShow({
                     {/* Left column: Collection Documents */}
                     <div className="min-w-0 space-y-6">
                         <div className="flex items-center justify-between">
-                            <HeadingSmall title="Neuron Documents" description="These documents define how AI operates in this neuron. They are always included in MCP context." />
+                            <HeadingSmall title="Collection Documents" description="These documents define how AI operates in this collection. They are always included in MCP context." />
                             <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowAddDoc(!showAddDoc)}>
                                 <Plus className="h-4 w-4" />
                                 Add Document
@@ -392,7 +392,7 @@ export default function CollectionShow({
                     {/* Right column: Content + MCP + Tokens */}
                     <div className="min-w-0 space-y-6">
                         <div className="space-y-3">
-                            <HeadingSmall title="Content" description="Manage what's included in this neuron." />
+                            <HeadingSmall title="Content" description="Manage what's included in this collection." />
                             <Deferred data={['documents', 'skills', 'snippets', 'assets']} fallback={
                                 <div className="space-y-2">
                                     {[1, 2, 3, 4].map((i) => <div key={i} className="animate-pulse h-12 rounded-md bg-muted" />)}
@@ -471,7 +471,7 @@ export default function CollectionShow({
                 onClose={() => setShowDelete(false)}
                 onConfirm={() => router.delete(route('collections.destroy', collection.id))}
                 title={`Delete "${collection.name}"?`}
-                description="This deletes the neuron, its documents, and all API tokens. Content items (documents, skills, etc.) are NOT deleted."
+                description="This deletes the collection, its documents, and all API tokens. Content items (documents, skills, etc.) are NOT deleted."
             />
         </AppLayout>
     );

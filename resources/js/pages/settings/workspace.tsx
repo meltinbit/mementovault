@@ -123,7 +123,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                     {/* ── MCP Connection ── */}
                     {activeTab === 'mcp' && (
                         <div className="space-y-4">
-                            <HeadingSmall title="MCP Connection" description="Generate a nucleus token to connect any AI client. One token gives access to all your neurons." />
+                            <HeadingSmall title="MCP Connection" description="Generate a nucleus token to connect any AI client. One token gives access to all your collections." />
 
                             <WorkspaceTokenManager
                                 tokens={workspaceTokens}
@@ -220,7 +220,7 @@ export default function WorkspaceSettings({ workspace, workspaceTokens, mcpEndpo
                                     <InputError message={errors.memory_max_entries} />
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="collection_memory_max_entries">Neuron memory limit</Label>
+                                    <Label htmlFor="collection_memory_max_entries">Collection memory limit</Label>
                                     <Input id="collection_memory_max_entries" type="number" min={1} max={200} value={data.collection_memory_max_entries} onChange={(e) => setData('collection_memory_max_entries', parseInt(e.target.value) || 20)} className="w-24" />
                                     <InputError message={errors.collection_memory_max_entries} />
                                 </div>

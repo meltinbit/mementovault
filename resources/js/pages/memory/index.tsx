@@ -35,7 +35,7 @@ export default function MemoryIndex({ entries, filters, categories, collection }
 
     const breadcrumbs: BreadcrumbItem[] = isCollection
         ? [
-              { title: 'Neurons', href: '/collections' },
+              { title: 'Collections', href: '/collections' },
               { title: collection!.name, href: `/collections/${collection!.id}` },
               { title: 'Memory', href: baseRoute },
           ]

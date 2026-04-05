@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { type BreadcrumbItem, type CollectionData, type PaginatedResponse } from '@/types';
 import { Plus, Pencil, Trash2, FileText, Zap, Code, Image, FolderOpen } from 'lucide-react';
 
-const breadcrumbs: BreadcrumbItem[] = [{ title: 'Neurons', href: '/collections' }];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Collections', href: '/collections' }];
 
 const typeOptions = [
     { value: 'software_project', label: 'Software Project' },
@@ -37,19 +37,19 @@ export default function CollectionsIndex({ collections, filters }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Neurons" />
+            <Head title="Collections" />
             <div className="space-y-6 overflow-hidden p-4">
                 <div>
                     <div className="flex items-center justify-between gap-2">
-                        <h2 className="min-w-0 text-xl font-semibold tracking-tight">Neurons</h2>
+                        <h2 className="min-w-0 text-xl font-semibold tracking-tight">Collections</h2>
                         <Button asChild size="sm" className="shrink-0 gap-1">
                             <Link href={route('collections.create')}>
                                 <Plus className="h-4 w-4" />
-                                New Neuron
+                                New Collection
                             </Link>
                         </Button>
                     </div>
-                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Specialized AI roles that bundle documents, skills, snippets, and assets for a specific project. Each neuron gets its own MCP endpoint.</p>
+                    <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">Context packages that bundle documents, skills, snippets, and assets for a specific project. Each collection gets its own MCP endpoint.</p>
                 </div>
 
                 <ResourceFilters route="/collections" filters={filters} typeOptions={typeOptions} typePlaceholder="All types" />
@@ -57,13 +57,13 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                 {collections.data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
                         <FolderOpen className="mb-3 h-8 w-8 text-muted-foreground" />
-                        <p className="text-sm font-medium">No neurons yet</p>
+                        <p className="text-sm font-medium">No collections yet</p>
                         <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-                            Neurons are specialized AI roles with their own MCP endpoint. Create one to start organizing your AI context by project.
+                            Collections are context packages with their own MCP endpoint. Create one to start organizing your AI context by project.
                         </p>
                         <Button asChild size="sm" className="mt-4 gap-1">
                             <Link href={route('collections.create')}>
-                                <Plus className="h-4 w-4" /> Create your first neuron
+                                <Plus className="h-4 w-4" /> Create your first collection
                             </Link>
                         </Button>
                     </div>
@@ -142,7 +142,7 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                 onClose={() => setDeleteCollection(null)}
                 onConfirm={handleDelete}
                 title={`Delete "${deleteCollection?.name}"?`}
-                description="This will permanently delete this neuron, its documents, and all API tokens."
+                description="This will permanently delete this collection, its documents, and all API tokens."
             />
         </AppLayout>
     );

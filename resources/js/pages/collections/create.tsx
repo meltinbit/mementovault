@@ -13,7 +13,7 @@ import { type BreadcrumbItem } from '@/types';
 import { ArrowRight, FolderOpen, FileText, Key } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Neurons', href: '/collections' },
+    { title: 'Collections', href: '/collections' },
     { title: 'Create', href: '/collections/create' },
 ];
 
@@ -35,14 +35,14 @@ export default function CollectionCreate() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Neuron" />
+            <Head title="Create Collection" />
             <div className="space-y-6 p-4">
-                <Heading title="Create Neuron" description="Start a new specialized AI role. Pick a template to pre-populate documents, or start from scratch. The neuron gets its own MCP endpoint you can connect to any AI client." />
+                <Heading title="Create Collection" description="Start a new context package. Pick a template to pre-populate documents, or start from scratch. The collection gets its own MCP endpoint you can connect to any AI client." />
 
                 {/* Steps indicator */}
                 <div className="grid grid-cols-3 gap-2 rounded-lg border bg-muted/30 p-3 sm:p-4">
                     {[
-                        { icon: FolderOpen, label: 'Define your neuron', sub: 'Name, type, description', active: true },
+                        { icon: FolderOpen, label: 'Define your collection', sub: 'Name, type, description', active: true },
                         { icon: FileText, label: 'Add content', sub: 'Documents, skills, snippets', active: false },
                         { icon: Key, label: 'Connect via MCP', sub: 'Generate token', active: false },
                     ].map((step, i) => (
@@ -116,7 +116,7 @@ export default function CollectionCreate() {
                     </div>
 
                     <Button disabled={processing} className="gap-2">
-                        Create Neuron <ArrowRight className="h-4 w-4" />
+                        Create Collection <ArrowRight className="h-4 w-4" />
                     </Button>
                 </form>
             </div>

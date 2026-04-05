@@ -229,7 +229,7 @@ export function CollectionItemPicker(props: CollectionItemPickerProps) {
         <div className="space-y-2">
             <div className="flex items-center justify-between">
                 <p className="text-xs text-muted-foreground">
-                    {totalAttached} item{totalAttached !== 1 ? 's' : ''} in this neuron
+                    {totalAttached} item{totalAttached !== 1 ? 's' : ''} in this collection
                 </p>
             </div>
             {contentTypes.map((ct) => (
