@@ -175,8 +175,8 @@ export default function Welcome() {
                                 </div>
                             </div>
                             <p className="mt-8 text-sm leading-relaxed sm:text-base" style={{ color: '#8888a0', fontWeight: 300 }}>
-                                Your AI context is scattered across local files and chat histories.{' '}
-                                <span className="font-semibold text-white">Every new conversation starts from zero.</span>
+                                Centralize your AI identity, instructions, documents, skills, and assets in one place.{' '}
+                                <span className="font-semibold text-white">Serve them to any MCP client automatically.</span>
                             </p>
                         </div>
 
