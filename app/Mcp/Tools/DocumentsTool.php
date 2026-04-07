@@ -17,27 +17,29 @@ class DocumentsTool extends Tool
 {
     public function handle(Request $request): Response
     {
-        if (! mcp_collection()) {
+        $action = $request->get('action');
+
+        if (! mcp_collection() && ! in_array($action, ['list', 'get'])) {
             return Response::text('No collection active. Call get_context(collection: "slug") to select one.');
         }
 
-        return match ($request->get('action')) {
+        return match ($action) {
             'list' => $this->list(),
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
             'append' => $this->append($request),
             'delete' => $this->delete($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append, delete."),
+            default => Response::error("Unknown action '{$action}'. Use: list, get, create, update, append, delete."),
         };
     }
 
     private function list(): Response
     {
-        $collection = app('mcp_collection');
-        $docs = $collection->documents()
-            ->where('is_active', true)
-            ->get(['documents.id', 'title', 'type', 'slug']);
+        $collection = mcp_collection();
+        $docs = $collection
+            ? $collection->documents()->where('is_active', true)->get(['documents.id', 'title', 'type', 'slug'])
+            : Document::where('workspace_id', app('current_workspace')->id)->where('is_active', true)->get(['id', 'title', 'type', 'slug']);
 
         $list = $docs->map(fn ($d) => "- **{$d->title}** (`{$d->slug}`, {$d->type})")->join("\n");
 
@@ -46,16 +48,15 @@ class DocumentsTool extends Tool
 
     private function get(Request $request): Response
     {
-        $collection = app('mcp_collection');
+        $collection = mcp_collection();
         $slug = $request->get('slug');
 
-        $document = $collection->documents()
-            ->where('slug', $slug)
-            ->where('is_active', true)
-            ->first();
+        $document = $collection
+            ? $collection->documents()->where('slug', $slug)->where('is_active', true)->first()
+            : Document::where('workspace_id', app('current_workspace')->id)->where('slug', $slug)->where('is_active', true)->first();
 
         if (! $document) {
-            return Response::error("Document with slug '{$slug}' not found in this collection.");
+            return Response::error("Document with slug '{$slug}' not found.");
         }
 
         return Response::text("# {$document->title}\n\n{$document->content}");

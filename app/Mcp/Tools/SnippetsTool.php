@@ -17,45 +17,46 @@ class SnippetsTool extends Tool
 {
     public function handle(Request $request): Response
     {
-        if (! mcp_collection()) {
+        $action = $request->get('action');
+
+        if (! mcp_collection() && ! in_array($action, ['list', 'get'])) {
             return Response::text('No collection active. Call get_context(collection: "slug") to select one.');
         }
 
-        return match ($request->get('action')) {
+        return match ($action) {
             'list' => $this->list(),
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
             'append' => $this->append($request),
             'delete' => $this->delete($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append, delete."),
+            default => Response::error("Unknown action '{$action}'. Use: list, get, create, update, append, delete."),
         };
     }
 
     private function list(): Response
     {
-        $collection = app('mcp_collection');
-        $snippets = $collection->snippets()
-            ->where('is_active', true)
-            ->get(['snippets.id', 'name', 'slug']);
+        $collection = mcp_collection();
+        $snippets = $collection
+            ? $collection->snippets()->where('is_active', true)->get(['snippets.id', 'name', 'slug'])
+            : Snippet::where('workspace_id', app('current_workspace')->id)->where('is_active', true)->get(['id', 'name', 'slug']);
 
         $list = $snippets->map(fn ($s) => "- **{$s->name}** (`{$s->slug}`)")->join("\n");
 
-        return Response::text($list ?: 'No snippets in this collection.');
+        return Response::text($list ?: 'No snippets found.');
     }
 
     private function get(Request $request): Response
     {
-        $collection = app('mcp_collection');
+        $collection = mcp_collection();
         $slug = $request->get('slug');
 
-        $snippet = $collection->snippets()
-            ->where('slug', $slug)
-            ->where('is_active', true)
-            ->first();
+        $snippet = $collection
+            ? $collection->snippets()->where('slug', $slug)->where('is_active', true)->first()
+            : Snippet::where('workspace_id', app('current_workspace')->id)->where('slug', $slug)->where('is_active', true)->first();
 
         if (! $snippet) {
-            return Response::error("Snippet with slug '{$slug}' not found in this collection.");
+            return Response::error("Snippet with slug '{$slug}' not found.");
         }
 
         return Response::text($snippet->content);

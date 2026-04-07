@@ -17,45 +17,46 @@ class SkillsTool extends Tool
 {
     public function handle(Request $request): Response
     {
-        if (! mcp_collection()) {
+        $action = $request->get('action');
+
+        if (! mcp_collection() && ! in_array($action, ['list', 'get'])) {
             return Response::text('No collection active. Call get_context(collection: "slug") to select one.');
         }
 
-        return match ($request->get('action')) {
+        return match ($action) {
             'list' => $this->list(),
             'get' => $this->get($request),
             'create' => $this->create($request),
             'update' => $this->update($request),
             'append' => $this->append($request),
             'delete' => $this->delete($request),
-            default => Response::error("Unknown action '{$request->get('action')}'. Use: list, get, create, update, append, delete."),
+            default => Response::error("Unknown action '{$action}'. Use: list, get, create, update, append, delete."),
         };
     }
 
     private function list(): Response
     {
-        $collection = app('mcp_collection');
-        $skills = $collection->skills()
-            ->where('is_active', true)
-            ->get(['skills.id', 'name', 'description', 'slug']);
+        $collection = mcp_collection();
+        $skills = $collection
+            ? $collection->skills()->where('is_active', true)->get(['skills.id', 'name', 'description', 'slug'])
+            : Skill::where('workspace_id', app('current_workspace')->id)->where('is_active', true)->get(['id', 'name', 'description', 'slug']);
 
         $list = $skills->map(fn ($s) => "- **{$s->name}** (`{$s->slug}`): {$s->description}")->join("\n");
 
-        return Response::text($list ?: 'No skills in this collection.');
+        return Response::text($list ?: 'No skills found.');
     }
 
     private function get(Request $request): Response
     {
-        $collection = app('mcp_collection');
+        $collection = mcp_collection();
         $slug = $request->get('slug');
 
-        $skill = $collection->skills()
-            ->where('slug', $slug)
-            ->where('is_active', true)
-            ->first();
+        $skill = $collection
+            ? $collection->skills()->where('slug', $slug)->where('is_active', true)->first()
+            : Skill::where('workspace_id', app('current_workspace')->id)->where('slug', $slug)->where('is_active', true)->first();
 
         if (! $skill) {
-            return Response::error("Skill with slug '{$slug}' not found in this collection.");
+            return Response::error("Skill with slug '{$slug}' not found.");
         }
 
         return Response::text("# {$skill->name}\n\n**Description:** {$skill->description}\n\n{$skill->content}");

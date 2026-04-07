@@ -43,7 +43,8 @@ class SearchTool extends Tool
 
         foreach ($documents as $doc) {
             $excerpt = $this->excerpt($doc->content, $query);
-            $results[] = "**Document: {$doc->title}** (slug: `{$doc->slug}`, type: {$doc->type})\n> {$excerpt}";
+            $collections = $scope === 'workspace' ? $this->collectionsFor($doc, 'App\Models\Document') : '';
+            $results[] = "**Document: {$doc->title}** (slug: `{$doc->slug}`, type: {$doc->type}){$collections}\n> {$excerpt}";
         }
 
         // Search skills
@@ -59,7 +60,8 @@ class SearchTool extends Tool
 
         foreach ($skills as $skill) {
             $excerpt = $this->excerpt($skill->content, $query);
-            $results[] = "**Skill: {$skill->name}** (slug: `{$skill->slug}`)\n> {$excerpt}";
+            $collections = $scope === 'workspace' ? $this->collectionsFor($skill, 'App\Models\Skill') : '';
+            $results[] = "**Skill: {$skill->name}** (slug: `{$skill->slug}`){$collections}\n> {$excerpt}";
         }
 
         // Search snippets
@@ -74,7 +76,8 @@ class SearchTool extends Tool
 
         foreach ($snippets as $snippet) {
             $excerpt = $this->excerpt($snippet->content, $query);
-            $results[] = "**Snippet: {$snippet->name}** (slug: `{$snippet->slug}`)\n> {$excerpt}";
+            $collections = $scope === 'workspace' ? $this->collectionsFor($snippet, 'App\Models\Snippet') : '';
+            $results[] = "**Snippet: {$snippet->name}** (slug: `{$snippet->slug}`){$collections}\n> {$excerpt}";
         }
 
         // Search assets
@@ -91,7 +94,8 @@ class SearchTool extends Tool
         foreach ($assets as $asset) {
             $size = number_format($asset->size_bytes / 1024, 1).' KB';
             $desc = $asset->description ? " — {$asset->description}" : '';
-            $results[] = "**Asset: {$asset->name}** ({$asset->mime_type}, {$size}){$desc}";
+            $collections = $scope === 'workspace' ? $this->collectionsFor($asset, 'App\Models\Asset') : '';
+            $results[] = "**Asset: {$asset->name}** ({$asset->mime_type}, {$size}){$collections}{$desc}";
         }
 
         // Search collection documents (only when scoped to a collection)
@@ -127,6 +131,21 @@ class SearchTool extends Tool
             'query' => $schema->string()->description('The search query to find matching content.')->required(),
             'scope' => $schema->string()->description('Search scope: "collection" (default, active collection only) or "workspace" (all content in the workspace regardless of collection).'),
         ];
+    }
+
+    private function collectionsFor($item, string $type): string
+    {
+        $names = \DB::table('collectables')
+            ->join('collections', 'collections.id', '=', 'collectables.collection_id')
+            ->where('collectables.collectable_id', $item->id)
+            ->where('collectables.collectable_type', $type)
+            ->pluck('collections.name');
+
+        if ($names->isEmpty()) {
+            return ' [not assigned to any collection]';
+        }
+
+        return ' [in: '.implode(', ', $names->toArray()).']';
     }
 
     private function excerpt(string $content, string $query, int $radius = 100): string
