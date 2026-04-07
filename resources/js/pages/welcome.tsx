@@ -425,7 +425,6 @@ export default function Welcome() {
                     <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 70%)' }} />
                     <div className="relative mx-auto max-w-3xl px-6 text-center">
                         <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-                            Stop repeating yourself to AI.<br />
                             <span className="gradient-text">Start building your vault.</span>
                         </h2>
                         {registrationEnabled && (
@@ -447,7 +446,7 @@ export default function Welcome() {
                     <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 sm:flex-row">
                         <div className="flex items-center gap-2.5 text-sm font-semibold">
                             <div className="flex size-6 items-center justify-center overflow-hidden rounded">
-                                <img src="/logo2.png" alt="Logo" className="size-6 object-cover" />
+                                <img src="/logo.png" alt="Logo" className="size-6 object-contain" />
                             </div>
                             {appName}
                         </div>
