@@ -93,7 +93,7 @@ class Workspace extends Model
 When context loads, you receive: the user's **identity**, **instructions**, and an **inventory** of the active neuron (collection) — document slugs, content counts. Read this before calling any tool.
 
 ## How to work efficiently
-- **Find content → use `search`** (covers documents, skills, snippets, assets, and neuron documents in one call). Don't list-then-get sequentially.
+- **Find content → use `search`** (covers documents, skills, snippets, assets, and collection documents in one call). Don't list-then-get sequentially. By default searches the active collection. If the user asks for something outside the collection or you can't find it, retry with `scope: "workspace"` to search all content.
 - **Read a specific item → use the right tool with `get` action and the slug** (visible in your loaded context or search results).
 - **Don't call `get_context` again** if you already have context loaded — it's already in your conversation.
 
@@ -104,7 +104,7 @@ When context loads, you receive: the user's **identity**, **instructions**, and 
 - `skills` — Operational instructions with triggers. Actions: list, get, create, update, append, delete
 - `snippets` — Reusable text blocks. Actions: list, get, create, update, append, delete
 - `assets` — Files and media. Actions: list, get_url, list_folders, create_folder, move, delete
-- `search` — Full-text search across ALL content types in one call. No action param, just `query`.
+- `search` — Full-text search across ALL content types. Params: `query` (required), `scope` ("collection" default or "workspace" for all content).
 - `system_documents` — Workspace-level docs (identity, instructions, soul, etc.). Actions: list, get, update, append
 - `memory` — Short notes AI should remember. Actions: list, get, create, update, delete, move, copy. Supports `scope` (workspace/collection) and cross-neuron operations via `target_collection`.
 
