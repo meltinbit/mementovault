@@ -333,6 +333,26 @@ export default function Welcome() {
                             <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own memory</span> — project-specific memory</li>
                         </ul>
                     </div>
+
+                    {/* Arrow down to MCP */}
+                    <div className="flex flex-col items-center py-4">
+                        <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(167, 139, 250, 0.4), rgba(99, 102, 241, 0.15))' }} />
+                    </div>
+
+                    {/* MCP Connection */}
+                    <div className="mx-auto max-w-2xl rounded-xl border px-6 py-5" style={{ borderColor: 'rgba(255, 255, 255, 0.08)', background: 'rgba(17, 17, 24, 0.6)' }}>
+                        <p className="mb-3 text-center text-sm font-semibold uppercase tracking-widest" style={{ color: '#6366f1' }}>Connect via MCP</p>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="rounded-lg p-4" style={{ background: 'rgba(99, 102, 241, 0.06)' }}>
+                                <p className="text-sm font-medium text-white">Nucleus token</p>
+                                <p className="mt-1 text-xs" style={{ color: '#8888a0' }}>One token, all collections. AI can switch between them dynamically.</p>
+                            </div>
+                            <div className="rounded-lg p-4" style={{ background: 'rgba(139, 92, 246, 0.06)' }}>
+                                <p className="text-sm font-medium text-white">Collection token</p>
+                                <p className="mt-1 text-xs" style={{ color: '#8888a0' }}>Scoped to one collection. Dedicated, focused connection.</p>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 {/* Product Screenshot */}
