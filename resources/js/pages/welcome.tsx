@@ -355,82 +355,18 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Product Screenshot */}
-                <section id="product" className="relative mx-auto max-w-6xl px-6 py-16 lg:py-24">
+                {/* Admin UI */}
+                <section className="relative mx-auto max-w-6xl px-6 py-16 lg:py-24">
                     <div className="text-center">
-                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">See it in action</h2>
+                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Manage everything from a single UI</h2>
                         <p className="animate-fade-in-up stagger-1 mt-5 text-base lg:text-lg" style={{ color: '#8888a0' }}>
-                            A clean dashboard to manage all your AI context.
+                            A self-hosted admin panel to organize your identity, documents, skills, snippets, assets, and collections. No CLI, no config files.
                         </p>
                     </div>
 
-                    {/* Main screenshot */}
                     <div className="animate-fade-in-up stagger-2 mx-auto mt-12 max-w-5xl">
                         <div className="overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)' }}>
-                            <img src="/screenshots/dashboard.png" alt="Memento Vault dashboard showing getting started checklist, stats, and recent activity" className="w-full" />
-                        </div>
-                    </div>
-                </section>
-
-                {/* How it works */}
-                <section id="how-it-works" className="relative mx-auto max-w-6xl overflow-hidden px-6 py-20 lg:py-32">
-                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
-
-                    <div className="mb-16 text-center lg:mb-20">
-                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Three steps to get started</h2>
-                    </div>
-
-                    <div className="grid gap-16 lg:gap-24">
-                        {/* Step 1 */}
-                        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-                            <div>
-                                <div className="mb-4 flex items-center gap-3">
-                                    <span className="flex size-8 items-center justify-center rounded-full text-sm font-bold" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#6366f1' }}>1</span>
-                                    <h3 className="text-xl font-semibold lg:text-2xl">Define your AI identity</h3>
-                                </div>
-                                <p className="text-base leading-relaxed" style={{ color: '#9999b0' }}>
-                                    Tell AI who you are, how you work, and what you expect. Your identity and instructions follow you across every project and every AI client.
-                                </p>
-                            </div>
-                            <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/identity.png" alt="Nucleus identity editor with markdown preview" className="w-full max-w-full" />
-                            </div>
-                        </div>
-
-                        {/* Step 2 */}
-                        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-                            <div className="lg:order-2">
-                                <div className="mb-4 flex items-center gap-3">
-                                    <span className="flex size-8 items-center justify-center rounded-full text-sm font-bold" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#6366f1' }}>2</span>
-                                    <h3 className="text-xl font-semibold lg:text-2xl">Organize by project</h3>
-                                </div>
-                                <p className="text-base leading-relaxed" style={{ color: '#9999b0' }}>
-                                    Create collections for each project or client. Add documents, skills, snippets, and assets. Each collection gets its own set of instructions and its own MCP endpoint.
-                                </p>
-                            </div>
-                            <div className="overflow-hidden rounded-xl lg:order-1" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/collection.png" alt="Collection detail showing documents, content items, and MCP endpoint" className="w-full max-w-full" />
-                            </div>
-                        </div>
-
-                        {/* Step 3 */}
-                        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-                            <div>
-                                <div className="mb-4 flex items-center gap-3">
-                                    <span className="flex size-8 items-center justify-center rounded-full text-sm font-bold" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#6366f1' }}>3</span>
-                                    <h3 className="text-xl font-semibold lg:text-2xl">Connect via MCP</h3>
-                                </div>
-                                <p className="text-base leading-relaxed" style={{ color: '#9999b0' }}>
-                                    Generate a token, paste the MCP endpoint in your AI client, and start chatting. Your AI now knows who you are and what you're working on.
-                                </p>
-                                <div className="mt-6 overflow-hidden rounded-lg" style={{ background: 'rgba(17, 17, 24, 0.9)', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                                    <div className="px-4 py-2 text-xs" style={{ color: '#55556a', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>MCP Endpoint</div>
-                                    <pre className="overflow-x-auto px-4 py-3 text-sm" style={{ color: '#6366f1', fontFamily: "'JetBrains Mono', monospace" }}>https://your-vault.com/mcp?token=cv_ws_...</pre>
-                                </div>
-                            </div>
-                            <div className="overflow-hidden rounded-xl" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)' }}>
-                                <img src="/screenshots/claude-connected.png" alt="Claude Desktop connected with context loaded" className="w-full max-w-full" />
-                            </div>
+                            <img src="/screenshots/mv.png" alt="Memento Vault admin panel showing collections overview" className="w-full" />
                         </div>
                     </div>
                 </section>
