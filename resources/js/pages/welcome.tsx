@@ -396,29 +396,6 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* What you can store */}
-                <section className="relative mx-auto max-w-6xl px-6 py-20 lg:py-28">
-                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
-
-                    <div className="mb-16 text-center">
-                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Everything your AI needs</h2>
-                    </div>
-
-                    <div className="grid gap-px overflow-hidden rounded-2xl sm:grid-cols-2 lg:grid-cols-4" style={{ background: 'rgba(255, 255, 255, 0.04)' }}>
-                        {[
-                            { title: 'Identity & Instructions', desc: 'Who you are, how you work, your preferences and constraints. Always loaded.', color: '#6366f1' },
-                            { title: 'Documents', desc: 'Specs, guides, notes — reference material AI retrieves when it needs deeper context.', color: '#3b82f6' },
-                            { title: 'Skills', desc: 'Operational instructions AI activates automatically. Code review, content writing, analysis.', color: '#8b5cf6' },
-                            { title: 'Assets', desc: 'Images, videos, files organized in folders. AI gets direct URLs for instant access.', color: '#a78bfa' },
-                        ].map((item) => (
-                            <div key={item.title} className="p-8 lg:p-10" style={{ background: '#0a0a0f' }}>
-                                <div className="mb-4 h-1 w-8 rounded-full" style={{ background: item.color }} />
-                                <h3 className="mb-3 text-base font-semibold">{item.title}</h3>
-                                <p className="text-sm leading-relaxed" style={{ color: '#8888a0' }}>{item.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
 
                 {/* Who it's for */}
                 <section className="relative mx-auto max-w-4xl px-6 py-20 lg:py-28">
