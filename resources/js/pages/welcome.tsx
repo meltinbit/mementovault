@@ -175,7 +175,7 @@ export default function Welcome() {
                                 </div>
                             </div>
                             <p className="mt-8 text-sm leading-relaxed sm:text-base" style={{ color: '#8888a0', fontWeight: 300 }}>
-                                Centralize your AI identity, instructions, documents, skills, and assets in one place.{' '}
+                                Centralize your AI identity, instructions, documents, skills, and assets in one place.{' '}<br/>
                                 <span className="font-semibold text-white">Serve them to any MCP client automatically.</span>
                             </p>
                         </div>
@@ -307,7 +307,7 @@ export default function Welcome() {
                         {/* Content */}
                         <div className="glass-card rounded-2xl p-8">
                             <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Cortex</p>
-                            <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base — assign to collections</p>
+                            <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base</p>
                             <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
                                 <li><span className="text-white font-medium">Documents</span> — specs, guides, notes</li>
                                 <li><span className="text-white font-medium">Skills</span> — operational instructions</li>
@@ -317,25 +317,18 @@ export default function Welcome() {
                         </div>
                     </div>
 
-                    {/* Arrows down — differentiated */}
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <div className="flex flex-col items-center py-4">
-                            <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.15))' }} />
-                            <p className="text-xs" style={{ color: '#6366f1' }}>always inherited <span style={{ color: '#55556a' }}>(Nucleus)</span></p>
-                        </div>
-                        <div className="flex flex-col items-center py-4">
-                            <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.15))' }} />
-                            <p className="text-xs" style={{ color: '#8b5cf6' }}>you choose what to assign <span style={{ color: '#55556a' }}>(Cortex)</span></p>
-                        </div>
+                    {/* Arrow down to Neurons */}
+                    <div className="flex flex-col items-center py-4">
+                        <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.4), rgba(167, 139, 250, 0.2))' }} />
                     </div>
 
-                    {/* Bottom: Organization */}
+                    {/* Bottom: Neurons */}
                     <div className="glass-card mx-auto max-w-2xl rounded-2xl border-indigo-500/20 p-8" style={{ background: 'rgba(99, 102, 241, 0.04)' }}>
                         <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#a78bfa' }}>Neurons</p>
-                        <p className="text-base" style={{ color: '#55556a' }}>Create collections to organize context by project. Connect via a single nucleus token or per-collection tokens.</p>
+                        <p className="text-base" style={{ color: '#55556a' }}>Each collection is a project context. Connect via MCP and AI gets everything it needs.</p>
                         <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
-                            <li><span style={{ color: '#6366f1' }}>+</span> Nucleus identity & instructions <span className="text-sm" style={{ color: '#55556a' }}>(automatic)</span></li>
-                            <li><span style={{ color: '#8b5cf6' }}>+</span> Content you assign <span className="text-sm" style={{ color: '#55556a' }}>(you pick which docs, skills, assets)</span></li>
+                            <li><span style={{ color: '#6366f1' }}>+</span> <span className="text-white font-medium">Nucleus</span> — identity & instructions <span className="text-sm" style={{ color: '#55556a' }}>(always inherited)</span></li>
+                            <li><span style={{ color: '#8b5cf6' }}>+</span> <span className="text-white font-medium">Cortex</span> — docs, skills, snippets, assets <span className="text-sm" style={{ color: '#55556a' }}>(you choose what to assign)</span></li>
                             <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own documents</span> — project-specific instructions, architecture, etc.</li>
                             <li><span style={{ color: '#a78bfa' }}>+</span> <span className="text-white font-medium">Own memory</span> — project-specific memory</li>
                         </ul>
