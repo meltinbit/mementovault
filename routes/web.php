@@ -7,6 +7,7 @@ use App\Http\Controllers\CollectionDocumentController;
 use App\Http\Controllers\CollectionItemController;
 use App\Http\Controllers\CollectionMemoryEntryController;
 use App\Http\Controllers\CollectionTokenController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MemoryEntryController;
@@ -28,6 +29,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::post('trial-request', TrialRequestController::class)->name('trial-request.store');
+Route::post('contact', ContactMessageController::class)->name('contact.store');
 
 Route::get('docs', function () {
     return Inertia::render('docs/index');

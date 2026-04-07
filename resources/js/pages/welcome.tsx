@@ -441,6 +441,18 @@ export default function Welcome() {
                     </div>
                 </section>
 
+                {/* Contact */}
+                <section className="relative mx-auto max-w-3xl px-6 py-16 lg:py-24">
+                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Get in touch</h2>
+                        <p className="mt-3 text-sm" style={{ color: '#8888a0' }}>
+                            Questions, feedback, or just want to say hi? Drop a message.
+                        </p>
+                    </div>
+                    <ContactForm />
+                </section>
+
                 {/* Footer */}
                 <footer className="relative" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
                     <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 sm:flex-row">
@@ -514,5 +526,76 @@ function TrialRequestForm() {
             </form>
             {errors.email && <p className="mt-2 text-center text-xs text-red-400">{errors.email}</p>}
         </div>
+    );
+}
+
+function ContactForm() {
+    const { data, setData, post, processing, errors, wasSuccessful, reset } = useForm({
+        name: '',
+        email: '',
+        message: '',
+    });
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('contact.store'), { preserveScroll: true, onSuccess: () => reset() });
+    };
+
+    if (wasSuccessful) {
+        return (
+            <div className="mt-8 flex items-center justify-center gap-2 text-sm" style={{ color: '#8b8ba0' }}>
+                <CheckCircle className="size-4 text-green-400" />
+                <span>Message sent! Thanks for reaching out.</span>
+            </div>
+        );
+    }
+
+    const inputClass = 'w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30';
+
+    return (
+        <form onSubmit={submit} className="mx-auto mt-8 max-w-lg space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <input
+                        type="text"
+                        value={data.name}
+                        onChange={(e) => setData('name', e.target.value)}
+                        placeholder="Name"
+                        className={inputClass}
+                    />
+                    {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
+                </div>
+                <div>
+                    <input
+                        type="email"
+                        value={data.email}
+                        onChange={(e) => setData('email', e.target.value)}
+                        placeholder="Email"
+                        className={inputClass}
+                    />
+                    {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
+                </div>
+            </div>
+            <div>
+                <textarea
+                    value={data.message}
+                    onChange={(e) => setData('message', e.target.value)}
+                    placeholder="Your message..."
+                    rows={4}
+                    className={inputClass}
+                />
+                {errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}
+            </div>
+            <div className="text-center">
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="btn-primary-glow inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+                >
+                    {processing ? <Loader2 className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
+                    Send Message
+                </button>
+            </div>
+        </form>
     );
 }
