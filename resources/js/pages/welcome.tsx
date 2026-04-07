@@ -126,7 +126,7 @@ export default function Welcome() {
                         <div className="absolute size-3 rounded-full" style={{ background: '#6366f1', boxShadow: '0 0 20px rgba(99, 102, 241, 0.5)', animation: 'pulse-glow 3s ease-in-out infinite' }} />
                     </div>
 
-                    <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-24 text-center lg:pt-36 lg:pb-36">
+                    <div className="relative mx-auto max-w-4xl px-6 pt-12 pb-24 text-center lg:pt-12 lg:pb-36">
                         <div className="animate-fade-in-up flex flex-col items-center">
                             <div className="flex size-20 items-center justify-center lg:size-24">
                                 <img src="/logo.png" alt="Logo" className="size-20 object-contain lg:size-24" />
@@ -560,7 +560,8 @@ function ContactForm() {
                         type="text"
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
-                        placeholder="Name"
+                        placeholder="Name *"
+                        required
                         className={inputClass}
                     />
                     {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
@@ -570,7 +571,8 @@ function ContactForm() {
                         type="email"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
-                        placeholder="Email"
+                        placeholder="Email *"
+                        required
                         className={inputClass}
                     />
                     {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
@@ -580,7 +582,8 @@ function ContactForm() {
                 <textarea
                     value={data.message}
                     onChange={(e) => setData('message', e.target.value)}
-                    placeholder="Your message..."
+                    placeholder="Your message... *"
+                    required
                     rows={4}
                     className={inputClass}
                 />
