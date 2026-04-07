@@ -164,7 +164,7 @@ export default function Welcome() {
                                         <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#6366f1' }}>Memory</div>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Content</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: '#55556a' }}>Cortex</p>
                                         <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Documents & Skills</div>
                                         <div className="glass-card rounded-lg px-4 py-2 text-xs font-medium" style={{ color: '#8b5cf6' }}>Snippets & Assets</div>
                                     </div>
@@ -306,7 +306,7 @@ export default function Welcome() {
 
                         {/* Content */}
                         <div className="glass-card rounded-2xl p-8">
-                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Content</p>
+                            <p className="mb-2 text-sm font-semibold uppercase tracking-widest" style={{ color: '#8b5cf6' }}>Cortex</p>
                             <p className="text-base" style={{ color: '#55556a' }}>Your knowledge base — assign to collections</p>
                             <ul className="mt-5 space-y-3 text-base" style={{ color: '#8888a0' }}>
                                 <li><span className="text-white font-medium">Documents</span> — specs, guides, notes</li>
@@ -325,7 +325,7 @@ export default function Welcome() {
                         </div>
                         <div className="flex flex-col items-center py-4">
                             <div className="h-8 w-px" style={{ background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.15))' }} />
-                            <p className="text-xs" style={{ color: '#8b5cf6' }}>you choose what to assign <span style={{ color: '#55556a' }}>(Content)</span></p>
+                            <p className="text-xs" style={{ color: '#8b5cf6' }}>you choose what to assign <span style={{ color: '#55556a' }}>(Cortex)</span></p>
                         </div>
                     </div>
 

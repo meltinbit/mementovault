@@ -39,7 +39,7 @@ Memento Vault centralizes your entire AI "brain" and serves it via **MCP (Model 
                             │
          ┌──────────────────┼──────────────────┐
          │                  │                  │
-     NUCLEUS           CONTENT            NEURONS
+     NUCLEUS           CORTEX             NEURONS
   ┌──────────┐    ┌──────────────┐    ┌────────────┐
   │ Identity │    │  Documents   │    │Collections │
   │ Instruct.│    │   Skills     │    │  (project  │

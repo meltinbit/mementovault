@@ -330,7 +330,7 @@ Instead of repeating yourself in every conversation, you define your identity, i
 Your vault is organized into three areas — matching the app sidebar:
 
 - **Nucleus** — Identity, Instructions, Memory. Your global AI persona, shared across all projects.
-- **Content** — Documents, Skills, Snippets, Assets. Reference materials and tools AI can use.
+- **Cortex** — Documents, Skills, Snippets, Assets. Reference materials and tools AI can use.
 - **Neurons** — Collections. Project packages that bundle nucleus content with their own documents and MCP endpoints.
 
 AI clients connect via MCP and get lazy-loaded context: a minimal index first, then specific content on demand.`}</Markdown>

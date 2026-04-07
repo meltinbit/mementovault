@@ -392,7 +392,7 @@ export default function CollectionShow({
                     {/* Right column: Content + MCP + Tokens */}
                     <div className="min-w-0 space-y-6">
                         <div className="space-y-3">
-                            <HeadingSmall title="Content" description="Manage what's included in this collection." />
+                            <HeadingSmall title="Cortex" description="Manage what's included in this collection." />
                             <Deferred data={['documents', 'skills', 'snippets', 'assets']} fallback={
                                 <div className="space-y-2">
                                     {[1, 2, 3, 4].map((i) => <div key={i} className="animate-pulse h-12 rounded-md bg-muted" />)}

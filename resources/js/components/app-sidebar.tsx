@@ -207,7 +207,7 @@ export function AppSidebar() {
                     description="This will permanently delete this nucleus document and all its revision history."
                 />
 
-                <NavMain items={contentNavItems} label="Content" />
+                <NavMain items={contentNavItems} label="Cortex" />
                 <NavMain items={organizationNavItems} label="Neurons" />
             </SidebarContent>
 
