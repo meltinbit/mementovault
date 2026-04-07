@@ -442,7 +442,7 @@ export default function Welcome() {
                 </section>
 
                 {/* Contact */}
-                {trialEnabled && (
+                {!registrationEnabled && trialEnabled && (
                     <section className="relative mx-auto max-w-3xl px-6 py-16 lg:py-24">
                         <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
                         <div className="text-center">
