@@ -442,16 +442,18 @@ export default function Welcome() {
                 </section>
 
                 {/* Contact */}
-                <section className="relative mx-auto max-w-3xl px-6 py-16 lg:py-24">
-                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Get in touch</h2>
-                        <p className="mt-3 text-sm" style={{ color: '#8888a0' }}>
-                            Questions, feedback, or just want to say hi? Drop a message.
-                        </p>
-                    </div>
-                    <ContactForm />
-                </section>
+                {trialEnabled && (
+                    <section className="relative mx-auto max-w-3xl px-6 py-16 lg:py-24">
+                        <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
+                        <div className="text-center">
+                            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Get in touch</h2>
+                            <p className="mt-3 text-sm" style={{ color: '#8888a0' }}>
+                                Questions, feedback, or just want to say hi? Drop a message.
+                            </p>
+                        </div>
+                        <ContactForm />
+                    </section>
+                )}
 
                 {/* Footer */}
                 <footer className="relative" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
