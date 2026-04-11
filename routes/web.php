@@ -10,6 +10,7 @@ use App\Http\Controllers\CollectionTokenController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\GraphController;
 use App\Http\Controllers\MemoryEntryController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\SearchController;
@@ -86,6 +87,10 @@ Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::delete('memory/{entry}', [MemoryEntryController::class, 'destroy'])->name('memory.destroy');
 
     Route::get('search', SearchController::class)->name('search');
+
+    Route::get('graph', [GraphController::class, 'index'])->name('graph.index');
+    Route::get('graph/data', [GraphController::class, 'data'])->name('graph.data');
+    Route::post('graph/resolve-slugs', [GraphController::class, 'resolveSlugs'])->name('graph.resolve-slugs');
 
     Route::resource('collections', CollectionController::class);
     Route::post('collections/{collection}/items', [CollectionItemController::class, 'store'])->name('collections.items.store');

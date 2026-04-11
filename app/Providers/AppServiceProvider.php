@@ -6,12 +6,16 @@ use App\Listeners\CreateWorkspaceOnRegistration;
 use App\Models\Asset;
 use App\Models\AssetFolder;
 use App\Models\Collection;
+use App\Models\CollectionDocument;
+use App\Models\CollectionMemoryEntry;
 use App\Models\CollectionSystemDocument;
 use App\Models\Document;
+use App\Models\MemoryEntry;
 use App\Models\Skill;
 use App\Models\Snippet;
 use App\Models\SystemDocument;
 use App\Observers\ActivityLogObserver;
+use App\Observers\ContentLinkObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
@@ -45,5 +49,13 @@ class AppServiceProvider extends ServiceProvider
         SystemDocument::observe(ActivityLogObserver::class);
         CollectionSystemDocument::observe(ActivityLogObserver::class);
         AssetFolder::observe(ActivityLogObserver::class);
+
+        // Content link observers (wikilinks + mentions)
+        Document::observe(ContentLinkObserver::class);
+        Skill::observe(ContentLinkObserver::class);
+        Snippet::observe(ContentLinkObserver::class);
+        CollectionDocument::observe(ContentLinkObserver::class);
+        MemoryEntry::observe(ContentLinkObserver::class);
+        CollectionMemoryEntry::observe(ContentLinkObserver::class);
     }
 }

@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage, router } from '@inertiajs/react';
-import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Package, Plus, Tag, Target, Trash2, User, Zap } from 'lucide-react';
+import { type LucideIcon, BookOpen, BookText, Brain, Briefcase, Code, Database, FileText, FolderOpen, Heart, Image, LayoutGrid, Network, Package, Plus, Tag, Target, Trash2, User, Zap } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', url: '/dashboard', icon: LayoutGrid },
+    { title: 'Graph', url: '/graph', icon: Network },
 ];
 
 const contentNavItems: NavItem[] = [

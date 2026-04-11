@@ -1,10 +1,12 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Bold, Code, FileCode, Heading2, Heading3, Italic, List, ListOrdered, Eye, Pencil } from 'lucide-react';
+import { extractWikilinkSlugs, renderWikilinks } from '@/lib/wikilinks';
 
 interface MarkdownEditorProps {
     value: string;
@@ -16,6 +18,38 @@ interface MarkdownEditorProps {
 export function MarkdownEditor({ value, onChange, placeholder = 'Write your content in markdown...', minRows = 20 }: MarkdownEditorProps) {
     const [mode, setMode] = useState<'write' | 'preview'>('preview');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [resolvedLinks, setResolvedLinks] = useState<Map<string, string | null>>(new Map());
+
+    // Resolve wikilink slugs when switching to preview or when value changes in preview mode
+    useEffect(() => {
+        if (mode !== 'preview') return;
+
+        const slugs = extractWikilinkSlugs(value);
+        if (slugs.length === 0) {
+            setResolvedLinks(new Map());
+            return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        fetch('/graph/resolve-slugs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
+            },
+            body: JSON.stringify({ slugs }),
+        })
+            .then(res => res.json())
+            .then((data: Record<string, string | null>) => {
+                setResolvedLinks(new Map(Object.entries(data)));
+            })
+            .catch(() => {
+                // If resolution fails, show all as broken
+                setResolvedLinks(new Map(slugs.map(s => [s, null])));
+            });
+    }, [mode, value]);
 
     const insertMarkdown = useCallback((before: string, after: string = '') => {
         const textarea = textareaRef.current;
@@ -85,9 +119,11 @@ export function MarkdownEditor({ value, onChange, placeholder = 'Write your cont
                     className="font-mono text-sm"
                 />
             ) : (
-                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none overflow-hidden rounded-md border border-input bg-background p-4" style={{ overflowWrap: 'anywhere' }}>
+                <div className="prose prose-sm dark:prose-invert min-h-[320px] max-w-none overflow-hidden rounded-md border border-input bg-background p-4 [&_.wikilink--valid]:text-violet-400 [&_.wikilink--valid]:underline [&_.wikilink--valid]:decoration-violet-400/40 [&_.wikilink--valid]:cursor-pointer [&_.wikilink--broken]:text-red-400 [&_.wikilink--broken]:line-through [&_.wikilink--broken]:cursor-not-allowed" style={{ overflowWrap: 'anywhere' }}>
                     {value ? (
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                            {renderWikilinks(value, resolvedLinks)}
+                        </ReactMarkdown>
                     ) : (
                         <p className="text-muted-foreground">Nothing to preview</p>
                     )}
