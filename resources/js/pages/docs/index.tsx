@@ -58,6 +58,15 @@ const sections: Section[] = [
         ],
     },
     {
+        id: 'graph-wikilinks',
+        title: 'Graph & Wikilinks',
+        children: [
+            { id: 'graph-view', title: 'Graph View' },
+            { id: 'wikilinks', title: 'Wikilinks' },
+            { id: 'mentions', title: 'Mentions' },
+        ],
+    },
+    {
         id: 'templates',
         title: 'Templates',
         children: [
@@ -658,6 +667,116 @@ Tags help organize your content across all types:
 - **Filter lists** by tag to quickly find related content
 
 Tags are nucleus-level — the same tag can be applied to any content type.`}</Markdown>
+                            </section>
+                        </section>
+
+                        {/* Graph & Wikilinks */}
+                        <section id="graph-wikilinks" className="mb-16">
+                            <h1 className="mb-8 text-3xl font-bold text-white">Graph & Wikilinks</h1>
+
+                            <section id="graph-view" className="mb-12">
+                                <Markdown>{`## Graph View
+
+The Graph View provides an interactive, force-directed visualization of your entire vault — inspired by Obsidian's graph view.
+
+Navigate to **Graph** in the sidebar to explore your content as a network of interconnected nodes.
+
+### Node types
+
+- **Nucleus** — the central node representing your workspace
+- **Collections** — first-level nodes around the nucleus, colored per collection
+- **Collection Documents** — core project docs, shown with a solid accent color
+- **Documents** — reference material, shown in muted tones
+- **Skills** — green nodes
+- **Snippets** — orange nodes
+- **Memory** — purple nodes
+
+### Edge types
+
+| Type | Appearance | Description |
+|------|-----------|-------------|
+| **Hierarchy** | Dashed, light | Structural relationships (Nucleus → Collection → content) |
+| **Wikilink** | Solid, with arrow | Explicit links created with \`[[slug]]\` syntax |
+| **Mention** | Dotted, subtle | Implicit connections detected by slug or title matches |
+
+### Controls
+
+- **Zoom/Pan** — mouse wheel and drag
+- **Click** a node to navigate to that content
+- **Hover** a node to see its type and collection
+- **Toggle edge types** — show/hide hierarchy, wikilinks, and mentions independently
+- **Filter by type** — show only specific content types (documents, skills, etc.)
+- **Filter by collection** — focus on a single collection's subgraph
+- **Orphans toggle** — show or hide content with no connections`}</Markdown>
+                            </section>
+
+                            <section id="wikilinks" className="mb-12">
+                                <Markdown>{`## Wikilinks
+
+Wikilinks let you create explicit connections between any content in your vault.
+
+### Syntax
+
+Use double brackets in any content field:
+
+- \`[[slug]]\` — link to a document, skill, snippet, or collection document by its slug
+- \`[[slug|Custom Label]]\` — link with alternative display text
+
+### How they work
+
+1. When you save content containing wikilinks, the system parses and resolves them
+2. Resolved links create edges in the graph and render as clickable links in the editor preview
+3. Broken links (unresolved slugs) appear in red in the preview
+
+### Slug resolution order
+
+1. Collection documents in the active collection
+2. Workspace-level content (documents, skills, snippets)
+3. Collection documents in other collections
+
+### Example
+
+\`\`\`markdown
+See the [[brand-positioning]] document for tone guidelines.
+This follows the [[content-writer|content writing skill]] conventions.
+\`\`\`
+
+In preview mode, these render as clickable links that navigate to the referenced content.`}</Markdown>
+                            </section>
+
+                            <section id="mentions" className="mb-12">
+                                <Markdown>{`## Mentions
+
+Mentions are implicit connections detected automatically — no special syntax needed.
+
+### How detection works
+
+The system scans all content and creates mention edges when:
+
+1. **Slug match** — a content's slug appears as a word in another content's text (case-insensitive, word boundary matching)
+2. **Title match** — a content's title (minimum 3 words) appears in another content's text
+
+### What's excluded
+
+- Self-references
+- Matches inside code blocks
+- Generic titles (e.g. "Instructions", "Architecture", "Roadmap")
+- Duplicate mentions where a wikilink already exists to the same target
+
+### Backfill command
+
+To scan all existing content and build mention connections:
+
+\`\`\`bash
+php artisan wikilinks:sync --all
+\`\`\`
+
+Options:
+- \`--workspace=ID\` — sync a specific workspace
+- \`--mentions\` — only run mention detection
+- \`--wikilinks-only\` — only parse wikilinks
+
+This command is idempotent and can be re-run at any time.`}</Markdown>
                             </section>
                         </section>
 

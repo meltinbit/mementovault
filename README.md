@@ -89,6 +89,9 @@ https://yourdomain.com/mcp?token=cv_ws_...
 - **Version history** — every change tracked with revision history
 - **Asset management** — folders, drag & drop, move, copy, batch operations, video playback
 - **Full-text search** — find anything across your entire vault
+- **Graph view** — interactive force-directed visualization of all content and connections
+- **Wikilinks** — link content with `[[slug]]` syntax, rendered as clickable links
+- **Mention detection** — automatic implicit connections by slug and title matching
 - **Chunked writing** — append action for writing long content via MCP
 - **Self-hostable** — your data, your server, your control
 
