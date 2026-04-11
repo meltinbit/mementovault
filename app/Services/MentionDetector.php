@@ -13,11 +13,18 @@ use Illuminate\Support\Facades\DB;
 
 class MentionDetector
 {
-    /** @var string[] Titles too generic to produce reliable mentions */
-    private const GENERIC_TITLES = [
+    /** @var string[] Titles too generic to produce reliable mentions (lowercase) */
+    private const TITLE_SKIPLIST = [
         'instructions', 'architecture', 'roadmap', 'memory', 'context',
         'identity', 'soul', 'notes', 'todo', 'readme', 'overview',
-        'changelog', 'config', 'settings', 'draft', 'template',
+        'changelog', 'config', 'configuration', 'settings', 'draft',
+        'template', 'test', 'summary', 'content', 'assets', 'setup',
+        'guide', 'documentation', 'docs',
+    ];
+
+    /** @var string[] Template slugs common across collections — skip cross-collection mentions */
+    private const TEMPLATE_SLUGS = [
+        'instructions', 'architecture', 'memory',
     ];
 
     /**
@@ -28,6 +35,8 @@ class MentionDetector
         $content = $source->content ?? '';
         $workspaceId = $this->getWorkspaceId($source);
         $sourceType = ContentLink::typeKeyForModel($source);
+        $sourceSlug = $source->slug ?? null;
+        $sourceCollectionId = $this->getCollectionId($source);
 
         // Delete existing mentions from this source
         ContentLink::where('source_type', $sourceType)
@@ -42,6 +51,15 @@ class MentionDetector
         $cleaned = $this->stripCodeBlocks($content);
         $candidates = $this->getAllLinkableContent($workspaceId);
 
+        // Pre-load existing wikilinks from this source to avoid duplicate checks per candidate
+        $existingWikilinks = ContentLink::where('source_type', $sourceType)
+            ->where('source_id', $source->id)
+            ->where('link_type', 'wikilink')
+            ->get()
+            ->map(fn ($l) => "{$l->target_type}:{$l->target_id}")
+            ->flip()
+            ->all();
+
         $links = [];
         foreach ($candidates as $candidate) {
             // Skip self-references
@@ -50,33 +68,34 @@ class MentionDetector
             }
 
             // Skip if an explicit wikilink already exists to this target
-            $wikilinkExists = ContentLink::where('source_type', $sourceType)
-                ->where('source_id', $source->id)
-                ->where('target_type', $candidate['type'])
-                ->where('target_id', $candidate['id'])
-                ->where('link_type', 'wikilink')
-                ->exists();
+            if (isset($existingWikilinks["{$candidate['type']}:{$candidate['id']}"])) {
+                continue;
+            }
 
-            if ($wikilinkExists) {
+            // Skip same-slug content in different collections (e.g. two "instructions")
+            if ($sourceSlug && $candidate['slug'] === $sourceSlug && $candidate['collection_id'] !== $sourceCollectionId) {
+                continue;
+            }
+
+            // Skip cross-collection mentions targeting template slugs
+            if ($sourceCollectionId !== $candidate['collection_id']
+                && in_array($candidate['slug'], self::TEMPLATE_SLUGS, true)) {
                 continue;
             }
 
             $matched = false;
 
-            // Match by slug (word boundary, case-insensitive)
-            if (! empty($candidate['slug']) && preg_match('/\b'.preg_quote($candidate['slug'], '/').'\b/i', $cleaned)) {
-                $matched = true;
+            // Match by slug
+            if (! $matched && $this->shouldMatchBySlug($candidate['slug'])) {
+                if (preg_match('/\b'.preg_quote($candidate['slug'], '/').'\b/i', $cleaned)) {
+                    $matched = true;
+                }
             }
 
-            // Match by title (minimum 3 words, case-insensitive, word boundary)
-            if (! $matched && ! empty($candidate['title'])) {
-                $titleWords = str_word_count($candidate['title']);
-                $titleLower = strtolower($candidate['title']);
-
-                if ($titleWords >= 3 && ! in_array($titleLower, self::GENERIC_TITLES)) {
-                    if (preg_match('/\b'.preg_quote($candidate['title'], '/').'\b/i', $cleaned)) {
-                        $matched = true;
-                    }
+            // Match by title (minimum 3 words, not in skiplist)
+            if (! $matched && $this->shouldMatchByTitle($candidate['title'])) {
+                if (preg_match('/\b'.preg_quote($candidate['title'], '/').'\b/i', $cleaned)) {
+                    $matched = true;
                 }
             }
 
@@ -108,11 +127,14 @@ class MentionDetector
         $slug = $newContent->slug ?? null;
         $title = $this->getTitle($newContent);
 
-        if (! $slug && ! $title) {
+        // Only search for slugs/titles that would pass our filters
+        $searchSlug = ($slug && $this->shouldMatchBySlug($slug)) ? $slug : null;
+        $searchTitle = ($title && $this->shouldMatchByTitle($title)) ? $title : null;
+
+        if (! $searchSlug && ! $searchTitle) {
             return;
         }
 
-        // Find all content in this workspace that might mention this new content
         $modelsToCheck = [
             'document' => Document::class,
             'skill' => Skill::class,
@@ -124,17 +146,16 @@ class MentionDetector
                 ->where('workspace_id', $workspaceId)
                 ->where('content', '!=', '');
 
-            $query->where(function ($q) use ($slug, $title) {
-                if ($slug) {
-                    $q->where('content', 'LIKE', '%'.$slug.'%');
+            $query->where(function ($q) use ($searchSlug, $searchTitle) {
+                if ($searchSlug) {
+                    $q->where('content', 'LIKE', '%'.$searchSlug.'%');
                 }
-                if ($title && str_word_count($title) >= 3) {
-                    $q->orWhere('content', 'LIKE', '%'.$title.'%');
+                if ($searchTitle) {
+                    $q->orWhere('content', 'LIKE', '%'.$searchTitle.'%');
                 }
             });
 
             foreach ($query->cursor() as $existing) {
-                // Skip self
                 if ($type === $contentType && $existing->id === $newContent->id) {
                     continue;
                 }
@@ -148,12 +169,12 @@ class MentionDetector
             $q->where('workspace_id', $workspaceId);
         })->where('content', '!=', '');
 
-        $collDocQuery->where(function ($q) use ($slug, $title) {
-            if ($slug) {
-                $q->where('content', 'LIKE', '%'.$slug.'%');
+        $collDocQuery->where(function ($q) use ($searchSlug, $searchTitle) {
+            if ($searchSlug) {
+                $q->where('content', 'LIKE', '%'.$searchSlug.'%');
             }
-            if ($title && str_word_count($title) >= 3) {
-                $q->orWhere('content', 'LIKE', '%'.$title.'%');
+            if ($searchTitle) {
+                $q->orWhere('content', 'LIKE', '%'.$searchTitle.'%');
             }
         });
 
@@ -167,33 +188,82 @@ class MentionDetector
     }
 
     /**
-     * Get all linkable content in a workspace (slugs + titles).
+     * Whether a slug is specific enough to match as a mention.
+     */
+    private function shouldMatchBySlug(?string $slug): bool
+    {
+        if (! $slug || strlen($slug) < 6) {
+            return false;
+        }
+
+        // Single-word slugs (no hyphen) are too generic
+        if (! str_contains($slug, '-')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Whether a title is specific enough to match as a mention.
+     */
+    private function shouldMatchByTitle(?string $title): bool
+    {
+        if (! $title) {
+            return false;
+        }
+
+        if (str_word_count($title) < 3) {
+            return false;
+        }
+
+        if (in_array(strtolower($title), self::TITLE_SKIPLIST, true)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get all linkable content in a workspace (slugs + titles + collection context).
      *
-     * @return array<array{type: string, id: int, slug: string|null, title: string|null}>
+     * @return array<array{type: string, id: int, slug: string|null, title: string|null, collection_id: int|null}>
      */
     private function getAllLinkableContent(int $workspaceId): array
     {
         $items = [];
 
-        // Documents
         foreach (Document::withoutGlobalScopes()->where('workspace_id', $workspaceId)->select('id', 'slug', 'title')->cursor() as $doc) {
-            $items[] = ['type' => 'document', 'id' => $doc->id, 'slug' => $doc->slug, 'title' => $doc->title];
+            // Get first collection assignment
+            $collId = DB::table('collectables')
+                ->where('collectable_type', 'App\\Models\\Document')
+                ->where('collectable_id', $doc->id)
+                ->value('collection_id');
+
+            $items[] = ['type' => 'document', 'id' => $doc->id, 'slug' => $doc->slug, 'title' => $doc->title, 'collection_id' => $collId];
         }
 
-        // Skills
         foreach (Skill::withoutGlobalScopes()->where('workspace_id', $workspaceId)->select('id', 'slug', 'name')->cursor() as $skill) {
-            $items[] = ['type' => 'skill', 'id' => $skill->id, 'slug' => $skill->slug, 'title' => $skill->name];
+            $collId = DB::table('collectables')
+                ->where('collectable_type', 'App\\Models\\Skill')
+                ->where('collectable_id', $skill->id)
+                ->value('collection_id');
+
+            $items[] = ['type' => 'skill', 'id' => $skill->id, 'slug' => $skill->slug, 'title' => $skill->name, 'collection_id' => $collId];
         }
 
-        // Snippets
         foreach (Snippet::withoutGlobalScopes()->where('workspace_id', $workspaceId)->select('id', 'slug', 'name')->cursor() as $snippet) {
-            $items[] = ['type' => 'snippet', 'id' => $snippet->id, 'slug' => $snippet->slug, 'title' => $snippet->name];
+            $collId = DB::table('collectables')
+                ->where('collectable_type', 'App\\Models\\Snippet')
+                ->where('collectable_id', $snippet->id)
+                ->value('collection_id');
+
+            $items[] = ['type' => 'snippet', 'id' => $snippet->id, 'slug' => $snippet->slug, 'title' => $snippet->name, 'collection_id' => $collId];
         }
 
-        // Collection documents (all collections in workspace)
         $collectionIds = DB::table('collections')->where('workspace_id', $workspaceId)->pluck('id');
-        foreach (CollectionDocument::whereIn('collection_id', $collectionIds)->select('id', 'slug', 'name')->cursor() as $collDoc) {
-            $items[] = ['type' => 'collection_document', 'id' => $collDoc->id, 'slug' => $collDoc->slug, 'title' => $collDoc->name];
+        foreach (CollectionDocument::whereIn('collection_id', $collectionIds)->select('id', 'collection_id', 'slug', 'name')->cursor() as $collDoc) {
+            $items[] = ['type' => 'collection_document', 'id' => $collDoc->id, 'slug' => $collDoc->slug, 'title' => $collDoc->name, 'collection_id' => $collDoc->collection_id];
         }
 
         return $items;
@@ -218,6 +288,15 @@ class MentionDetector
         }
 
         throw new \RuntimeException('Cannot determine workspace_id for '.get_class($model));
+    }
+
+    private function getCollectionId(Model $model): ?int
+    {
+        if (isset($model->collection_id)) {
+            return $model->collection_id;
+        }
+
+        return null;
     }
 
     private function getTitle(Model $model): ?string
