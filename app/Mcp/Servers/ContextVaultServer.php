@@ -6,6 +6,7 @@ use App\Mcp\Tools\AssetsTool;
 use App\Mcp\Tools\CollectionDocumentsTool;
 use App\Mcp\Tools\DocumentsTool;
 use App\Mcp\Tools\GetContextTool;
+use App\Mcp\Tools\GraphTool;
 use App\Mcp\Tools\MemoryTool;
 use App\Mcp\Tools\SearchTool;
 use App\Mcp\Tools\SkillsTool;
@@ -34,6 +35,7 @@ class ContextVaultServer extends Server
         SearchTool::class,
         SystemDocumentsTool::class,
         MemoryTool::class,
+        GraphTool::class,
     ];
 
     protected function boot(): void

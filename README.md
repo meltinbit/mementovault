@@ -80,7 +80,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 ## Features
 
 - **Centralized context** — one source of truth for all your AI interactions
-- **MCP-native** — 9 consolidated tools with action-based API
+- **MCP-native** — 10 consolidated tools with action-based API
 - **Lazy context loading** — minimal initial context, everything fetched on demand
 - **Nucleus tokens** — single token for all collections with dynamic switching
 - **Collection tokens** — dedicated per-project access
@@ -116,6 +116,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | `search` | — | Full-text search across all content |
 | `system_documents` | list, get, update, append | Manage nucleus-level system documents |
 | `memory` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
+| `graph` | overview, collection, connections, path | Navigate the workspace knowledge graph |
 
 ### CRUD Coverage
 
@@ -235,6 +236,8 @@ Once connected, just talk to your AI naturally:
 **Assets** — "What assets do I have?" · "Get the URL for the [filename]"
 
 **Search** — "Search everything for [keyword]"
+
+**Graph** — "Show me a graph overview" · "What's connected to [slug]?" · "How are [A] and [B] connected?"
 
 **Collections** — "What collections do I have?" · "Switch to the [name] collection"
 

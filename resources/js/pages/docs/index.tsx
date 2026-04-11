@@ -846,7 +846,8 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 | \`assets\` | list, get_url, list_folders, create_folder, move, delete | Manage assets and folders |
 | \`search\` | — | Full-text search across documents, skills, and snippets |
 | \`system_documents\` | list, get, update, append | Manage nucleus-level system documents (Identity, Instructions, etc.) |
-| \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |`}</Markdown>
+| \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
+| \`graph\` | overview, collection, connections, path | Navigate the workspace knowledge graph |`}</Markdown>
                             </section>
 
                             <section id="built-in-instructions" className="mb-12">
@@ -917,7 +918,13 @@ You don't need to know MCP commands. Just talk to your AI naturally — it will 
 - **"What collections do I have?"** — Lists all available collections
 - **"Switch to the [name] collection"** — Changes active collection context
 - **"Show me my identity document"** — Reads your nucleus identity
-- **"Update my instructions with [changes]"** — Updates nucleus-level documents`}</Markdown>
+- **"Update my instructions with [changes]"** — Updates nucleus-level documents
+
+### Graph
+- **"Show me a graph overview of my vault"** — High-level workspace structure with connection counts
+- **"What's connected to the [slug] document?"** — Find all related content via wikilinks and mentions
+- **"Show the graph for the [name] collection"** — Explore a single collection's nodes and connections
+- **"How are [slug-a] and [slug-b] connected?"** — Find the shortest path between two content nodes`}</Markdown>
                             </section>
 
                             <section id="authentication" className="mb-12">
