@@ -107,6 +107,7 @@ When context loads, you receive: the user's **identity**, **instructions**, and 
 - `search` — Full-text search across ALL content types. Params: `query` (required), `scope` ("collection" default or "workspace" for all content).
 - `system_documents` — Workspace-level docs (identity, instructions, soul, etc.). Actions: list, get, update, append
 - `memory` — Short notes AI should remember. Actions: list, get, create, update, delete, move, copy. Supports `scope` (workspace/collection) and cross-neuron operations via `target_collection`.
+- `collections` — Manage collections (neurons). Actions: list, get, create, update, delete. Requires workspace token for create/update/delete.
 - `graph` — Navigate the workspace knowledge graph. Actions: overview (workspace map), collection (single collection graph), connections (find what's linked to a content), path (shortest path between two nodes). Read-only. Use `[[slug]]` syntax in content to create wikilinks.
 
 ## Writing long content

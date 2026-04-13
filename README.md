@@ -80,7 +80,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 ## Features
 
 - **Centralized context** — one source of truth for all your AI interactions
-- **MCP-native** — 10 consolidated tools with action-based API
+- **MCP-native** — 11 consolidated tools with action-based API
 - **Lazy context loading** — minimal initial context, everything fetched on demand
 - **Nucleus tokens** — single token for all collections with dynamic switching
 - **Collection tokens** — dedicated per-project access
@@ -116,6 +116,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | `search` | — | Full-text search across all content |
 | `system_documents` | list, get, update, append | Manage nucleus-level system documents |
 | `memory` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
+| `collections` | list, get, create, update, delete | Manage collections (neurons) |
 | `graph` | overview, collection, connections, path | Navigate the workspace knowledge graph |
 
 ### CRUD Coverage
@@ -128,6 +129,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | **Snippets** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | |
 | **Assets** | ✅ | ✅ | — | — | — | ✅ | list_folders, create_folder, move |
 | **System Documents** | ✅ | ✅ | — | ✅ | ✅ | — | Fixed types (identity, instructions, etc.) |
+| **Collections** | ✅ | ✅ | ✅ | ✅ | — | ✅ | Template seeding on create |
 | **Memory** | ✅ | ✅ | ✅ | ✅ | — | ✅ | move, copy (cross-collection) |
 
 ### How AI Clients Learn Your Vault

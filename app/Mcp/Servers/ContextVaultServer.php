@@ -4,6 +4,7 @@ namespace App\Mcp\Servers;
 
 use App\Mcp\Tools\AssetsTool;
 use App\Mcp\Tools\CollectionDocumentsTool;
+use App\Mcp\Tools\CollectionsTool;
 use App\Mcp\Tools\DocumentsTool;
 use App\Mcp\Tools\GetContextTool;
 use App\Mcp\Tools\GraphTool;
@@ -35,6 +36,7 @@ class ContextVaultServer extends Server
         SearchTool::class,
         SystemDocumentsTool::class,
         MemoryTool::class,
+        CollectionsTool::class,
         GraphTool::class,
     ];
 

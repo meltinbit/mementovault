@@ -848,6 +848,7 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 | \`search\` | — | Full-text search across documents, skills, and snippets |
 | \`system_documents\` | list, get, update, append | Manage nucleus-level system documents (Identity, Instructions, etc.) |
 | \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
+| \`collections\` | list, get, create, update, delete | Manage collections (neurons) |
 | \`graph\` | overview, collection, connections, path | Navigate the workspace knowledge graph |`}</Markdown>
                             </section>
 
