@@ -14,7 +14,7 @@ use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 
 #[Name('get_context')]
-#[Description('Load context. With a workspace token, pass a collection slug to select which collection to work with. Without a slug, lists available collections.')]
+#[Description('Activate a collection to work with, or list available collections. Pass a collection slug to activate it and load its full context (identity, instructions, collection documents). Omit the slug to list available collections. TIP: Prefer graph(action: "overview") over calling this without a slug — the graph gives you richer information about the workspace structure.')]
 #[IsReadOnly]
 class GetContextTool extends Tool
 {

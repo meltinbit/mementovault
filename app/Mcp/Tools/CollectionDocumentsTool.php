@@ -12,7 +12,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('collection_documents')]
-#[Description('Manage collection documents (Instructions, Memory, Architecture, etc.) — these define how AI operates and are always in context. Actions: list, get, create, update, append, delete, reorder, list_templates. Use append to add content in chunks.')]
+#[Description('Manage collection documents (Instructions, Memory, Architecture, etc.) — these define how AI operates and are always in context. Actions: list, get, create, update, append, delete, reorder, list_templates. Use append to add content in chunks. Use collection_documents for essential project context that AI must ALWAYS know (brand, positioning, USP, architecture, workflows). Use regular documents (not collection_documents) for reference material only needed occasionally. Support [[slug]] wikilink syntax in content.')]
 class CollectionDocumentsTool extends Tool
 {
     public function handle(Request $request): Response

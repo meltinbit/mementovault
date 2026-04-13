@@ -12,7 +12,7 @@ use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 
 #[Name('graph')]
-#[Description('Navigate the workspace knowledge graph. View all content nodes and their connections (hierarchy, wikilinks, mentions). Use to understand workspace structure, find related content, and discover connections between documents, skills, snippets, and memories.')]
+#[Description('Navigate the workspace knowledge graph. View all content nodes and their connections (hierarchy, wikilinks, mentions). IMPORTANT: Call graph(action: "overview") as your FIRST action when connecting to a workspace — it gives you the full map of all collections, their contents, and connections. Use this BEFORE get_context to understand the workspace structure. Then use get_context(collection: "slug") to activate the collection you need to work with. Actions: "overview" — full workspace map (collections, content counts, connections). Use as first call. "collection" — all nodes and connections for a specific collection (pass slug). "connections" — find everything linked to a specific content node (pass slug + content_type). Useful before creating content to avoid duplicates. "path" — find shortest path between two content nodes (pass slug + target_slug).')]
 #[IsReadOnly]
 class GraphTool extends Tool
 {

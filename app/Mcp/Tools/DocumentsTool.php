@@ -12,7 +12,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Tool;
 
 #[Name('documents')]
-#[Description('Manage workspace documents in this collection. Actions: list, get, create, update, append, delete. Use append to add content in chunks.')]
+#[Description('Manage workspace documents in this collection. Actions: list, get, create, update, append, delete. Use append to add content in chunks. When creating documents, use [[slug]] or [[slug|label]] syntax in content to create wikilinks to other content. Always verify the document belongs to the correct collection — use target_collection parameter if the content belongs to a different collection than the active one.')]
 class DocumentsTool extends Tool
 {
     public function handle(Request $request): Response

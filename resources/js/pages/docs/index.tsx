@@ -80,6 +80,7 @@ const sections: Section[] = [
         title: 'API / MCP Reference',
         children: [
             { id: 'available-tools', title: 'Available Tools' },
+            { id: 'recommended-workflow', title: 'Recommended MCP Workflow' },
             { id: 'built-in-instructions', title: 'Built-in AI Instructions' },
             { id: 'example-prompts', title: 'Example Prompts' },
             { id: 'authentication', title: 'Authentication' },
@@ -848,6 +849,38 @@ ${appName} exposes **9 tools** via MCP. Most tools use an \`action\` parameter t
 | \`system_documents\` | list, get, update, append | Manage nucleus-level system documents (Identity, Instructions, etc.) |
 | \`memory\` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
 | \`graph\` | overview, collection, connections, path | Navigate the workspace knowledge graph |`}</Markdown>
+                            </section>
+
+                            <section id="recommended-workflow" className="mb-12">
+                                <Markdown>{`## Recommended MCP Workflow
+
+When an AI client connects to your vault via MCP, it should follow this workflow to get oriented and work efficiently.
+
+### First connection
+
+1. **\`graph(action: "overview")\`** — First call. Gets the full workspace map: all collections, their contents, and connection counts. This gives the AI a complete picture of your vault before diving into any specific collection.
+2. **\`get_context(collection: "slug")\`** — Activate the collection the user needs to work with. This loads the collection's identity, instructions, and collection documents into context.
+3. **\`graph(action: "connections", slug: "...")\`** — When looking for related content or trying to understand how something fits into the bigger picture.
+
+### Where to create content
+
+| Level | Tool | Purpose | Auto-loaded? |
+|-------|------|---------|:------------:|
+| **System Documents** | \`system_documents\` | Global identity (identity, instructions, soul) | Yes |
+| **Collection Documents** | \`collection_documents\` | Essential project context (brand, architecture, workflows) | Yes |
+| **Documents** | \`documents\` | Reference material (drafts, specs, templates) | No |
+
+**Rule of thumb:** If the AI must know it every time it works on this project, it's a collection document. If it's reference material needed occasionally, it's a regular document.
+
+### Creating connections
+
+Use \`[[slug]]\` or \`[[slug|label]]\` syntax in any content field to create explicit wikilinks between content. These are parsed on save and appear as edges in the graph.
+
+### Cross-collection operations
+
+When creating content that belongs to a different collection than the active one, use the \`target_collection\` parameter (available on documents, skills, snippets, memory) instead of switching collections.
+
+This workflow is automatically taught to AI clients via the tool descriptions and built-in instructions, but understanding it helps you structure your vault more effectively.`}</Markdown>
                             </section>
 
                             <section id="built-in-instructions" className="mb-12">
