@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { type BreadcrumbItem, type CollectionData, type PaginatedResponse } from '@/types';
-import { Plus, Pencil, Trash2, FileText, Zap, Code, Image, FolderOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, FileText, Zap, Code, Image, FolderOpen, Copy, Check } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Collections', href: '/collections' }];
 
@@ -27,6 +27,13 @@ interface Props {
 
 export default function CollectionsIndex({ collections, filters }: Props) {
     const [deleteCollection, setDeleteCollection] = useState<CollectionData | null>(null);
+    const [copiedSlug, setCopiedSlug] = useState<number | null>(null);
+
+    const copySlug = (col: CollectionData) => {
+        navigator.clipboard.writeText(col.slug);
+        setCopiedSlug(col.id);
+        setTimeout(() => setCopiedSlug(null), 2000);
+    };
 
     const handleDelete = () => {
         if (!deleteCollection) return;
@@ -90,6 +97,14 @@ export default function CollectionsIndex({ collections, filters }: Props) {
                                             </Button>
                                         </div>
                                     </div>
+                                    <button
+                                        onClick={() => copySlug(col)}
+                                        className="mt-1.5 flex items-center gap-1 rounded px-1 py-0.5 font-mono text-xs text-muted-foreground transition-colors hover:bg-muted cursor-pointer"
+                                        title="Copy slug"
+                                    >
+                                        {col.slug}
+                                        {copiedSlug === col.id ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                                    </button>
                                     <Badge variant="outline" className="mt-2 text-xs capitalize">
                                         {col.type.replace('_', ' ')}
                                     </Badge>

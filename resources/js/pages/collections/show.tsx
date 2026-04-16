@@ -76,6 +76,20 @@ function PromptRow({ prompt }: { prompt: string }) {
     );
 }
 
+function SlugCopy({ slug }: { slug: string }) {
+    const [copied, setCopied] = useState(false);
+    return (
+        <button
+            onClick={() => { navigator.clipboard.writeText(slug); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+            className="mt-1 flex items-center gap-1 rounded px-1 py-0.5 font-mono text-xs text-muted-foreground transition-colors hover:bg-muted cursor-pointer"
+            title="Copy slug"
+        >
+            {slug}
+            {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+        </button>
+    );
+}
+
 function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc: CollectionDocumentData }) {
     const [expanded, setExpanded] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -219,12 +233,15 @@ export default function CollectionShow({
             <div className="space-y-6 overflow-hidden p-4">
                 <div className="mb-8 space-y-1.5">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex min-w-0 items-center gap-3">
-                            <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: collection.color }} />
-                            <h2 className="truncate text-xl font-semibold tracking-tight">{collection.name}</h2>
-                            <Badge variant="outline" className="shrink-0 capitalize">
-                                {collection.type.replace(/_/g, ' ')}
-                            </Badge>
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-3">
+                                <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: collection.color }} />
+                                <h2 className="truncate text-xl font-semibold tracking-tight">{collection.name}</h2>
+                                <Badge variant="outline" className="shrink-0 capitalize">
+                                    {collection.type.replace(/_/g, ' ')}
+                                </Badge>
+                            </div>
+                            <SlugCopy slug={collection.slug} />
                         </div>
                         <div className="flex shrink-0 items-center gap-2">
                             <Button variant="outline" size="sm" onClick={() => setShowDetails(!showDetails)}>
