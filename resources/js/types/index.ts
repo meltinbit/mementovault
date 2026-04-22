@@ -73,6 +73,7 @@ export interface DocumentData {
     created_at: string;
     updated_at: string;
     tags: TagData[];
+    collections?: { id: number; name: string; slug: string; color: string }[];
 }
 
 export interface SkillData {

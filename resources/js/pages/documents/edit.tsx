@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from 'react';
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type BreadcrumbItem, type DocumentData, type RevisionData, type TagData } from '@/types';
-import { Trash2 } from 'lucide-react';
+import { FolderOpen, Trash2 } from 'lucide-react';
 
 interface Props {
     document: DocumentData;
@@ -67,6 +67,23 @@ export default function DocumentEdit({ document, revisions, tags }: Props) {
                         <RevisionHistory revisions={revisions} currentVersion={document.version} onRestore={handleRestore} />
                     </div>
                 </div>
+
+                {document.collections && document.collections.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2">
+                        <FolderOpen className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">In:</span>
+                        {document.collections.map((col) => (
+                            <Link
+                                key={col.id}
+                                href={route('collections.show', col.id)}
+                                className="inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-medium transition-colors hover:bg-accent"
+                            >
+                                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: col.color }} />
+                                {col.name}
+                            </Link>
+                        ))}
+                    </div>
+                )}
 
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-4 md:grid-cols-2">

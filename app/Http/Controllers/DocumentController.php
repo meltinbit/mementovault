@@ -59,7 +59,7 @@ class DocumentController extends Controller
 
     public function edit(Document $document): Response
     {
-        $document->load('tags');
+        $document->load('tags', 'collections:id,name,slug,color');
 
         $revisions = $document->revisions()
             ->latest('version')
