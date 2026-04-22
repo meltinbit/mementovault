@@ -371,6 +371,32 @@ export default function Welcome() {
                     </div>
                 </section>
 
+                {/* Key capabilities */}
+                <section className="relative mx-auto max-w-5xl px-6 py-20 lg:py-28">
+                    <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />
+
+                    <div className="mb-14 text-center">
+                        <h2 className="animate-fade-in-up text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Built to stay in sync</h2>
+                        <p className="animate-fade-in-up stagger-1 mt-5 text-base lg:text-lg" style={{ color: '#8888a0' }}>
+                            Your vault grows with you. No manual work needed.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {[
+                            { title: 'Guided document structure', desc: 'Each document type comes with suggested sections to keep your context consistent and organized. Edit freely.' },
+                            { title: 'Neuron status at a glance', desc: 'See all your neurons on the dashboard: activity, last MCP access, content counts. Know what\'s active and what needs attention.' },
+                            { title: 'Export CLAUDE.md', desc: 'Generate a ready-to-use CLAUDE.md file from any neuron via MCP. Keep your Claude Code projects in sync with your vault.' },
+                            { title: 'Auto-learning memory', desc: 'Important decisions and preferences are saved to memory automatically during conversations. No manual work needed.' },
+                        ].map((item) => (
+                            <div key={item.title} className="glass-card rounded-xl p-6">
+                                <h3 className="mb-2 font-semibold">{item.title}</h3>
+                                <p className="text-sm leading-relaxed" style={{ color: '#8888a0' }}>{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
                 {/* What you can ask */}
                 <section className="relative mx-auto max-w-5xl px-6 py-20 lg:py-28">
                     <div className="absolute top-0 right-0 left-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent)' }} />

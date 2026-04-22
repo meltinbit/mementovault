@@ -52,6 +52,7 @@ class CollectionTemplateService
                 'name' => $doc['name'],
                 'slug' => $doc['slug'],
                 'content' => $doc['placeholder'] ?? '',
+                'schema' => $doc['schema'] ?? null,
                 'sort_order' => $doc['sort_order'],
                 'is_required' => $doc['is_required'] ?? false,
             ]);

@@ -8,21 +8,37 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# Development rules for this project\n\n## Stack\nLanguages, frameworks, tools.\n\n## Code Style\nConventions, linting, formatting.\n\n## Things to avoid\nAnti-patterns, forbidden libraries, bad practices."
+      "placeholder": "# Development rules for this project\n\n## Stack\nLanguages, frameworks, tools.\n\n## Code Style\nConventions, linting, formatting.\n\n## Things to avoid\nAnti-patterns, forbidden libraries, bad practices.",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     },
     {
       "name": "Architecture",
       "slug": "architecture",
       "sort_order": 1,
       "is_required": false,
-      "placeholder": "# System architecture\n\n## Overview\nHigh-level architecture description.\n\n## Database\nSchema overview, key tables, relationships.\n\n## API\nEndpoints, authentication, data flow.\n\n## Infrastructure\nHosting, CI/CD, deployment."
+      "placeholder": "# System architecture\n\n## Overview\nHigh-level architecture description.\n\n## Database\nSchema overview, key tables, relationships.\n\n## API\nEndpoints, authentication, data flow.\n\n## Infrastructure\nHosting, CI/CD, deployment.",
+      "schema": [
+        { "heading": "Overview", "hint": "High-level architecture description" },
+        { "heading": "Database", "hint": "Schema overview, key tables, relationships" },
+        { "heading": "API", "hint": "Endpoints, authentication, data flow" },
+        { "heading": "Infrastructure", "hint": "Hosting, CI/CD, deployment" }
+      ]
     },
     {
       "name": "Roadmap",
       "slug": "roadmap",
       "sort_order": 2,
       "is_required": false,
-      "placeholder": "# Project status and plan\n\n## Current State\nWhat's built, what's working, known issues.\n\n## Next Steps\nImmediate priorities.\n\n## Backlog\nFuture features and improvements."
+      "placeholder": "# Project status and plan\n\n## Current State\nWhat's built, what's working, known issues.\n\n## Next Steps\nImmediate priorities.\n\n## Backlog\nFuture features and improvements.",
+      "schema": [
+        { "heading": "Current State", "hint": "What is built, what is working, known issues" },
+        { "heading": "Next Steps", "hint": "Immediate priorities" },
+        { "heading": "Backlog", "hint": "Future features and improvements" }
+      ]
     }
   ]
 }

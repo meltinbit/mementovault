@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem, type DashboardStats, type ActivityLogEntry } from '@/types';
-import { FileText, Zap, Code, Image, FolderOpen, Check, User, BookText, Key, X, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FileText, Zap, Code, Image, FolderOpen, Check, User, BookText, Key, X, ArrowRight, Plus, Database } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -19,9 +20,24 @@ interface OnboardingChecklist {
     hasCollection: boolean;
 }
 
+interface NeuronData {
+    id: number;
+    name: string;
+    slug: string;
+    color: string;
+    type: string;
+    is_active: boolean;
+    documents_count: number;
+    memory_count: number;
+    content_count: number;
+    updated_at: string;
+    last_mcp_access: string | null;
+}
+
 interface DashboardProps {
     stats?: DashboardStats;
     recentActivity?: ActivityLogEntry[];
+    neurons?: NeuronData[];
     onboardingChecklist?: OnboardingChecklist;
     hideOnboarding?: boolean;
 }
@@ -197,6 +213,112 @@ function StatsGridSkeleton() {
     );
 }
 
+function timeAgo(dateStr: string): string {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days}d ago`;
+    return `${Math.floor(days / 30)}mo ago`;
+}
+
+function activityDot(neuron: NeuronData): { color: string; pulse: boolean; label: string } {
+    if (!neuron.is_active) return { color: 'bg-muted-foreground/40', pulse: false, label: 'Inactive' };
+    if (neuron.last_mcp_access) {
+        const hoursSinceMcp = (Date.now() - new Date(neuron.last_mcp_access).getTime()) / 3600000;
+        if (hoursSinceMcp < 24) return { color: 'bg-green-500', pulse: true, label: 'Active via MCP' };
+    }
+    const daysSinceUpdate = (Date.now() - new Date(neuron.updated_at).getTime()) / 86400000;
+    if (daysSinceUpdate < 7) return { color: 'bg-amber-500', pulse: false, label: 'Updated recently' };
+    return { color: 'bg-muted-foreground/40', pulse: false, label: 'Stale' };
+}
+
+function NeuronStatus({ neurons }: { neurons: NeuronData[] }) {
+    if (neurons.length === 0) {
+        return (
+            <Card>
+                <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+                    <FolderOpen className="mb-3 h-8 w-8 text-muted-foreground" />
+                    <p className="text-sm font-medium">No neurons yet</p>
+                    <p className="mt-1 max-w-xs text-xs text-muted-foreground">Neurons organize your AI context by project. Create one to get started.</p>
+                    <Button asChild size="sm" className="mt-4 gap-1">
+                        <Link href={route('collections.create')}>
+                            <Plus className="h-4 w-4" /> Create your first Neuron
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <div>
+            <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-sm font-semibold">Neurons</h3>
+                <Button asChild variant="outline" size="sm" className="h-7 gap-1 text-xs">
+                    <Link href={route('collections.create')}>
+                        <Plus className="h-3 w-3" /> New
+                    </Link>
+                </Button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {neurons.map((neuron) => {
+                    const dot = activityDot(neuron);
+                    return (
+                        <Link key={neuron.id} href={route('collections.show', neuron.id)}>
+                            <Card className="transition-colors hover:bg-accent/50">
+                                <CardContent className="p-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: neuron.color }} />
+                                            <span className="truncate text-sm font-medium">{neuron.name}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className={`h-2 w-2 rounded-full ${dot.color} ${dot.pulse ? 'animate-pulse' : ''}`} title={dot.label} />
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="mt-2 text-[10px] capitalize">{neuron.type.replace(/_/g, ' ')}</Badge>
+                                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                                        <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> {neuron.documents_count}</span>
+                                        <span className="flex items-center gap-1"><Database className="h-3 w-3" /> {neuron.memory_count}</span>
+                                        <span className="flex items-center gap-1"><FolderOpen className="h-3 w-3" /> {neuron.content_count}</span>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+                                        <span>Updated {timeAgo(neuron.updated_at)}</span>
+                                        <span>MCP: {neuron.last_mcp_access ? timeAgo(neuron.last_mcp_access) : 'Never'}</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+function NeuronStatusSkeleton() {
+    return (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i}>
+                    <CardContent className="p-4 space-y-3">
+                        <div className="flex items-center gap-2">
+                            <Skeleton className="h-3 w-3 rounded-full" />
+                            <Skeleton className="h-4 w-24" />
+                        </div>
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-3 w-full" />
+                    </CardContent>
+                </Card>
+            ))}
+        </div>
+    );
+}
+
 function ActivityFeed({ activity }: { activity: ActivityLogEntry[] }) {
     if (activity.length === 0) {
         return (
@@ -238,7 +360,7 @@ function ActivityFeedSkeleton() {
     );
 }
 
-export default function Dashboard({ stats, recentActivity, onboardingChecklist, hideOnboarding }: DashboardProps) {
+export default function Dashboard({ stats, recentActivity, neurons, onboardingChecklist, hideOnboarding }: DashboardProps) {
     const [showChecklist, setShowChecklist] = useState(!hideOnboarding);
 
     const dismissChecklist = () => {
@@ -256,6 +378,10 @@ export default function Dashboard({ stats, recentActivity, onboardingChecklist, 
 
                 <Deferred data="stats" fallback={<StatsGridSkeleton />}>
                     <StatsGrid stats={stats!} />
+                </Deferred>
+
+                <Deferred data="neurons" fallback={<NeuronStatusSkeleton />}>
+                    <NeuronStatus neurons={neurons ?? []} />
                 </Deferred>
 
                 <Card>

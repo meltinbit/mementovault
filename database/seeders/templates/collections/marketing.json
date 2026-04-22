@@ -8,28 +8,48 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# Marketing operation rules\n\n## Tone & Language\nBrand tone for marketing content.\n\n## Channels\nActive marketing channels.\n\n## Guidelines\nDo's and don'ts for marketing content."
+      "placeholder": "# Marketing operation rules\n\n## Tone & Language\nBrand tone for marketing content.\n\n## Channels\nActive marketing channels.\n\n## Guidelines\nDo's and don'ts for marketing content.",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     },
     {
       "name": "Brand & Positioning",
       "slug": "brand-positioning",
       "sort_order": 1,
       "is_required": false,
-      "placeholder": "# Brand positioning\n\n## Value Proposition\nCore message.\n\n## Differentiators\nWhat makes us unique.\n\n## Target Audience\nWho we're talking to."
+      "placeholder": "# Brand positioning\n\n## Value Proposition\nCore message.\n\n## Differentiators\nWhat makes us unique.\n\n## Target Audience\nWho we're talking to.",
+      "schema": [
+        { "heading": "Value Proposition", "hint": "Core message and unique value" },
+        { "heading": "Differentiators", "hint": "What makes us unique" },
+        { "heading": "Target Audience", "hint": "Who we're talking to" }
+      ]
     },
     {
       "name": "Campaigns",
       "slug": "campaigns",
       "sort_order": 2,
       "is_required": false,
-      "placeholder": "# Active campaigns\n\nCurrent campaigns, goals, status, metrics."
+      "placeholder": "# Active campaigns\n\nCurrent campaigns, goals, status, metrics.",
+      "schema": [
+        { "heading": "Active Campaigns", "hint": "Currently running campaigns with goals and status" },
+        { "heading": "Metrics", "hint": "KPIs and performance tracking" },
+        { "heading": "Upcoming", "hint": "Planned campaigns and launch dates" }
+      ]
     },
     {
       "name": "Content Bank",
       "slug": "content-bank",
       "sort_order": 3,
       "is_required": false,
-      "placeholder": "# Reusable content\n\n## Key Messages\nCore messages to reinforce.\n\n## Proof Points\nCase studies, testimonials, data points.\n\n## Keywords\nSEO keywords, phrases to target."
+      "placeholder": "# Reusable content\n\n## Key Messages\nCore messages to reinforce.\n\n## Proof Points\nCase studies, testimonials, data points.\n\n## Keywords\nSEO keywords, phrases to target.",
+      "schema": [
+        { "heading": "Key Messages", "hint": "Core messages to reinforce" },
+        { "heading": "Proof Points", "hint": "Case studies, testimonials, data points" },
+        { "heading": "Keywords", "hint": "SEO keywords, phrases to target" }
+      ]
     }
   ]
 }

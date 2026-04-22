@@ -8,21 +8,36 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# How to work on this client project\n\n## Communication Style\nHow to communicate about/for this client.\n\n## Deliverable Format\nExpected formats, quality standards.\n\n## Boundaries\nWhat's in scope, what's out of scope."
+      "placeholder": "# How to work on this client project\n\n## Communication Style\nHow to communicate about/for this client.\n\n## Deliverable Format\nExpected formats, quality standards.\n\n## Boundaries\nWhat's in scope, what's out of scope.",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     },
     {
       "name": "Client Brief",
       "slug": "client-brief",
       "sort_order": 1,
       "is_required": false,
-      "placeholder": "# About the client\n\n## Who they are\nCompany, industry, size.\n\n## What they need\nProject goals, desired outcomes.\n\n## Key Contacts\nWho to reference, decision makers."
+      "placeholder": "# About the client\n\n## Who they are\nCompany, industry, size.\n\n## What they need\nProject goals, desired outcomes.\n\n## Key Contacts\nWho to reference, decision makers.",
+      "schema": [
+        { "heading": "About the Client", "hint": "Company, industry, size" },
+        { "heading": "Objectives", "hint": "Project goals, desired outcomes" },
+        { "heading": "Key Contacts", "hint": "Who to reference, decision makers" }
+      ]
     },
     {
       "name": "Deliverables",
       "slug": "deliverables",
       "sort_order": 2,
       "is_required": false,
-      "placeholder": "# What we're delivering\n\n## Scope\nDetailed deliverables list.\n\n## Timeline\nMilestones and deadlines.\n\n## Status\nCurrent progress per deliverable."
+      "placeholder": "# What we're delivering\n\n## Scope\nDetailed deliverables list.\n\n## Timeline\nMilestones and deadlines.\n\n## Status\nCurrent progress per deliverable.",
+      "schema": [
+        { "heading": "Scope", "hint": "Detailed deliverables list" },
+        { "heading": "Timeline", "hint": "Milestones and deadlines" },
+        { "heading": "Status", "hint": "Current progress per deliverable" }
+      ]
     }
   ]
 }

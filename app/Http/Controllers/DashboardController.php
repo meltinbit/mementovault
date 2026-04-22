@@ -39,6 +39,27 @@ class DashboardController extends Controller
                 'assets' => Asset::count(),
                 'collections' => Collection::count(),
             ]),
+            'neurons' => Inertia::defer(fn () => Collection::query()
+                ->withCount(['collectionDocuments', 'collectionMemoryEntries'])
+                ->with(['apiTokens' => fn ($q) => $q->select('id', 'collection_id', 'last_used_at')
+                    ->latest('last_used_at')->limit(1)])
+                ->get()
+                ->map(fn (Collection $n) => [
+                    'id' => $n->id,
+                    'name' => $n->name,
+                    'slug' => $n->slug,
+                    'color' => $n->color,
+                    'type' => $n->type,
+                    'is_active' => $n->is_active,
+                    'documents_count' => $n->collection_documents_count,
+                    'memory_count' => $n->collection_memory_entries_count,
+                    'content_count' => $n->documents()->count() + $n->skills()->count() + $n->snippets()->count() + $n->assets()->count(),
+                    'updated_at' => $n->updated_at->toISOString(),
+                    'last_mcp_access' => $n->apiTokens->first()?->last_used_at?->toISOString(),
+                ])
+                ->sortByDesc('is_active')
+                ->sortByDesc('updated_at')
+                ->values()),
             'recentActivity' => Inertia::defer(fn () => ActivityLog::with('user')
                 ->latest('created_at')
                 ->limit(10)

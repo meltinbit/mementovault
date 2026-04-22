@@ -90,17 +90,34 @@ function SlugCopy({ slug }: { slug: string }) {
     );
 }
 
+function schemaToMarkdown(schema: { heading: string; hint: string }[]): string {
+    return schema.map((s) => `## ${s.heading}\n<!-- ${s.hint} -->\n`).join('\n');
+}
+
 function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc: CollectionDocumentData }) {
     const [expanded, setExpanded] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [resetConfirm, setResetConfirm] = useState(false);
+
+    const hasSchema = doc.schema && doc.schema.length > 0;
+    const isEmpty = !doc.content || !doc.content.trim();
+    const initialContent = hasSchema && isEmpty ? schemaToMarkdown(doc.schema!) : doc.content;
+
     const { data, setData, put, processing, recentlySuccessful } = useForm({
         name: doc.name,
-        content: doc.content,
+        content: initialContent,
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         put(route('collections.docs.update', [collectionId, doc.id]), { preserveScroll: true });
+    };
+
+    const resetToSchema = () => {
+        if (hasSchema) {
+            setData('content', schemaToMarkdown(doc.schema!));
+        }
+        setResetConfirm(false);
     };
 
     return (
@@ -125,9 +142,15 @@ function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc
                         <Label>Name</Label>
                         <Input value={data.name} onChange={(e) => setData('name', e.target.value)} className="h-8" />
                     </div>
+                    {hasSchema && isEmpty && (
+                        <p className="text-xs text-muted-foreground">This document has a suggested structure. Edit freely.</p>
+                    )}
                     <MarkdownEditor value={data.content} onChange={(v) => setData('content', v)} minRows={8} placeholder={`Write ${doc.name.toLowerCase()} content...`} />
                     <div className="flex items-center gap-4">
                         <Button size="sm" disabled={processing}>Save</Button>
+                        {hasSchema && !isEmpty && (
+                            <Button type="button" size="sm" variant="ghost" onClick={() => setResetConfirm(true)}>Reset to template</Button>
+                        )}
                         <Transition show={recentlySuccessful} enter="transition ease-in-out" enterFrom="opacity-0" leave="transition ease-in-out" leaveTo="opacity-0">
                             <p className="text-sm text-neutral-600">Saved</p>
                         </Transition>
@@ -146,6 +169,14 @@ function CollectionDocSection({ collectionId, doc }: { collectionId: number; doc
                 }}
                 title={`Delete "${doc.name}"?`}
                 description="This will permanently delete this document and its revision history."
+            />
+
+            <DeleteConfirmation
+                open={resetConfirm}
+                onClose={() => setResetConfirm(false)}
+                onConfirm={resetToSchema}
+                title={`Reset "${doc.name}" to template?`}
+                description="This will replace the current content with the template structure. Save to apply."
             />
         </div>
     );

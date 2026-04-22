@@ -32,6 +32,7 @@ const sections: Section[] = [
             { id: 'collection-documents', title: 'Collection Documents' },
             { id: 'content-types', title: 'Documents, Skills, Snippets, Assets' },
             { id: 'context-merging', title: 'How Context Loading Works' },
+            { id: 'auto-learning-memory', title: 'Auto-Learning Memory' },
         ],
     },
     {
@@ -43,6 +44,7 @@ const sections: Section[] = [
             { id: 'claude-code', title: 'Claude Code' },
             { id: 'cowork', title: 'Cowork' },
             { id: 'token-management', title: 'Token Management' },
+            { id: 'exporting-claude-md', title: 'Exporting CLAUDE.md' },
         ],
     },
     {
@@ -55,6 +57,7 @@ const sections: Section[] = [
             { id: 'uploading-assets', title: 'Uploading Assets' },
             { id: 'asset-folders', title: 'Asset Folders' },
             { id: 'tagging', title: 'Tagging' },
+            { id: 'document-structure-templates', title: 'Document Structure Templates' },
         ],
     },
     {
@@ -494,6 +497,21 @@ This keeps the initial context small (under 2KB). AI then fetches specific conte
 
 This lazy approach is intentional — it prevents context overflow and lets AI decide what it needs based on the conversation.`}</Markdown>
                             </section>
+
+                            <section id="auto-learning-memory" className="mb-12">
+                                <Markdown>{`## Auto-Learning Memory
+
+During conversations, Memento Vault automatically saves important decisions, preferences, and insights to your memory. You don't need to say "save this" — the AI recognizes what matters and stores it.
+
+**How it works:**
+- When you make a decision ("let's use PostgreSQL for this"), it's saved automatically
+- Project-specific info goes to the collection's memory
+- General preferences go to workspace memory
+- Entries are categorized: decision, preference, technical, workflow, marketing, roadmap
+- Trivial messages (greetings, thanks) are ignored
+
+You can review, pin, archive, or delete entries anytime from the **Memory** section in the UI.`}</Markdown>
+                            </section>
                         </section>
 
                         {/* Connecting to Clients */}
@@ -574,6 +592,25 @@ Key details about API tokens:
 - **Revocation**: tokens can be revoked independently at any time
 
 You can create multiple tokens per collection or nucleus (e.g., one for Claude Desktop, one for Claude Code).`}</Markdown>
+                            </section>
+
+                            <section id="exporting-claude-md" className="mb-12">
+                                <Markdown>{`## Exporting CLAUDE.md
+
+If you use Claude Code, you can generate a \`CLAUDE.md\` file directly from your neuron's context. Ask Claude to call \`export_claude_md\` and it produces a complete file with your identity, instructions, and all neuron documents.
+
+**Usage:**
+\`\`\`
+"Export the CLAUDE.md for this neuron"
+\`\`\`
+
+Claude will call the \`export_claude_md\` tool and produce the file content. Save it to your project root.
+
+**Options:**
+- \`include_memory: true\` — include memory entries (off by default since memory changes frequently)
+- \`include_skills_content: true\` — include full skill content, not just names
+
+Regenerate anytime your vault changes to keep the CLAUDE.md in sync.`}</Markdown>
                             </section>
                         </section>
 
@@ -668,6 +705,21 @@ Tags help organize your content across all types:
 - **Filter lists** by tag to quickly find related content
 
 Tags are nucleus-level — the same tag can be applied to any content type.`}</Markdown>
+                            </section>
+
+                            <section id="document-structure-templates" className="mb-12">
+                                <Markdown>{`## Document Structure Templates
+
+When you create a new document in a neuron, Memento Vault suggests a structure based on the document type.
+
+For example:
+- An **Architecture** document gets sections for Overview, Database, API, and Infrastructure
+- A **Sales Playbook** gets Process, Common Objections, Email Templates, Qualification Criteria
+- A **Brand Voice** document gets Personality, Do's, Don'ts, and Examples
+
+These are suggestions, not constraints. The editor pre-fills section headers with hints as HTML comments. You edit freely — add, remove, or restructure sections as you see fit.
+
+If you've already written content, the schema is ignored. You can use the **Reset to template** button to restore the original structure (with confirmation).`}</Markdown>
                             </section>
                         </section>
 

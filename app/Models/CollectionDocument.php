@@ -18,6 +18,7 @@ class CollectionDocument extends Model
         'name',
         'slug',
         'content',
+        'schema',
         'sort_order',
         'is_required',
         'version',
@@ -34,6 +35,7 @@ class CollectionDocument extends Model
     protected function casts(): array
     {
         return [
+            'schema' => 'array',
             'is_required' => 'boolean',
             'sort_order' => 'integer',
             'version' => 'integer',

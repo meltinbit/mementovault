@@ -120,6 +120,9 @@ To create content in a different neuron without switching: pass `target_collecti
 - **collection_documents** = neuron-level system docs, always loaded in context (Instructions, Architecture, Memory...)
 - **documents** = workspace-level reference docs, fetched on demand (specs, guides, notes...)
 - **system_documents** = workspace-level identity docs (identity, instructions, soul...) — shared across all neurons
+
+## Auto-save to memory
+When the user makes a decision, expresses a preference, or when important information emerges during conversation, save it to memory using the `memory` tool (action: "create"). Do not ask for confirmation. Use scope "collection" for project-specific info and "workspace" for general preferences. Keep entries concise (1-2 sentences). Use categories: "decision", "preference", "technical", "workflow", "marketing", "roadmap". Do not save trivial info, greetings, or questions.
 PROMPT;
     }
 }

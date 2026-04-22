@@ -8,28 +8,48 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# How to think with me\n\n## Role\nBe a critical sparring partner. Challenge my assumptions.\n\n## Approach\nPropose alternatives, think about market fit, be honest about weaknesses.\n\n## Format\nHow to structure analysis: SWOT, lean canvas, pros/cons?"
+      "placeholder": "# How to think with me\n\n## Role\nBe a critical sparring partner. Challenge my assumptions.\n\n## Approach\nPropose alternatives, think about market fit, be honest about weaknesses.\n\n## Format\nHow to structure analysis: SWOT, lean canvas, pros/cons?",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     },
     {
       "name": "Ideas Pipeline",
       "slug": "ideas-pipeline",
       "sort_order": 1,
       "is_required": false,
-      "placeholder": "# Ideas I'm exploring\n\nList current ideas, their status, initial thoughts on each."
+      "placeholder": "# Ideas I'm exploring\n\nList current ideas, their status, initial thoughts on each.",
+      "schema": [
+        { "heading": "Active Ideas", "hint": "Ideas currently being explored" },
+        { "heading": "Parked", "hint": "Ideas saved for later" },
+        { "heading": "Killed", "hint": "Ideas abandoned and why" }
+      ]
     },
     {
       "name": "Market Context",
       "slug": "market-context",
       "sort_order": 2,
       "is_required": false,
-      "placeholder": "# Market landscape\n\n## Trends\nWhat's happening in the market.\n\n## Competitors\nWho's doing similar things.\n\n## Opportunities\nGaps I see."
+      "placeholder": "# Market landscape\n\n## Trends\nWhat's happening in the market.\n\n## Competitors\nWho's doing similar things.\n\n## Opportunities\nGaps I see.",
+      "schema": [
+        { "heading": "Trends", "hint": "What is happening in the market" },
+        { "heading": "Competitors", "hint": "Who is doing similar things" },
+        { "heading": "Opportunities", "hint": "Gaps you see" }
+      ]
     },
     {
       "name": "Validation Framework",
       "slug": "validation-framework",
       "sort_order": 3,
       "is_required": false,
-      "placeholder": "# How I validate ideas\n\n## Criteria\nWhat makes an idea worth pursuing for me?\n\n## Process\nSteps from idea to MVP decision.\n\n## Kill Criteria\nWhen to abandon an idea."
+      "placeholder": "# How I validate ideas\n\n## Criteria\nWhat makes an idea worth pursuing for me?\n\n## Process\nSteps from idea to MVP decision.\n\n## Kill Criteria\nWhen to abandon an idea.",
+      "schema": [
+        { "heading": "Criteria", "hint": "What makes an idea worth pursuing" },
+        { "heading": "Process", "hint": "Steps from idea to MVP decision" },
+        { "heading": "Kill Criteria", "hint": "When to abandon an idea" }
+      ]
     }
   ]
 }

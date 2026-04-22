@@ -8,7 +8,12 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# Instructions\n\nDefine how Claude should operate in this collection."
+      "placeholder": "# Instructions\n\nDefine how Claude should operate in this collection.",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     }
   ]
 }

@@ -8,28 +8,49 @@
       "slug": "instructions",
       "sort_order": 0,
       "is_required": true,
-      "placeholder": "# How to operate as my Social Manager\n\n## Content Language\nWhat language for posts?\n\n## Tone\nCasual? Professional? Playful?\n\n## Rules\nEmoji usage, hashtag limits, things to avoid."
+      "placeholder": "# How to operate as my Social Manager\n\n## Content Language\nWhat language for posts?\n\n## Tone\nCasual? Professional? Playful?\n\n## Rules\nEmoji usage, hashtag limits, things to avoid.",
+      "schema": [
+        { "heading": "Role", "hint": "What role should the AI assume in this neuron" },
+        { "heading": "Tone & Language", "hint": "Communication style, language for outputs" },
+        { "heading": "Rules", "hint": "What to always do and what to never do" }
+      ]
     },
     {
       "name": "Content Strategy",
       "slug": "content-strategy",
       "sort_order": 1,
       "is_required": false,
-      "placeholder": "# What to communicate\n\n## Content Pillars\nMain themes and topics.\n\n## Content Calendar\nPosting frequency, best times, recurring series.\n\n## Goals\nWhat are we trying to achieve? Followers, engagement, leads?"
+      "placeholder": "# What to communicate\n\n## Content Pillars\nMain themes and topics.\n\n## Content Calendar\nPosting frequency, best times, recurring series.\n\n## Goals\nWhat are we trying to achieve? Followers, engagement, leads?",
+      "schema": [
+        { "heading": "Content Pillars", "hint": "Main themes and topics" },
+        { "heading": "Calendar", "hint": "Posting frequency, best times, recurring series" },
+        { "heading": "Goals", "hint": "What are we trying to achieve" }
+      ]
     },
     {
       "name": "Brand Voice",
       "slug": "brand-voice",
       "sort_order": 2,
       "is_required": false,
-      "placeholder": "# How the brand sounds\n\n## Personality\nAdjectives that describe the brand voice.\n\n## Do's\nPhrases, styles, approaches that fit.\n\n## Don'ts\nThings that are off-brand.\n\n## Examples\nExample posts that nail the voice."
+      "placeholder": "# How the brand sounds\n\n## Personality\nAdjectives that describe the brand voice.\n\n## Do's\nPhrases, styles, approaches that fit.\n\n## Don'ts\nThings that are off-brand.\n\n## Examples\nExample posts that nail the voice.",
+      "schema": [
+        { "heading": "Personality", "hint": "Adjectives that describe the brand voice" },
+        { "heading": "Do's", "hint": "Phrases, styles, approaches that fit" },
+        { "heading": "Don'ts", "hint": "Things that are off-brand" },
+        { "heading": "Examples", "hint": "Example posts that nail the voice" }
+      ]
     },
     {
       "name": "Channels & Formats",
       "slug": "channels-formats",
       "sort_order": 3,
       "is_required": false,
-      "placeholder": "# Where and how to post\n\n## Platforms\nWhich platforms, any platform-specific rules.\n\n## Formats\nPost types: text, carousel, video, story, thread.\n\n## Hashtag Strategy\nHashtag groups, limits per platform."
+      "placeholder": "# Where and how to post\n\n## Platforms\nWhich platforms, any platform-specific rules.\n\n## Formats\nPost types: text, carousel, video, story, thread.\n\n## Hashtag Strategy\nHashtag groups, limits per platform.",
+      "schema": [
+        { "heading": "Platforms", "hint": "Which platforms and platform-specific rules" },
+        { "heading": "Formats", "hint": "Post types: text, carousel, video, story, thread" },
+        { "heading": "Hashtag Strategy", "hint": "Hashtag groups and limits per platform" }
+      ]
     }
   ]
 }

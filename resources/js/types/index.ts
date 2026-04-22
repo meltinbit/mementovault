@@ -180,6 +180,7 @@ export interface CollectionDocumentData {
     name: string;
     slug: string;
     content: string;
+    schema?: { heading: string; hint: string }[] | null;
     sort_order: number;
     is_required: boolean;
     version: number;

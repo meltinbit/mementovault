@@ -92,6 +92,10 @@ https://yourdomain.com/mcp?token=cv_ws_...
 - **Graph view** — interactive force-directed visualization of all content and connections
 - **Wikilinks** — link content with `[[slug]]` syntax, rendered as clickable links
 - **Mention detection** — automatic implicit connections by slug and title matching
+- **Guided document structure** — suggested sections per document type, edit freely
+- **Neuron status dashboard** — see activity, MCP access, and content at a glance
+- **Export CLAUDE.md** — generate context files for Claude Code projects from any neuron
+- **Auto-learning memory** — decisions and preferences saved automatically during conversations
 - **Chunked writing** — append action for writing long content via MCP
 - **Self-hostable** — your data, your server, your control
 
@@ -118,6 +122,7 @@ https://yourdomain.com/mcp?token=cv_ws_...
 | `memory` | list, get, create, update, delete, move, copy | Manage memory entries (nucleus or collection scoped) |
 | `collections` | list, get, create, update, delete | Manage collections (neurons) |
 | `graph` | overview, collection, connections, path | Navigate the workspace knowledge graph |
+| `export_claude_md` | — | Export neuron context as CLAUDE.md content |
 
 ### CRUD Coverage
 
