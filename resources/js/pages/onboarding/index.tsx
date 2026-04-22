@@ -164,21 +164,21 @@ export default function Onboarding({ workspace }: Props) {
                                 </p>
                             </div>
                             <div className="mx-auto max-w-sm space-y-3 text-left">
-                                <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">1.</span> Complete your Instructions in the
-                                    Nucleus section
+                                <div className="rounded-md border border-primary/50 bg-primary/5 p-3 text-sm">
+                                    <span className="font-medium">1.</span> Generate an API token and connect your
+                                    AI client via MCP
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">2.</span> Configure S3/R2 storage in Settings to
-                                    upload assets
+                                    <span className="font-medium">2.</span> Personalize your Identity in the Nucleus
+                                    section
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">3.</span> Create your first Collection to organize
-                                    content by project
+                                    <span className="font-medium">3.</span> Write your Instructions — language, code
+                                    style, preferences
                                 </div>
                                 <div className="rounded-md border p-3 text-sm">
-                                    <span className="font-medium">4.</span> Generate a nucleus token in Settings and
-                                    connect via MCP
+                                    <span className="font-medium">4.</span> Create a Collection and populate it with
+                                    content for a project
                                 </div>
                             </div>
                             <div className="flex justify-between">

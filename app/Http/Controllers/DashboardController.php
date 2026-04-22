@@ -10,6 +10,7 @@ use App\Models\Document;
 use App\Models\Skill;
 use App\Models\Snippet;
 use App\Models\SystemDocument;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,17 +21,15 @@ class DashboardController extends Controller
     {
         return Inertia::render('dashboard', [
             'onboardingChecklist' => [
-                'identity' => SystemDocument::where('type', 'identity')
-                    ->where('content', '!=', '')
-                    ->whereRaw("content NOT LIKE '%[%]%'")
-                    ->exists(),
-                'instructions' => SystemDocument::where('type', 'instructions')
-                    ->where('content', '!=', '')
-                    ->whereRaw("content NOT LIKE '%[%]%'")
-                    ->exists(),
-                'hasStorage' => ! empty(current_workspace()?->settings['storage']['key']),
-                'hasCollection' => Collection::exists(),
                 'hasToken' => ApiToken::exists(),
+                'identity' => $this->isSystemDocumentPersonalized('identity'),
+                'instructions' => $this->isSystemDocumentPersonalized('instructions'),
+                'hasCollection' => Collection::where(function ($q) {
+                    $q->whereHas('documents')
+                        ->orWhereHas('skills')
+                        ->orWhereHas('snippets')
+                        ->orWhereHas('assets');
+                })->exists(),
             ],
             'hideOnboarding' => current_workspace()?->settings['hide_onboarding'] ?? false,
             'stats' => Inertia::defer(fn () => [
@@ -54,5 +53,31 @@ class DashboardController extends Controller
                     'user' => $log->user ? ['name' => $log->user->name] : null,
                 ])),
         ]);
+    }
+
+    public function hideOnboarding(Request $request): RedirectResponse
+    {
+        $workspace = current_workspace();
+        $settings = $workspace->settings;
+        $settings['hide_onboarding'] = true;
+        $workspace->update(['settings' => $settings]);
+
+        return back();
+    }
+
+    private function isSystemDocumentPersonalized(string $type): bool
+    {
+        $doc = SystemDocument::where('type', $type)->first();
+
+        if (! $doc || empty(trim($doc->content))) {
+            return false;
+        }
+
+        // Detect template placeholders like [Your name, role...] but not markdown links [text](url)
+        if (preg_match('/\[[A-Z][^\]]{3,}\]/', $doc->content)) {
+            return false;
+        }
+
+        return true;
     }
 }

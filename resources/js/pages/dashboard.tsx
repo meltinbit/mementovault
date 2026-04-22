@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Deferred } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem, type DashboardStats, type ActivityLogEntry } from '@/types';
-import { FileText, Zap, Code, Image, FolderOpen, Check, Circle, User, BookText, HardDrive, Key, X } from 'lucide-react';
+import { FileText, Zap, Code, Image, FolderOpen, Check, User, BookText, Key, X, ArrowRight } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
 ];
 
 interface OnboardingChecklist {
+    hasToken: boolean;
     identity: boolean;
     instructions: boolean;
-    hasStorage: boolean;
     hasCollection: boolean;
-    hasToken: boolean;
 }
 
 interface DashboardProps {
@@ -26,17 +26,65 @@ interface DashboardProps {
     hideOnboarding?: boolean;
 }
 
-const checklistItems = [
-    { key: 'identity', label: 'Set up your Identity', description: 'Tell AI who you are', href: '/workspace/identity', icon: User },
-    { key: 'instructions', label: 'Write Instructions', description: 'Define how AI should work with you', href: '/workspace/instructions', icon: BookText },
-    { key: 'hasStorage', label: 'Configure Storage', description: 'Set up S3/R2 to upload assets', href: '/settings/workspace?tab=storage', icon: HardDrive },
-    { key: 'hasCollection', label: 'Create a Collection', description: 'Organize content by project', href: '/collections/create', icon: FolderOpen },
-    { key: 'hasToken', label: 'Connect via MCP', description: 'Generate a token and connect your AI client', href: '/settings/workspace?tab=mcp', icon: Key },
+interface StepItem {
+    key: keyof OnboardingChecklist;
+    step: number;
+    label: string;
+    why: string;
+    href: string;
+    icon: React.ComponentType<{ className?: string }>;
+}
+
+const phases: { title: string; steps: StepItem[] }[] = [
+    {
+        title: 'Connect',
+        steps: [
+            {
+                key: 'hasToken',
+                step: 1,
+                label: 'Connect via MCP',
+                why: 'This is how your AI clients (Claude Code, Cursor, etc.) read and write to your vault.',
+                href: '/settings/workspace?tab=mcp',
+                icon: Key,
+            },
+            {
+                key: 'identity',
+                step: 2,
+                label: 'Set up your Identity',
+                why: 'Loaded into every AI conversation so it knows who you are from the start.',
+                href: '/workspace/identity',
+                icon: User,
+            },
+        ],
+    },
+    {
+        title: 'Customize',
+        steps: [
+            {
+                key: 'instructions',
+                step: 3,
+                label: 'Write Instructions',
+                why: 'Define rules: response language, code style, things to avoid.',
+                href: '/workspace/instructions',
+                icon: BookText,
+            },
+            {
+                key: 'hasCollection',
+                step: 4,
+                label: 'Populate a Collection',
+                why: 'Collections organize knowledge by project. Each gets its own MCP endpoint.',
+                href: '/collections',
+                icon: FolderOpen,
+            },
+        ],
+    },
 ];
 
+const allSteps = phases.flatMap((p) => p.steps);
+
 function GettingStarted({ checklist, onHide }: { checklist: OnboardingChecklist; onHide: () => void }) {
-    const completed = Object.values(checklist).filter(Boolean).length;
-    const total = Object.keys(checklist).length;
+    const completed = allSteps.filter((s) => checklist[s.key]).length;
+    const total = allSteps.length;
 
     if (completed === total) {
         return null;
@@ -51,37 +99,53 @@ function GettingStarted({ checklist, onHide }: { checklist: OnboardingChecklist;
             >
                 <X className="h-4 w-4" />
             </button>
-            <CardHeader>
-                <CardTitle className="text-base">Getting Started</CardTitle>
-                <p className="text-sm text-muted-foreground">{completed} of {total} steps completed</p>
-                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(completed / total) * 100}%` }} />
+            <CardHeader className="pb-4">
+                <CardTitle className="text-base">Get started with Memento Vault</CardTitle>
+                <p className="text-sm text-muted-foreground">Your AI clients need a bridge to your knowledge. Complete these steps to connect everything.</p>
+                <div className="flex items-center gap-3 pt-1">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(completed / total) * 100}%` }} />
+                    </div>
+                    <span className="text-xs tabular-nums text-muted-foreground">{completed}/{total}</span>
                 </div>
             </CardHeader>
-            <CardContent>
-                <div className="space-y-2">
-                    {checklistItems.map((item) => {
-                        const done = checklist[item.key as keyof OnboardingChecklist];
-                        return (
-                            <Link
-                                key={item.key}
-                                href={item.href}
-                                className={`flex items-center gap-3 rounded-md border p-3 text-sm transition-colors hover:bg-accent ${done ? 'opacity-60' : ''}`}
-                            >
-                                {done ? (
-                                    <Check className="h-5 w-5 shrink-0 text-primary" />
-                                ) : (
-                                    <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
-                                )}
-                                <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                                <div>
-                                    <p className={`font-medium ${done ? 'line-through' : ''}`}>{item.label}</p>
-                                    <p className="text-xs text-muted-foreground">{item.description}</p>
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
+            <CardContent className="space-y-5">
+                {phases.map((phase) => (
+                    <div key={phase.title}>
+                        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{phase.title}</p>
+                        <div className="space-y-2">
+                            {phase.steps.map((item) => {
+                                const done = checklist[item.key];
+                                const isHighlight = item.key === 'hasToken' && !done;
+                                return (
+                                    <Link
+                                        key={item.key}
+                                        href={item.href}
+                                        className={`group flex items-start gap-3 rounded-lg border p-3 transition-colors hover:bg-accent ${
+                                            isHighlight ? 'border-primary/50 bg-primary/5' : ''
+                                        } ${done ? 'opacity-50' : ''}`}
+                                    >
+                                        <div className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                                            done
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'border-2 border-muted-foreground/30 text-muted-foreground'
+                                        }`}>
+                                            {done ? <Check className="h-3.5 w-3.5" /> : item.step}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <p className={`text-sm font-medium ${done ? 'line-through' : ''}`}>{item.label}</p>
+                                                {isHighlight && <Badge variant="default" className="text-[10px] px-1.5 py-0">Start here</Badge>}
+                                            </div>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">{item.why}</p>
+                                        </div>
+                                        {!done && <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ))}
             </CardContent>
         </Card>
     );
@@ -177,12 +241,17 @@ function ActivityFeedSkeleton() {
 export default function Dashboard({ stats, recentActivity, onboardingChecklist, hideOnboarding }: DashboardProps) {
     const [showChecklist, setShowChecklist] = useState(!hideOnboarding);
 
+    const dismissChecklist = () => {
+        setShowChecklist(false);
+        router.post(route('dashboard.hide-onboarding'), {}, { preserveScroll: true });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="space-y-6 p-4">
                 {showChecklist && onboardingChecklist && (
-                    <GettingStarted checklist={onboardingChecklist} onHide={() => setShowChecklist(false)} />
+                    <GettingStarted checklist={onboardingChecklist} onHide={dismissChecklist} />
                 )}
 
                 <Deferred data="stats" fallback={<StatsGridSkeleton />}>

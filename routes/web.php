@@ -46,6 +46,7 @@ Route::get('assets/{asset}/download', [AssetController::class, 'download'])
 
 Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('dashboard/hide-onboarding', [DashboardController::class, 'hideOnboarding'])->name('dashboard.hide-onboarding');
 
     Route::get('workspace/{type}', [SystemDocumentController::class, 'show'])
         ->where('type', '[a-z][a-z0-9_-]*')
