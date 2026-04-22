@@ -210,7 +210,7 @@ export default function Welcome() {
                                         <CopyButton text="cd mementovault && docker compose up -d" />
                                     </div>
                                     <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                                        <span style={{ color: '#55556a' }}># Open http://localhost:4242</span>
+                                        <span style={{ color: '#55556a' }}># Open http://localhost:4242/login</span>
                                     </div>
                                     <div>
                                         <span style={{ color: '#55556a' }}>Login:</span>{' '}

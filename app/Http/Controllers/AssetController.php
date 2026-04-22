@@ -148,7 +148,7 @@ class AssetController extends Controller
             }
         }
 
-        return back();
+        return to_route('assets.index', $asset->folder_id ? ['folder' => $asset->folder_id] : []);
     }
 
     public function edit(Asset $asset): Response
