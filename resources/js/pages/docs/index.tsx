@@ -534,7 +534,7 @@ ${appName} supports two types of API tokens:
 | Collection switching | Yes, via \`get_context\` | No |
 | Create from | Settings → Nucleus | Collection page |
 
-With a nucleus token, AI calls \`get_context\` to see available collections, then \`get_context(collection: "slug")\` to select one. After selection, all tools work as if using a collection token.`}</Markdown>
+With a nucleus token, AI calls \`get_context\` to see available collections, then \`get_context(collection: "slug")\` to select one. After selection, all tools work as if using a collection token. The selection is per MCP session, so several AI sessions can share one nucleus token and each work on a different collection (see [Collection Switching](#collection-switching)).`}</Markdown>
                             </section>
 
                             <section id="claude-desktop" className="mb-12">
@@ -931,7 +931,9 @@ Use \`[[slug]]\` or \`[[slug|label]]\` syntax in any content field to create exp
 
 ### Cross-collection operations
 
-When creating content that belongs to a different collection than the active one, use the \`target_collection\` parameter (available on documents, skills, snippets, memory) instead of switching collections.
+To work on a different collection than the active one for a single call, pass the \`collection\` parameter (available on collection_documents, documents, skills, snippets, assets, search, memory, export_claude_md). It targets that collection for that call only and doesn't change the active one. When writing, passing \`collection\` explicitly is recommended: the target is always clear, even with several sessions open.
+
+For \`create\` you can also use \`target_collection\` (documents, skills, snippets, memory); for memory, \`move\` and \`copy\` support it too.
 
 This workflow is automatically taught to AI clients via the tool descriptions and built-in instructions, but understanding it helps you structure your vault more effectively.`}</Markdown>
                             </section>
@@ -951,7 +953,7 @@ The built-in guide teaches AI clients:
 
 3. **Tool reference** — Which tool to use for each task, with all available actions listed.
 
-4. **Cross-collection operations** — How to create content in a different collection by passing \`target_collection\` on \`create\`, avoiding the switch-create-switch pattern that wastes 3 tool calls.
+4. **Cross-collection operations** — How to work on a different collection by passing \`collection\` on a single call (or \`target_collection\` on \`create\`), avoiding the switch-create-switch pattern that wastes 3 tool calls.
 
 5. **Content chunking** — How to write long content using \`create\` then \`append\` (max ~1500 chars per call).
 
@@ -1045,7 +1047,22 @@ With a **nucleus token**, you can switch between collections dynamically:
 3. All subsequent tool calls are scoped to the selected collection
 4. Call \`get_context(collection: "other-slug")\` — switches to a different collection
 
-The active collection is **persisted on the token**, so it survives across conversations using the same MCP endpoint.
+### One active collection per session
+
+The active collection is kept **per MCP session**: several AI clients or conversations can share the same nucleus token (e.g. parallel Claude Code sessions) and each one works on its own collection. Switching in one session never moves the others.
+
+- A new session starts on the collection selected most recently with that token, and stays there until it calls \`get_context(collection: ...)\` itself.
+- Clients that don't send an \`MCP-Session-Id\` header share the token's last selection, as before.
+
+### Targeting a collection for one call
+
+Instead of switching, pass \`collection: "slug"\` to collection_documents, documents, skills, snippets, assets, search, memory or export_claude_md. The call runs on that collection and the active one is left unchanged:
+
+\`\`\`
+collection_documents(action: "update", slug: "architecture", content: "...", collection: "other-project")
+\`\`\`
+
+If the collection doesn't exist, or a collection token tries to reach a collection other than its own, the call returns an error and nothing is written. Prefer this parameter for writes when more than one session may be working on the vault.
 
 With a **collection token**, the collection is fixed — no switching is needed or possible.`}</Markdown>
                             </section>

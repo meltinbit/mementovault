@@ -57,7 +57,7 @@ Set up nucleus documents — Identity, Instructions, and optional documents like
 Create **Collections** with their own named documents (Instructions, Architecture, Brand Voice, Roadmap, etc.). Assign nucleus content (documents, skills, snippets, assets) to collections.
 
 ### 3. Connect via MCP
-Use a **nucleus token** for access to all collections with dynamic switching, or a **collection token** for a dedicated single-project connection.
+Use a **nucleus token** for access to all collections with dynamic switching, or a **collection token** for a dedicated single-project connection. With a nucleus token the active collection is kept per MCP session, so parallel AI sessions can each work on a different collection; any collection-scoped tool also accepts `collection: "slug"` to target one for a single call.
 
 ```
 https://yourdomain.com/mcp?token=cv_ws_...
@@ -144,7 +144,7 @@ When an AI client connects via MCP, it receives **built-in instructions** that t
 - **What context is auto-loaded** — identity, instructions, and collection inventory are already available, no need to fetch them again
 - **Efficient workflows** — use `search` instead of listing then getting items one by one
 - **Tool reference** — which tool to use for what, with all available actions
-- **Cross-collection operations** — how to create content in other collections without switching
+- **Cross-collection operations** — how to work on other collections without switching (`collection` on a single call, `target_collection` on create)
 - **Content chunking** — how to write long documents using create + append
 
 You can **extend these instructions** with your own custom prompt in **Settings → AI Behavior → Custom MCP Prompt**. Your custom text is appended to the built-in guide, so you can add project-specific rules, tone preferences, or workflow instructions.
