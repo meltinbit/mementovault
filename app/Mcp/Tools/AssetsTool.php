@@ -203,6 +203,7 @@ class AssetsTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'collection' => $schema->string()->description('Collection slug to work on for this call only, instead of the active collection. Recommended when several sessions share the workspace.'),
             'action' => $schema->string()->enum(['list', 'get_url', 'list_folders', 'create_folder', 'move', 'delete'])->description('The action to perform.')->required(),
             'name' => $schema->string()->description('Asset name (for get_url) or folder name (for create_folder).'),
             'slug' => $schema->string()->description('Asset or folder slug.'),

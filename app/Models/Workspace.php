@@ -114,7 +114,7 @@ When context loads, you receive: the user's **identity**, **instructions**, and 
 Max ~1500 chars per call. Use `create` first, then `append` with the slug for additional chunks. One document per turn.
 
 ## Cross-neuron operations
-To create content in a different neuron without switching: pass `target_collection: "slug"` on `create` (documents, skills, snippets, memory). Requires a nucleus (workspace) token. For memory, `move` and `copy` also support `target_collection`.
+The active neuron is kept per MCP session: switching in one session doesn't affect others. To work on a neuron for a single call without switching, pass `collection: "slug"` (collection_documents, documents, skills, snippets, assets, search, memory, export_claude_md). Prefer it when writing, so the target is always explicit. To create content in a different neuron you can also pass `target_collection: "slug"` on `create` (documents, skills, snippets, memory). Both require a nucleus (workspace) token for other neurons. For memory, `move` and `copy` also support `target_collection`.
 
 ## Key distinctions
 - **collection_documents** = neuron-level system docs, always loaded in context (Instructions, Architecture, Memory...)

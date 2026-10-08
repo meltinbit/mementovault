@@ -167,6 +167,7 @@ class SnippetsTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'collection' => $schema->string()->description('Collection slug to work on for this call only, instead of the active collection. Recommended when several sessions share the workspace.'),
             'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'append', 'delete'])->description('The action to perform. Use append to add content in chunks.')->required(),
             'slug' => $schema->string()->description('Snippet slug. Required for get/update.'),
             'name' => $schema->string()->description('Snippet name. Required for create.'),

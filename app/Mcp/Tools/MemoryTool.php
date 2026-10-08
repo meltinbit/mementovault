@@ -251,6 +251,7 @@ class MemoryTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'collection' => $schema->string()->description('Collection slug to work on for this call only, instead of the active collection. Recommended when several sessions share the workspace.'),
             'action' => $schema->string()->enum(['list', 'get', 'create', 'update', 'delete', 'move', 'copy'])->description('The action to perform.')->required(),
             'id' => $schema->integer()->description('Memory entry ID. Required for get/update/delete/move/copy.'),
             'content' => $schema->string()->description('The memory content. Required for create, optional for update. Keep concise — 1-2 sentences.'),

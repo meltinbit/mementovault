@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Mcp\ActiveCollection;
 use App\Models\Collection;
 use App\Models\SystemDocument;
 use App\Services\ContextMergingService;
@@ -45,8 +46,8 @@ class GetContextTool extends Tool
                 return Response::error("Collection '{$collectionSlug}' not found in this workspace.");
             }
 
-            // Persist the switch
-            $token->update(['active_collection_id' => $collection->id]);
+            // Persist the switch for this MCP session (other sessions keep theirs)
+            ActiveCollection::set($token, $request->sessionId(), $collection);
             app()->instance('mcp_collection', $collection);
 
             return Response::text($service->merge($collection));
@@ -94,7 +95,7 @@ class GetContextTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'collection' => $schema->string()->description('Collection slug to activate. Omit to see available collections or current context.'),
+            'collection' => $schema->string()->description('Collection slug to activate for this session. Omit to see available collections or current context.'),
         ];
     }
 }

@@ -126,6 +126,7 @@ class ExportClaudeMdTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'collection' => $schema->string()->description('Collection slug to work on for this call only, instead of the active collection. Recommended when several sessions share the workspace.'),
             'include_memory' => $schema->boolean()->description('Include memory entries in export. Default false — memory changes frequently.'),
             'include_skills_content' => $schema->boolean()->description('Include full skill content, not just names/descriptions. Default false.'),
         ];

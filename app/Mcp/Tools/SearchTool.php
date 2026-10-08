@@ -128,6 +128,7 @@ class SearchTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
+            'collection' => $schema->string()->description('Collection slug to work on for this call only, instead of the active collection. Recommended when several sessions share the workspace.'),
             'query' => $schema->string()->description('The search query to find matching content.')->required(),
             'scope' => $schema->string()->description('Search scope: "collection" (default, active collection only) or "workspace" (all content in the workspace regardless of collection).'),
         ];
